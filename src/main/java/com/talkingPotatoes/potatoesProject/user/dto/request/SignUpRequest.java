@@ -1,5 +1,8 @@
 package com.talkingPotatoes.potatoesProject.user.dto.request;
 
+import java.util.List;
+import java.util.UUID;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
@@ -26,4 +29,6 @@ public class SignUpRequest {
 
 	@NotBlank(message = "블로그명은 필수 입력사항입니다.")
 	private String title;
+
+	private List<UUID> genreList;
 }

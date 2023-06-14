@@ -1,14 +1,16 @@
 package com.talkingPotatoes.potatoesProject.user.dto;
 
-import java.time.LocalDateTime;
+import java.util.UUID;
 
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
 
 @Data
 @SuperBuilder
-public class BaseDto {
-	private LocalDateTime createdAt;
+public class UserGenreDto extends BaseDto {
+	private UUID id;
 
-	private LocalDateTime updatedAt;
+	private UUID userId;
+
+	private UUID genreId;
 }

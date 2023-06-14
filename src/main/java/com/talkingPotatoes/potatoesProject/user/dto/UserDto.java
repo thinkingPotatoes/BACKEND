@@ -6,8 +6,10 @@ import java.util.UUID;
 import com.talkingPotatoes.potatoesProject.user.entity.Platform;
 
 import lombok.Data;
+import lombok.experimental.SuperBuilder;
 
 @Data
+@SuperBuilder
 public class UserDto extends BaseDto {
 	private UUID id;
 
