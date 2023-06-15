@@ -3,6 +3,7 @@ package com.talkingPotatoes.potatoesProject.user.dto.request;
 import java.util.List;
 import java.util.UUID;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
@@ -13,8 +14,7 @@ import lombok.NoArgsConstructor;
 public class SignUpRequest {
 
 	@NotBlank(message = "아이디는 필수 입력사항입니다.")
-	@Pattern(regexp = "[a-zA-Z0-9]{2,9}",
-		message = "아이디는 영문, 숫자만 가능하며 2 ~ 10자리까지 가능합니다.")
+	@Email
 	private String userId;
 
 	@NotBlank(message = "비밀번호는 필수 입력사항입니다.")
