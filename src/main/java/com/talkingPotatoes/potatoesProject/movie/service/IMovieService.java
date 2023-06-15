@@ -1,4 +1,4 @@
-package com.talkingPotatoes.potatoesProject.movie;
+package com.talkingPotatoes.potatoesProject.movie.service;
 
 public interface IMovieService {
 
