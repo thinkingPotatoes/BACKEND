@@ -1,5 +1,6 @@
 package com.talkingPotatoes.potatoesProject.movie.service.implement;
 
+import com.talkingPotatoes.potatoesProject.movie.dto.MovieDto;
 import com.talkingPotatoes.potatoesProject.movie.entity.Movie;
 import com.talkingPotatoes.potatoesProject.movie.mapper.MovieMapper;
 import com.talkingPotatoes.potatoesProject.movie.repository.MovieRepository;
@@ -9,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -21,8 +24,8 @@ public class MovieServiceImpl implements IMovieService {
 
     @Override
     @Transactional
-    public void save(String body) throws Exception {
-
+    public void save(List<MovieDto> movieDtoList) {
+        movieRepository.saveAll(movieMapper.toEntity(movieDtoList));
     }
 
 

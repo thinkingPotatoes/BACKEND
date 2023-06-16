@@ -1,5 +1,6 @@
 package com.talkingPotatoes.potatoesProject.movie.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
@@ -41,6 +42,7 @@ public class Movie {
 
     private String prodYear;
 
+    @Column(length = 50000)
     private String plot;
 
     private String runtime;

@@ -57,7 +57,11 @@ public class MovieApiScheduler {
         log.info(sb.toString());
 
         /* json 파싱해서 MovieDto 리스트로 변환 */
-        log.info(parse(sb.toString()).toString());
+        List<MovieDto> dtolist = parse(sb.toString());
+        log.info(dtolist.toString());
+
+        /* 파싱한 데이터 service로 넘기기 */
+        movieService.save(dtolist);
     }
 
     public List<MovieDto> parse(String body) throws Exception{

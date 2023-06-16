@@ -2,12 +2,14 @@ package com.talkingPotatoes.potatoesProject.movie.mapper;
 
 import com.talkingPotatoes.potatoesProject.movie.dto.MovieDto;
 import com.talkingPotatoes.potatoesProject.movie.entity.Movie;
+import java.util.ArrayList;
+import java.util.List;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-06-16T17:15:00+0900",
+    date = "2023-06-16T18:02:35+0900",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.7 (Oracle Corporation)"
 )
 @Component
@@ -77,5 +79,33 @@ public class MovieMapperImpl implements MovieMapper {
         movieDto.stillUrl( movie.getStillUrl() );
 
         return movieDto.build();
+    }
+
+    @Override
+    public List<Movie> toEntity(List<MovieDto> movieDtoList) {
+        if ( movieDtoList == null ) {
+            return null;
+        }
+
+        List<Movie> list = new ArrayList<Movie>( movieDtoList.size() );
+        for ( MovieDto movieDto : movieDtoList ) {
+            list.add( toEntity( movieDto ) );
+        }
+
+        return list;
+    }
+
+    @Override
+    public List<MovieDto> toDto(List<Movie> movieList) {
+        if ( movieList == null ) {
+            return null;
+        }
+
+        List<MovieDto> list = new ArrayList<MovieDto>( movieList.size() );
+        for ( Movie movie : movieList ) {
+            list.add( toDto( movie ) );
+        }
+
+        return list;
     }
 }
