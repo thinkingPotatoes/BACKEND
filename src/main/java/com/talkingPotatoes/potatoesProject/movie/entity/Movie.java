@@ -24,16 +24,22 @@ public class Movie {
 
     private String titleOrg;
 
+    @Column(length = 50000)
     private String directorNm;
 
+    @Column(length = 50000)
     private String directorEnNm;
 
+    @Column(length = 50000)
     private String directorId;
 
+    @Column(length = 50000)
     private String actorNm;
 
+    @Column(length = 50000)
     private String actorEnNm;
 
+    @Column(length = 50000)
     private String actorId;
 
     private String nation;
@@ -55,8 +61,10 @@ public class Movie {
 
     private String keywords;
 
+    @Column(length = 50000)
     private String posterUrl;
 
+    @Column(length = 50000)
     private String stillUrl;
 
 }

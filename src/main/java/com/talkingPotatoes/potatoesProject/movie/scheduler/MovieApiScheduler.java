@@ -27,41 +27,51 @@ public class MovieApiScheduler {
 
     private final IMovieService movieService;
 
-    @Scheduled(cron = "0/10 * * * * *")
+    @Scheduled(cron = "0 36 * * * *")
     public void getData() throws Exception{
-        /* open api 샘플코드 */
-        /* StringBuilder에 json 데이터 line으로 읽어서 저장 */
-        StringBuilder urlBuilder = new StringBuilder(
-                "http://api.koreafilm.or.kr/openapi-data2/wisenut/search_api/search_json2.jsp?collection=kmdb_new2");
-        urlBuilder.append("&" + URLEncoder.encode("ServiceKey", "UTF-8") + "=6HD78WK5N6X4BSJYO374");
-        URL url = new URL(urlBuilder.toString());
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("GET");
-        conn.setRequestProperty("Content-type", "application/json");
-        log.info("Response code: " + conn.getResponseCode());
-        BufferedReader rd;
-        if (conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
-            rd = new BufferedReader(new InputStreamReader(conn.getInputStream(),"UTF-8"));
-        } else {
-            rd = new BufferedReader(new InputStreamReader(conn.getErrorStream(),"UTF-8"));
+        int cnt = 1;
+        int index = 0;
+        while(cnt>0) {
+            /* open api 샘플코드 */
+            /* StringBuilder에 json 데이터 line으로 읽어서 저장 */
+            StringBuilder urlBuilder = new StringBuilder(
+                    "http://api.koreafilm.or.kr/openapi-data2/wisenut/search_api/search_json2.jsp?collection=kmdb_new2");
+            urlBuilder.append("&" + URLEncoder.encode("ServiceKey", "UTF-8") + "=6HD78WK5N6X4BSJYO374");
+            urlBuilder.append("&" + URLEncoder.encode("listCount", "UTF-8") + "=400");
+            urlBuilder.append("&" + URLEncoder.encode("startCount", "UTF-8") + "="+400*index);
+            log.info(urlBuilder.toString());
+            URL url = new URL(urlBuilder.toString());
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Content-type", "application/json");
+            log.info("Response code: " + conn.getResponseCode());
+            BufferedReader rd;
+            if (conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
+                rd = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+            } else {
+                rd = new BufferedReader(new InputStreamReader(conn.getErrorStream(), "UTF-8"));
+            }
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = rd.readLine()) != null) {
+                sb.append(line);
+            }
+            rd.close();
+            conn.disconnect();
+
+            /* 데이터 잘 들어오나 확인 */
+            //log.info(sb.toString());
+
+            /* json 파싱해서 MovieDto 리스트로 변환 */
+            List<MovieDto> dtolist = parse(sb.toString());
+            cnt = count(sb.toString());
+            log.info(Integer.toString(cnt));
+            index++;
+            //log.info(dtolist.toString());
+
+            /* 파싱한 데이터 service로 넘기기 */
+            movieService.save(dtolist);
         }
-        StringBuilder sb = new StringBuilder();
-        String line;
-        while ((line = rd.readLine()) != null) {
-            sb.append(line);
-        }
-        rd.close();
-        conn.disconnect();
-
-        /* 데이터 잘 들어오나 확인 */
-        log.info(sb.toString());
-
-        /* json 파싱해서 MovieDto 리스트로 변환 */
-        List<MovieDto> dtolist = parse(sb.toString());
-        log.info(dtolist.toString());
-
-        /* 파싱한 데이터 service로 넘기기 */
-        movieService.save(dtolist);
     }
 
     public List<MovieDto> parse(String body) throws Exception{
@@ -88,9 +98,9 @@ public class MovieApiScheduler {
             JSONArray directorArray = (JSONArray) directors.get("director");
             if(directorArray!=null && directorArray.size()>0) {
                 JSONObject director = (JSONObject) directorArray.get(0);
-                directorNm = (String) director.get("directorNm");
-                directorEnNm = (String) director.get("directorEnNm");
-                directorId = (String) director.get("directorId");
+                directorNm = director.get("directorNm").toString();
+                directorEnNm = director.get("directorEnNm").toString();
+                directorId = director.get("directorId").toString();
 
                 for(int j=1; j<directorArray.size(); j++) {
                     director = (JSONObject) directorArray.get(j);
@@ -109,9 +119,9 @@ public class MovieApiScheduler {
             JSONArray actorArray = (JSONArray) actors.get("actor");
             if(actorArray!=null && actorArray.size()>0) {
                 JSONObject actor = (JSONObject) actorArray.get(0);
-                actorNm = (String) actor.get("actorNm");
-                actorEnNm = (String) actor.get("actorEnNm");
-                actorId = (String) actor.get("actorId");
+                actorNm = actor.get("actorNm").toString();
+                actorEnNm = actor.get("actorEnNm").toString();
+                actorId = actor.get("actorId").toString();
 
                 for(int j=1; j<actorArray.size(); j++) {
                     actor = (JSONObject) actorArray.get(j);
@@ -129,7 +139,7 @@ public class MovieApiScheduler {
             JSONArray plotArray = (JSONArray) plots.get("plot");
             for(int j=0; j<plotArray.size(); j++) {
                 JSONObject plotData = (JSONObject) plotArray.get(j);
-                plotMap.put((String) plotData.get("plotLang"), (String) plotData.get("plotText"));
+                plotMap.put(plotData.get("plotLang").toString(), plotData.get("plotText").toString());
             }
 
             if(plotMap.containsKey("한국어")) {
@@ -141,27 +151,27 @@ public class MovieApiScheduler {
 
             /* dto에 데이터 저장 */
             MovieDto movieDto = MovieDto.builder()
-                    .docId((String) movieObj.get("DOCID"))
-                    .title((String) movieObj.get("title"))
-                    .titleEng((String) movieObj.get("titleEng"))
-                    .titleOrg((String) movieObj.get("titleOrg"))
+                    .docId(movieObj.get("DOCID").toString())
+                    .title(movieObj.get("title").toString())
+                    .titleEng(movieObj.get("titleEng").toString())
+                    .titleOrg(movieObj.get("titleOrg").toString())
                     .directorNm(directorNm)
                     .directorEnNm(directorEnNm)
                     .directorId(directorId)
                     .actorNm(actorNm)
                     .actorEnNm(actorEnNm)
                     .actorId(actorId)
-                    .nation((String) movieObj.get("nation"))
-                    .company((String) movieObj.get("company"))
-                    .prodYear((String) movieObj.get("prodYear"))
+                    .nation(movieObj.get("nation").toString())
+                    .company(movieObj.get("company").toString())
+                    .prodYear(movieObj.get("prodYear").toString())
                     .plot(plot)
-                    .runtime((String) movieObj.get("runtime"))
-                    .rating((String) movieObj.get("rating"))
-                    .genre((String) movieObj.get("genre"))
-                    .repRlsDate((String) movieObj.get("repRlsDate"))
-                    .keywords((String) movieObj.get("keywords"))
-                    .posterUrl((String) movieObj.get("posters"))
-                    .stillUrl((String) movieObj.get("stlls"))
+                    .runtime(movieObj.get("runtime").toString())
+                    .rating(movieObj.get("rating").toString())
+                    .genre(movieObj.get("genre").toString())
+                    .repRlsDate(movieObj.get("repRlsDate").toString())
+                    .keywords(movieObj.get("keywords").toString())
+                    .posterUrl(movieObj.get("posters").toString())
+                    .stillUrl(movieObj.get("stlls").toString())
                     .build();
 
             /* list에 dto 담기 */
@@ -169,5 +179,16 @@ public class MovieApiScheduler {
         }
 
         return list;
+    }
+
+    public int count(String body) throws Exception{
+        /* 영화정보 담겨있는 Result 개수 파싱 */
+        JSONParser parser = new JSONParser();
+        JSONObject object = (JSONObject) parser.parse(body);
+        JSONArray data = (JSONArray) object.get("Data");
+        JSONObject dataObj = (JSONObject) data.get(0);
+        int count = Integer.parseInt(dataObj.get("Count").toString());
+
+        return count;
     }
 }
