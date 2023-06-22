@@ -1,4 +1,4 @@
-package com.talkingPotatoes.potatoesProject.user.entity;
+package com.talkingPotatoes.potatoesProject.common.entity;
 
 import java.time.LocalDateTime;
 

@@ -3,6 +3,7 @@ package com.talkingPotatoes.potatoesProject.user.dto;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.talkingPotatoes.potatoesProject.common.dto.BaseDto;
 import com.talkingPotatoes.potatoesProject.user.entity.Platform;
 
 import lombok.Data;

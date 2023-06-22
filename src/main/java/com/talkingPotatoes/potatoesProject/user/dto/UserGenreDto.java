@@ -2,6 +2,7 @@ package com.talkingPotatoes.potatoesProject.user.dto;
 
 import java.util.UUID;
 
+import com.talkingPotatoes.potatoesProject.common.dto.BaseDto;
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
 

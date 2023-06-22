@@ -1,10 +1,10 @@
-package com.talkingPotatoes.potatoesProject.user.mapper;
+package com.talkingPotatoes.potatoesProject.common.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
-import com.talkingPotatoes.potatoesProject.user.dto.BaseDto;
-import com.talkingPotatoes.potatoesProject.user.entity.BaseEntity;
+import com.talkingPotatoes.potatoesProject.common.dto.BaseDto;
+import com.talkingPotatoes.potatoesProject.common.entity.BaseEntity;
 
 @Mapper(componentModel = "spring")
 public interface BaseMapper {
