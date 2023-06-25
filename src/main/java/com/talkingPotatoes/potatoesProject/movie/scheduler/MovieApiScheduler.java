@@ -1,6 +1,6 @@
 package com.talkingPotatoes.potatoesProject.movie.scheduler;
 
-import com.talkingPotatoes.potatoesProject.movie.dto.MovieDto;
+import com.talkingPotatoes.potatoesProject.movie.dto.*;
 import com.talkingPotatoes.potatoesProject.movie.service.IMovieService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,16 +9,14 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StopWatch;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 @RequiredArgsConstructor
@@ -27,9 +25,27 @@ public class MovieApiScheduler {
 
     private final IMovieService movieService;
 
-    @Scheduled(cron = "0 36 * * * *")
+    private List<ActorDto> actorList;
+    private List<DirectorDto> directorList;
+    private List<MovieDto> movieList;
+    private List<PosterDto> posterList;
+    private List<StaffDto> staffList;
+    private List<StillDto> stillList;
+    private int cnt;
+
+    @Scheduled(cron = "0 19 * * * *")
     public void getData() throws Exception{
-        int cnt = 1;
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+
+        actorList = new ArrayList<>();
+        directorList = new ArrayList<>();
+        movieList = new ArrayList<>();
+        posterList = new ArrayList<>();
+        staffList = new ArrayList<>();
+        stillList = new ArrayList<>();
+
+        cnt = 1;
         int index = 0;
         while(cnt>0) {
             /* open api 샘플코드 */
@@ -37,8 +53,8 @@ public class MovieApiScheduler {
             StringBuilder urlBuilder = new StringBuilder(
                     "http://api.koreafilm.or.kr/openapi-data2/wisenut/search_api/search_json2.jsp?collection=kmdb_new2");
             urlBuilder.append("&" + URLEncoder.encode("ServiceKey", "UTF-8") + "=6HD78WK5N6X4BSJYO374");
-            urlBuilder.append("&" + URLEncoder.encode("listCount", "UTF-8") + "=400");
-            urlBuilder.append("&" + URLEncoder.encode("startCount", "UTF-8") + "="+400*index);
+            urlBuilder.append("&" + URLEncoder.encode("listCount", "UTF-8") + "=100");
+            urlBuilder.append("&" + URLEncoder.encode("startCount", "UTF-8") + "="+100*index);
             log.info(urlBuilder.toString());
             URL url = new URL(urlBuilder.toString());
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -62,72 +78,115 @@ public class MovieApiScheduler {
             /* 데이터 잘 들어오나 확인 */
             //log.info(sb.toString());
 
-            /* json 파싱해서 MovieDto 리스트로 변환 */
-            List<MovieDto> dtolist = parse(sb.toString());
-            cnt = count(sb.toString());
+            /* json 파싱해서 MovieDto 리스트, StaffDto 리스트로 변환 */
+            parse(sb.toString());
             log.info(Integer.toString(cnt));
             index++;
-            //log.info(dtolist.toString());
 
-            /* 파싱한 데이터 service로 넘기기 */
-            movieService.save(dtolist);
         }
+
+        /* 파싱한 데이터 service로 넘기기 */
+        movieService.saveActor(actorList);
+        movieService.saveDirector(directorList);
+        movieService.saveMovie(movieList);
+        movieService.savePoster(posterList);
+        movieService.saveStaff(staffList);
+        movieService.saveStill(stillList);
+
+        stopWatch.stop();
+        log.info(stopWatch.prettyPrint());
+        log.info("코드 실행 시간 (s): " + stopWatch.getTotalTimeSeconds());
     }
 
-    public List<MovieDto> parse(String body) throws Exception{
+    public void parse(String body) throws Exception{
 
-        List<MovieDto> list = new ArrayList<>();
+        StringTokenizer st = null;
 
         /* 영화정보 담겨있는 Result Array 파싱 */
         JSONParser parser = new JSONParser();
         JSONObject object = (JSONObject) parser.parse(body);
         JSONArray data = (JSONArray) object.get("Data");
         JSONObject dataObj = (JSONObject) data.get(0);
+        cnt = Integer.parseInt(dataObj.get("Count").toString());
         JSONArray result = (JSONArray) dataObj.get("Result");
 
         /* Result Array -> MovieDto List */
         for (int i = 0; i < result.size(); i++) {
             JSONObject movieObj = (JSONObject) result.get(i);
 
-            /* 감독 배열 파싱해서 String으로 저장 */
-            String directorNm = "";
-            String directorEnNm = "";
-            String directorId = "";
-
+            /* 감독 배열 파싱해서 directordto에 데이터 저장하고 list에 dto 담기 */
             JSONObject directors = (JSONObject) movieObj.get("directors");
             JSONArray directorArray = (JSONArray) directors.get("director");
             if(directorArray!=null && directorArray.size()>0) {
-                JSONObject director = (JSONObject) directorArray.get(0);
-                directorNm = director.get("directorNm").toString();
-                directorEnNm = director.get("directorEnNm").toString();
-                directorId = director.get("directorId").toString();
-
-                for(int j=1; j<directorArray.size(); j++) {
-                    director = (JSONObject) directorArray.get(j);
-                    directorNm += ", " + director.get("directorNm");
-                    directorEnNm += ", " + director.get("directorEnNm");
-                    directorId += ", " + director.get("directorId");
+                for (int j = 0; j < directorArray.size(); j++) {
+                    JSONObject director = (JSONObject) directorArray.get(j);
+                    DirectorDto directorDto = DirectorDto.builder()
+                            .docId(movieObj.get("DOCID").toString())
+                            .directorNm(director.get("directorNm").toString())
+                            .directorEnNm(director.get("directorEnNm").toString())
+                            .directorId(director.get("directorId").toString())
+                            .build();
+                    directorList.add(directorDto);
                 }
             }
 
-            /* 배우 배열 파싱해서 String으로 저장 */
-            String actorNm = "";
-            String actorEnNm = "";
-            String actorId = "";
-
+            /* 배우 배열 파싱해서 actordto에 데이터 저장하고 list에 dto 담기 */
             JSONObject actors = (JSONObject) movieObj.get("actors");
             JSONArray actorArray = (JSONArray) actors.get("actor");
             if(actorArray!=null && actorArray.size()>0) {
-                JSONObject actor = (JSONObject) actorArray.get(0);
-                actorNm = actor.get("actorNm").toString();
-                actorEnNm = actor.get("actorEnNm").toString();
-                actorId = actor.get("actorId").toString();
+                for (int j = 0; j < actorArray.size(); j++) {
+                    JSONObject actor = (JSONObject) actorArray.get(j);
+                    ActorDto actorDto = ActorDto.builder()
+                            .docId(movieObj.get("DOCID").toString())
+                            .actorNm(actor.get("actorNm").toString())
+                            .actorEnNm(actor.get("actorEnNm").toString())
+                            .actorId(actor.get("actorId").toString())
+                            .build();
+                    actorList.add((actorDto));
+                }
+            }
 
-                for(int j=1; j<actorArray.size(); j++) {
-                    actor = (JSONObject) actorArray.get(j);
-                    actorNm += ", " + actor.get("actorNm");
-                    actorEnNm += ", " + actor.get("actorEnNm");
-                    actorId += ", " + actor.get("actorId");
+
+            /* 포스터 파싱해서 posterdto에 데이터 저장하고 list에 dto 담기 */
+            String posters = movieObj.get("posters").toString();
+            st = new StringTokenizer(posters, "|");
+            while(st.hasMoreTokens()) {
+                PosterDto posterDto = PosterDto.builder()
+                        .docId(movieObj.get("DOCID").toString())
+                        .posterUrl(st.nextToken())
+                        .build();
+                posterList.add(posterDto);
+            }
+
+            /* 스틸컷 파싱해서 stilldto에 데이터 저장하고 list에 dto 담기 */
+            String stills = movieObj.get("stlls").toString();
+            st = new StringTokenizer(stills, "|");
+            while(st.hasMoreTokens()) {
+                StillDto stillDto = StillDto.builder()
+                        .docId(movieObj.get("DOCID").toString())
+                        .stillUrl(st.nextToken())
+                        .build();
+                stillList.add(stillDto);
+            }
+
+            /* 스태프 배열 파싱해서 staffdto에 데이터 저장하고 list에 dto 담기 */
+            JSONObject staffs = (JSONObject) movieObj.get("staffs");
+            JSONArray staffArray = (JSONArray) staffs.get("staff");
+            if(staffArray!=null && staffArray.size()>0) {
+                for (int j = 0; j < staffArray.size(); j++) {
+                    JSONObject staff = (JSONObject) staffArray.get(j);
+                    String roleGroup = staff.get("staffRoleGroup").toString();
+                    if(!roleGroup.equals("감독") && !roleGroup.equals("각본") && !roleGroup.equals("출연")) {
+                        continue;
+                    }
+                    StaffDto staffDto = StaffDto.builder()
+                            .docId(movieObj.get("DOCID").toString())
+                            .staffId(staff.get("staffId").toString())
+                            .staffNm(staff.get("staffNm").toString())
+                            .staffRoleGroup(roleGroup)
+                            .staffRole(staff.get("staffRole").toString())
+                            .build();
+                    staffList.add(staffDto);
                 }
             }
 
@@ -149,18 +208,12 @@ public class MovieApiScheduler {
                 plot = plotMap.get("영어");
             }
 
-            /* dto에 데이터 저장 */
+            /* moviedto에 데이터 저장 */
             MovieDto movieDto = MovieDto.builder()
                     .docId(movieObj.get("DOCID").toString())
                     .title(movieObj.get("title").toString())
                     .titleEng(movieObj.get("titleEng").toString())
                     .titleOrg(movieObj.get("titleOrg").toString())
-                    .directorNm(directorNm)
-                    .directorEnNm(directorEnNm)
-                    .directorId(directorId)
-                    .actorNm(actorNm)
-                    .actorEnNm(actorEnNm)
-                    .actorId(actorId)
                     .nation(movieObj.get("nation").toString())
                     .company(movieObj.get("company").toString())
                     .prodYear(movieObj.get("prodYear").toString())
@@ -170,25 +223,11 @@ public class MovieApiScheduler {
                     .genre(movieObj.get("genre").toString())
                     .repRlsDate(movieObj.get("repRlsDate").toString())
                     .keywords(movieObj.get("keywords").toString())
-                    .posterUrl(movieObj.get("posters").toString())
-                    .stillUrl(movieObj.get("stlls").toString())
                     .build();
 
             /* list에 dto 담기 */
-            list.add(movieDto);
+            movieList.add(movieDto);
+
         }
-
-        return list;
-    }
-
-    public int count(String body) throws Exception{
-        /* 영화정보 담겨있는 Result 개수 파싱 */
-        JSONParser parser = new JSONParser();
-        JSONObject object = (JSONObject) parser.parse(body);
-        JSONArray data = (JSONArray) object.get("Data");
-        JSONObject dataObj = (JSONObject) data.get(0);
-        int count = Integer.parseInt(dataObj.get("Count").toString());
-
-        return count;
     }
 }

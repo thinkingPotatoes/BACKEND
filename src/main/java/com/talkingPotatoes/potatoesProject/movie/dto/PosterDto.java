@@ -5,18 +5,12 @@ import lombok.Data;
 
 @Data
 @Builder
-public class StaffDto {
+public class PosterDto {
 
     private long id;
 
     private String docId;
 
-    private String staffId;
-
-    private String staffNm;
-
-    private String staffRoleGroup;
-
-    private String staffRole;
+    private String posterUrl;
 
 }

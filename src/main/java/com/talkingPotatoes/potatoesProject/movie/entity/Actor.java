@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class Staff {
+public class Actor {
 
     @Id
     @GeneratedValue
@@ -21,12 +21,10 @@ public class Staff {
 
     private String docId;
 
-    private String staffId;
+    private String actorNm;
 
-    private String staffNm;
+    private String actorEnNm;
 
-    private String staffRoleGroup;
-
-    private String staffRole;
+    private String actorId;
 
 }

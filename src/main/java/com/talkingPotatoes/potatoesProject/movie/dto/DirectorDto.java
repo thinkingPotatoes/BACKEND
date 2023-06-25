@@ -5,18 +5,16 @@ import lombok.Data;
 
 @Data
 @Builder
-public class StaffDto {
+public class DirectorDto {
 
     private long id;
 
     private String docId;
 
-    private String staffId;
+    private String directorNm;
 
-    private String staffNm;
+    private String directorEnNm;
 
-    private String staffRoleGroup;
-
-    private String staffRole;
+    private String directorId;
 
 }
