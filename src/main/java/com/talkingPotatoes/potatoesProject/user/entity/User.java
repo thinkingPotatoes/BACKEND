@@ -47,4 +47,11 @@ public class User extends BaseEntity {
 	private Platform platform;
 
 	private LocalDateTime deletedAt;
+
+	@Column(columnDefinition = "boolean default false")
+	private boolean emailChecked;
+
+	public void updateEmailChecked(boolean checked) {
+		emailChecked = checked;
+	}
 }
