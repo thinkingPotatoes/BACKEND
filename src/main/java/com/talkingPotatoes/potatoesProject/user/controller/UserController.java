@@ -3,6 +3,7 @@ package com.talkingPotatoes.potatoesProject.user.controller;
 import java.util.List;
 import java.util.UUID;
 
+import com.talkingPotatoes.potatoesProject.user.dto.request.UserIdRequest;
 import com.talkingPotatoes.potatoesProject.user.service.EmailService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,6 +49,16 @@ public class UserController {
 			.body(Response.builder()
 				.message("회원이 생성되었습니다.")
 				.build());
+	}
+
+	@PostMapping("/email-send")
+	public ResponseEntity<Response> emailSend(@RequestBody UserIdRequest userIdRequest) throws Exception {
+		emailService.sendEmail(userIdRequest.getUserId());
+
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(Response.builder()
+						.message("이메일이 전송되었습니다.")
+						.build());
 	}
 
 	@GetMapping("/email-verify")

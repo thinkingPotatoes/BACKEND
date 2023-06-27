@@ -3,6 +3,7 @@ package com.talkingPotatoes.potatoesProject.user.service.implement;
 import com.talkingPotatoes.potatoesProject.common.exception.NotFoundException;
 import com.talkingPotatoes.potatoesProject.user.dto.UserDto;
 import com.talkingPotatoes.potatoesProject.user.entity.User;
+import com.talkingPotatoes.potatoesProject.user.mapper.UserMapper;
 import com.talkingPotatoes.potatoesProject.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +23,8 @@ public class EmailServiceImpl implements EmailService {
     private final EmailUtil emailUtil;
 
     private final UserRepository userRepository;
+
+    private final UserMapper userMapper;
 
     @Override
     @Transactional
@@ -45,5 +48,10 @@ public class EmailServiceImpl implements EmailService {
         User user = userRepository.findById(UUID.fromString(id)).orElseThrow(() -> new NotFoundException("회원을 찾지 못하였습니다."));
         user.updateEmailChecked(true);
         userRepository.save(user);
+    }
+
+    @Override
+    public void sendEmail(String userId) throws Exception {
+        sendSignUpMessage(userMapper.toDto(userRepository.findByUserId(userId).orElseThrow(() -> new NotFoundException("회원을 찾지 못하였습니다."))));
     }
 }

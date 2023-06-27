@@ -6,4 +6,6 @@ public interface EmailService {
     void sendSignUpMessage(UserDto to) throws Exception;
 
     void verify(String token);
+
+    void sendEmail(String userId) throws Exception;
 }
