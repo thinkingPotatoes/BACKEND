@@ -19,8 +19,15 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.MariaDBDialect
+
+  batch:
+    jdbc:
+      initialize-schema: never
+      schema: classpath:/org/springframework/batch/core/schema-mysql.sql
+    job:
+      enabled: true

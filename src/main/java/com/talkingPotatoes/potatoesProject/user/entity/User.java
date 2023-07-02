@@ -25,26 +25,29 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User extends BaseEntity {
-	@Id
-	@GeneratedValue
-	@UuidGenerator
-	@JdbcTypeCode(Types.VARCHAR)
-	private UUID id;
+    @Id
+    @GeneratedValue
+    @UuidGenerator
+    @JdbcTypeCode(Types.VARCHAR)
+    private UUID id;
 
-	@Column(unique = true, nullable = false)
-	private String userId;
+    @Column(unique = true, nullable = false)
+    private String userId;
 
-	private String password;
+    private String password;
 
-	@Column(unique = true, nullable = false)
-	private String nickname;
+    @Column(unique = true, nullable = false)
+    private String nickname;
 
-	@Column(nullable = false)
-	private String title;
+    @Column(nullable = false)
+    private String title;
 
-	@Column(nullable = false)
-	@Enumerated(EnumType.STRING)
-	private Platform platform;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Platform platform;
 
-	private LocalDateTime deletedAt;
+    private LocalDateTime deletedAt;
+
+    @Column(columnDefinition = "boolean default false")
+    private boolean emailChecked;
 }
