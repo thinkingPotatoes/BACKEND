@@ -54,4 +54,5 @@ public class User extends BaseEntity {
 	public void updateEmailChecked(boolean checked) {
 		emailChecked = checked;
 	}
+
 }

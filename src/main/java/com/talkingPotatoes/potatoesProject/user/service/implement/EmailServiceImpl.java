@@ -5,6 +5,7 @@ import com.talkingPotatoes.potatoesProject.user.dto.UserDto;
 import com.talkingPotatoes.potatoesProject.user.entity.User;
 import com.talkingPotatoes.potatoesProject.user.mapper.UserMapper;
 import com.talkingPotatoes.potatoesProject.user.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +19,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Slf4j
 public class EmailServiceImpl implements EmailService {
 
     private final EmailUtil emailUtil;
@@ -42,11 +44,13 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
+    @Transactional
     public void verify(String token) {
         String id = emailUtil.checkToken(token);
 
         User user = userRepository.findById(UUID.fromString(id)).orElseThrow(() -> new NotFoundException("회원을 찾지 못하였습니다."));
         user.updateEmailChecked(true);
+
         userRepository.save(user);
     }
 
