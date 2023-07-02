@@ -1,7 +1,8 @@
 package com.talkingPotatoes.potatoesProject.movie.scheduler;
 
-import com.talkingPotatoes.potatoesProject.movie.dto.*;
-import com.talkingPotatoes.potatoesProject.movie.service.IMovieService;
+import com.talkingPotatoes.potatoesProject.movie.dto.MovieApiDto;
+import com.talkingPotatoes.potatoesProject.movie.mapper.MovieApiMapper;
+import com.talkingPotatoes.potatoesProject.movie.repository.MovieApiRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONArray;
@@ -16,6 +17,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.time.LocalDate;
 import java.util.*;
 
 @Component
@@ -23,27 +25,17 @@ import java.util.*;
 @Slf4j
 public class MovieApiScheduler {
 
-    private final IMovieService movieService;
-
-    private List<ActorDto> actorList;
-    private List<DirectorDto> directorList;
-    private List<MovieDto> movieList;
-    private List<PosterDto> posterList;
-    private List<StaffDto> staffList;
-    private List<StillDto> stillList;
+    private final MovieApiRepository movieApiRepository;
+    private final MovieApiMapper movieApiMapper;
+    private List<MovieApiDto> movieApiList;
     private int cnt;
 
-    @Scheduled(cron = "0 19 * * * *")
+    @Scheduled(cron = "0 45 * * * *")
     public void getData() throws Exception{
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
 
-        actorList = new ArrayList<>();
-        directorList = new ArrayList<>();
-        movieList = new ArrayList<>();
-        posterList = new ArrayList<>();
-        staffList = new ArrayList<>();
-        stillList = new ArrayList<>();
+        movieApiList = new ArrayList<>();
 
         cnt = 1;
         int index = 0;
@@ -85,13 +77,8 @@ public class MovieApiScheduler {
 
         }
 
-        /* 파싱한 데이터 service로 넘기기 */
-        movieService.saveActor(actorList);
-        movieService.saveDirector(directorList);
-        movieService.saveMovie(movieList);
-        movieService.savePoster(posterList);
-        movieService.saveStaff(staffList);
-        movieService.saveStill(stillList);
+        /* 파싱한 데이터 저장하기 */
+        movieApiRepository.saveAll(movieApiMapper.toEntity(movieApiList));
 
         stopWatch.stop();
         log.info(stopWatch.prettyPrint());
@@ -110,85 +97,9 @@ public class MovieApiScheduler {
         cnt = Integer.parseInt(dataObj.get("Count").toString());
         JSONArray result = (JSONArray) dataObj.get("Result");
 
-        /* Result Array -> MovieDto List */
+        /* Result Array -> MovieApiDto List */
         for (int i = 0; i < result.size(); i++) {
             JSONObject movieObj = (JSONObject) result.get(i);
-
-            /* 감독 배열 파싱해서 directordto에 데이터 저장하고 list에 dto 담기 */
-            JSONObject directors = (JSONObject) movieObj.get("directors");
-            JSONArray directorArray = (JSONArray) directors.get("director");
-            if(directorArray!=null && directorArray.size()>0) {
-                for (int j = 0; j < directorArray.size(); j++) {
-                    JSONObject director = (JSONObject) directorArray.get(j);
-                    DirectorDto directorDto = DirectorDto.builder()
-                            .docId(movieObj.get("DOCID").toString())
-                            .directorNm(director.get("directorNm").toString())
-                            .directorEnNm(director.get("directorEnNm").toString())
-                            .directorId(director.get("directorId").toString())
-                            .build();
-                    directorList.add(directorDto);
-                }
-            }
-
-            /* 배우 배열 파싱해서 actordto에 데이터 저장하고 list에 dto 담기 */
-            JSONObject actors = (JSONObject) movieObj.get("actors");
-            JSONArray actorArray = (JSONArray) actors.get("actor");
-            if(actorArray!=null && actorArray.size()>0) {
-                for (int j = 0; j < actorArray.size(); j++) {
-                    JSONObject actor = (JSONObject) actorArray.get(j);
-                    ActorDto actorDto = ActorDto.builder()
-                            .docId(movieObj.get("DOCID").toString())
-                            .actorNm(actor.get("actorNm").toString())
-                            .actorEnNm(actor.get("actorEnNm").toString())
-                            .actorId(actor.get("actorId").toString())
-                            .build();
-                    actorList.add((actorDto));
-                }
-            }
-
-
-            /* 포스터 파싱해서 posterdto에 데이터 저장하고 list에 dto 담기 */
-            String posters = movieObj.get("posters").toString();
-            st = new StringTokenizer(posters, "|");
-            while(st.hasMoreTokens()) {
-                PosterDto posterDto = PosterDto.builder()
-                        .docId(movieObj.get("DOCID").toString())
-                        .posterUrl(st.nextToken())
-                        .build();
-                posterList.add(posterDto);
-            }
-
-            /* 스틸컷 파싱해서 stilldto에 데이터 저장하고 list에 dto 담기 */
-            String stills = movieObj.get("stlls").toString();
-            st = new StringTokenizer(stills, "|");
-            while(st.hasMoreTokens()) {
-                StillDto stillDto = StillDto.builder()
-                        .docId(movieObj.get("DOCID").toString())
-                        .stillUrl(st.nextToken())
-                        .build();
-                stillList.add(stillDto);
-            }
-
-            /* 스태프 배열 파싱해서 staffdto에 데이터 저장하고 list에 dto 담기 */
-            JSONObject staffs = (JSONObject) movieObj.get("staffs");
-            JSONArray staffArray = (JSONArray) staffs.get("staff");
-            if(staffArray!=null && staffArray.size()>0) {
-                for (int j = 0; j < staffArray.size(); j++) {
-                    JSONObject staff = (JSONObject) staffArray.get(j);
-                    String roleGroup = staff.get("staffRoleGroup").toString();
-                    if(!roleGroup.equals("감독") && !roleGroup.equals("각본") && !roleGroup.equals("출연")) {
-                        continue;
-                    }
-                    StaffDto staffDto = StaffDto.builder()
-                            .docId(movieObj.get("DOCID").toString())
-                            .staffId(staff.get("staffId").toString())
-                            .staffNm(staff.get("staffNm").toString())
-                            .staffRoleGroup(roleGroup)
-                            .staffRole(staff.get("staffRole").toString())
-                            .build();
-                    staffList.add(staffDto);
-                }
-            }
 
             /* 줄거리 배열 파싱해서 한국어 줄거리 저장, 한국어 없으면 영어 */
             Map<String, String> plotMap = new HashMap<>();
@@ -208,12 +119,14 @@ public class MovieApiScheduler {
                 plot = plotMap.get("영어");
             }
 
-            /* moviedto에 데이터 저장 */
-            MovieDto movieDto = MovieDto.builder()
+            /* MovieApiDto에 데이터 저장 */
+            MovieApiDto movieApiDto = MovieApiDto.builder()
                     .docId(movieObj.get("DOCID").toString())
                     .title(movieObj.get("title").toString())
                     .titleEng(movieObj.get("titleEng").toString())
                     .titleOrg(movieObj.get("titleOrg").toString())
+                    .director(movieObj.get("directors").toString())
+                    .actor(movieObj.get("actors").toString())
                     .nation(movieObj.get("nation").toString())
                     .company(movieObj.get("company").toString())
                     .prodYear(movieObj.get("prodYear").toString())
@@ -223,10 +136,14 @@ public class MovieApiScheduler {
                     .genre(movieObj.get("genre").toString())
                     .repRlsDate(movieObj.get("repRlsDate").toString())
                     .keywords(movieObj.get("keywords").toString())
+                    .posterUrl(movieObj.get("posters").toString())
+                    .stillUrl(movieObj.get("stlls").toString())
+                    .staffs(movieObj.get("staffs").toString())
+                    .updatedAt(LocalDate.now())
                     .build();
 
             /* list에 dto 담기 */
-            movieList.add(movieDto);
+            movieApiList.add(movieApiDto);
 
         }
     }
