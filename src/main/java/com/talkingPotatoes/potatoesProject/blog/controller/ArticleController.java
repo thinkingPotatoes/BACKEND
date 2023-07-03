@@ -3,6 +3,7 @@ package com.talkingPotatoes.potatoesProject.blog.controller;
 import com.talkingPotatoes.potatoesProject.blog.dto.ArticleDto;
 import com.talkingPotatoes.potatoesProject.blog.dto.request.CreateArticleRequest;
 import com.talkingPotatoes.potatoesProject.blog.dto.request.UpdateArticleRequest;
+import com.talkingPotatoes.potatoesProject.blog.dto.response.ListResponse;
 import com.talkingPotatoes.potatoesProject.blog.dto.response.Response;
 import com.talkingPotatoes.potatoesProject.blog.entity.Article;
 import com.talkingPotatoes.potatoesProject.blog.mapper.ArticleDtoMapper;
@@ -14,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -87,6 +89,18 @@ public class ArticleController {
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(articleDto);
+    }
+
+    /* 영화 블로그 글 리스트 */
+    @GetMapping("/movie/{movieId}")
+    public ResponseEntity<ListResponse> getArticleByMovieId(@PathVariable UUID movieId){
+        List<ArticleDto> articleDtoList = articleService.searchArticleByMovieId(movieId);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ListResponse.builder()
+                        .count(articleDtoList.size())
+                        .data(articleDtoList)
+                        .build());
     }
 
 }

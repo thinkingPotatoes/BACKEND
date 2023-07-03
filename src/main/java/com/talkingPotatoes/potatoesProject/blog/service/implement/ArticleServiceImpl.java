@@ -10,7 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -72,5 +74,14 @@ public class ArticleServiceImpl implements ArticleService {
         log.info("searchArticleById ::: id: {}", id);
         Article article = articleRepository.getReferenceById(id);
         return articleMapper.toDto(article);
+    }
+
+    @Override
+    public List<ArticleDto> searchArticleByMovieId(UUID movieId){
+        log.info("searchArticleById ::: id: {}", movieId);
+        List<Article> articleList = articleRepository.findAllByMovieId(movieId);
+        return articleList.stream().map(m -> articleMapper.toDto(m))
+                .collect(Collectors.toList());
+
     }
 }
