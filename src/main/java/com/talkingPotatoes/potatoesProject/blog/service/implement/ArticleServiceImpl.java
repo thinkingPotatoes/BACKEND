@@ -68,8 +68,9 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public Article searchArticleById(UUID id){
+    public ArticleDto searchArticleById(UUID id){
         log.info("searchArticleById ::: id: {}", id);
-        return articleRepository.getReferenceById(id);
+        Article article = articleRepository.getReferenceById(id);
+        return articleMapper.toDto(article);
     }
 }

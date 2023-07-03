@@ -10,5 +10,5 @@ public interface ArticleService {
     void createArticle(ArticleDto articleDto);
     void updateArticle(ArticleDto articleDto);
     void deleteArticle(UUID id);
-    Article searchArticleById(UUID id);
+    ArticleDto searchArticleById(UUID id);
 }

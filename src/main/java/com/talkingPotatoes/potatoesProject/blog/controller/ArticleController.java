@@ -80,4 +80,13 @@ public class ArticleController {
                         .build());
     }
 
+    /* 블로그 글 단일 조회 */
+    @GetMapping("/search/{articleId}")
+    public ResponseEntity<ArticleDto> getArticleById(@PathVariable UUID articleId){
+        ArticleDto articleDto = articleService.searchArticleById(articleId);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(articleDto);
+    }
+
 }
