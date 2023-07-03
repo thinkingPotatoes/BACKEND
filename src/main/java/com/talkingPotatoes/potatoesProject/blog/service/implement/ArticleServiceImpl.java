@@ -78,10 +78,18 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public List<ArticleDto> searchArticleByMovieId(UUID movieId){
-        log.info("searchArticleById ::: id: {}", movieId);
+        log.info("searchArticleByMovieId ::: id: {}", movieId);
         List<Article> articleList = articleRepository.findAllByMovieId(movieId);
         return articleList.stream().map(m -> articleMapper.toDto(m))
                 .collect(Collectors.toList());
 
+    }
+
+    @Override
+    public List<ArticleDto> searchArticleByUserId(UUID userId){
+        log.info("searchArticleByUserId ::: id: {}", userId);
+        List<Article> articleList = articleRepository.findAllByUserId(userId);
+        return articleList.stream().map(m -> articleMapper.toDto(m))
+                .collect(Collectors.toList());
     }
 }

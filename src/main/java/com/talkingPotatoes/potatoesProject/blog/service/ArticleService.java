@@ -13,4 +13,5 @@ public interface ArticleService {
     void deleteArticle(UUID id);
     ArticleDto searchArticleById(UUID id);
     List<ArticleDto> searchArticleByMovieId(UUID movieId);
+    List<ArticleDto> searchArticleByUserId(UUID userId);
 }

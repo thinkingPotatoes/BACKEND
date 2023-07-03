@@ -103,4 +103,16 @@ public class ArticleController {
                         .build());
     }
 
+    /* 유저 블로그 글 리스트 */
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<ListResponse> getArticleByUserId(@PathVariable UUID userId){
+        List<ArticleDto> articleDtoList = articleService.searchArticleByUserId(userId);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ListResponse.builder()
+                        .count(articleDtoList.size())
+                        .data(articleDtoList)
+                        .build());
+    }
+
 }
