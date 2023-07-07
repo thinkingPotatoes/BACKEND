@@ -8,11 +8,11 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface StillMapper {
-    Still toEntity(StillDto staffDto);
+    Still toEntity(StillDto stillDto);
 
-    StillDto toDto(Still staff);
+    StillDto toDto(Still still);
 
-    List<Still> toEntity(List<StillDto> staffDtoList);
+    List<Still> toEntity(List<StillDto> stillDtoList);
 
-    List<StillDto> toDto(List<Still> staffList);
+    List<StillDto> toDto(List<Still> stillList);
 }

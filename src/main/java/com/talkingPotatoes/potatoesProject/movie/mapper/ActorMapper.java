@@ -8,11 +8,11 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface ActorMapper {
-    Actor toEntity(ActorDto staffDto);
+    Actor toEntity(ActorDto actorDto);
 
-    ActorDto toDto(Actor staff);
+    ActorDto toDto(Actor actor);
 
-    List<Actor> toEntity(List<ActorDto> staffDtoList);
+    List<Actor> toEntity(List<ActorDto> actorDtoList);
 
-    List<ActorDto> toDto(List<Actor> staffList);
+    List<ActorDto> toDto(List<Actor> actorList);
 }

@@ -8,11 +8,11 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface PosterMapper {
-    Poster toEntity(PosterDto staffDto);
+    Poster toEntity(PosterDto posterDto);
 
-    PosterDto toDto(Poster staff);
+    PosterDto toDto(Poster poster);
 
-    List<Poster> toEntity(List<PosterDto> staffDtoList);
+    List<Poster> toEntity(List<PosterDto> posterDtoList);
 
-    List<PosterDto> toDto(List<Poster> staffList);
+    List<PosterDto> toDto(List<Poster> posterList);
 }

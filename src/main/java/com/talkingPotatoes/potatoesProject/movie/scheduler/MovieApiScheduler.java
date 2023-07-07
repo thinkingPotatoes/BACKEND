@@ -18,6 +18,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Component
@@ -28,10 +29,12 @@ public class MovieApiScheduler {
     private final MovieApiRepository movieApiRepository;
     private final MovieApiMapper movieApiMapper;
     private List<MovieApiDto> movieApiList;
+    // 데이터 들어오는 개수 확인, 0개 들어오면(마지막일 때) 반복문 탈출
     private int cnt;
 
-    @Scheduled(cron = "0 45 * * * *")
+    @Scheduled(cron = "0 53 * * * *") // 매주 월요일 새벽 1시(임의) (cron = "0 0 1 ? * MON"), 처음 배치 돌릴 때는 (cron = "0 현재시간에서 1~2분 뒤 * * * *")
     public void getData() throws Exception{
+        /* 실행 시간 재는 코드 */
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
 
@@ -72,7 +75,7 @@ public class MovieApiScheduler {
 
             /* json 파싱해서 MovieDto 리스트, StaffDto 리스트로 변환 */
             parse(sb.toString());
-            log.info(Integer.toString(cnt));
+            //log.info(Integer.toString(cnt));
             index++;
 
         }
@@ -80,6 +83,7 @@ public class MovieApiScheduler {
         /* 파싱한 데이터 저장하기 */
         movieApiRepository.saveAll(movieApiMapper.toEntity(movieApiList));
 
+        /* 실행 시간 재는 코드 */
         stopWatch.stop();
         log.info(stopWatch.prettyPrint());
         log.info("코드 실행 시간 (s): " + stopWatch.getTotalTimeSeconds());
@@ -100,6 +104,14 @@ public class MovieApiScheduler {
         /* Result Array -> MovieApiDto List */
         for (int i = 0; i < result.size(); i++) {
             JSONObject movieObj = (JSONObject) result.get(i);
+
+            /* 최종 업데이트 날짜 비교 */
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+            LocalDate modDate = LocalDate.parse(movieObj.get("modDate").toString(), formatter);
+            if(modDate.isBefore(LocalDate.now()) && movieApiRepository.existsById(movieObj.get("DOCID").toString())) {
+                continue;
+            }
+
 
             /* 줄거리 배열 파싱해서 한국어 줄거리 저장, 한국어 없으면 영어 */
             Map<String, String> plotMap = new HashMap<>();
@@ -138,9 +150,11 @@ public class MovieApiScheduler {
                     .keywords(movieObj.get("keywords").toString())
                     .posterUrl(movieObj.get("posters").toString())
                     .stillUrl(movieObj.get("stlls").toString())
-                    .staffs(movieObj.get("staffs").toString())
+                    //.staffs(movieObj.get("staffs").toString())
                     .updatedAt(LocalDate.now())
                     .build();
+
+            //log.info(movieApiDto.toString());
 
             /* list에 dto 담기 */
             movieApiList.add(movieApiDto);

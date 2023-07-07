@@ -13,11 +13,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -42,46 +37,43 @@ public class MovieParsingScheduler {
     private final StaffMapper staffMapper;
     private final StillMapper stillMapper;
 
-    private List<ActorDto> actorList;
-    private List<DirectorDto> directorList;
-    private List<MovieDto> movieList;
-    private List<PosterDto> posterList;
-    private List<StaffDto> staffList;
-    private List<StillDto> stillList;
-
-    @Scheduled(cron = "0 0 0 1 * *")
+    @Scheduled(cron = "0 5 1 ? * MON")  // API 배치 돌리고 5분 뒤
     public void getData() throws Exception{
+        /* 실행 시간 재는 코드 */
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
 
-        actorList = new ArrayList<>();
-        directorList = new ArrayList<>();
-        movieList = new ArrayList<>();
-        posterList = new ArrayList<>();
-        staffList = new ArrayList<>();
-        stillList = new ArrayList<>();
-
+        /* 오늘 변경된 데이터만 업데이트 */
         List<MovieApi> movieApiList = movieApiRepository.findAllByUpdatedAt(LocalDate.now());
         List<MovieApiDto> movieApiDtoList = movieApiMapper.toDto(movieApiList);
 
+        /* 각 데이터마다 삭제 저장 */
         for(MovieApiDto movieApiDto : movieApiDtoList) {
             parse(movieApiDto);
         }
 
-        /* 파싱한 데이터 저장하기 */
-        actorRepository.saveAll(actorMapper.toEntity((actorList)));
-        directorRepository.saveAll(directorMapper.toEntity(directorList));
-        movieRepository.saveAll(movieMapper.toEntity(movieList));
-        posterRepository.saveAll(posterMapper.toEntity(posterList));
-        staffRepository.saveAll(staffMapper.toEntity(staffList));
-        stillRepository.saveAll(stillMapper.toEntity(stillList));
-
+        /* 실행 시간 재는 코드 */
         stopWatch.stop();
         log.info(stopWatch.prettyPrint());
         log.info("코드 실행 시간 (s): " + stopWatch.getTotalTimeSeconds());
     }
 
     public void parse(MovieApiDto movieApiDto) throws Exception{
+
+        /* 이미 있는 데이터 삭제 */
+        actorRepository.deleteByDocIdInQuery(movieApiDto.getDocId());
+        directorRepository.deleteByDocIdInQuery(movieApiDto.getDocId());
+        movieRepository.deleteByDocIdInQuery(movieApiDto.getDocId());
+        posterRepository.deleteByDocIdInQuery(movieApiDto.getDocId());
+        staffRepository.deleteByDocIdInQuery(movieApiDto.getDocId());
+        stillRepository.deleteByDocIdInQuery(movieApiDto.getDocId());
+
+        List<ActorDto> actorList = new ArrayList<>();
+        List<DirectorDto> directorList = new ArrayList<>();
+        List<MovieDto> movieList = new ArrayList<>();
+        List<PosterDto> posterList = new ArrayList<>();
+        List<StaffDto> staffList = new ArrayList<>();
+        List<StillDto> stillList = new ArrayList<>();
 
         JSONParser parser = null;
         StringTokenizer st = null;
@@ -93,6 +85,11 @@ public class MovieParsingScheduler {
         if(directorArray!=null && directorArray.size()>0) {
             for (int j = 0; j < directorArray.size(); j++) {
                 JSONObject director = (JSONObject) directorArray.get(j);
+                if(director.get("directorNm").toString().equals("")
+                        && director.get("directorEnNm").toString().equals("")
+                        && director.get("directorId").toString().equals("")) {
+                    continue;
+                }
                 DirectorDto directorDto = DirectorDto.builder()
                         .docId(movieApiDto.getDocId())
                         .directorNm(director.get("directorNm").toString())
@@ -110,6 +107,11 @@ public class MovieParsingScheduler {
         if(actorArray!=null && actorArray.size()>0) {
             for (int j = 0; j < actorArray.size(); j++) {
                 JSONObject actor = (JSONObject) actorArray.get(j);
+                if(actor.get("actorNm").toString().equals("")
+                        && actor.get("actorEnNm").toString().equals("")
+                        && actor.get("actorId").toString().equals("")) {
+                    continue;
+                }
                 ActorDto actorDto = ActorDto.builder()
                         .docId(movieApiDto.getDocId())
                         .actorNm(actor.get("actorNm").toString())
@@ -121,7 +123,7 @@ public class MovieParsingScheduler {
         }
 
         /* 스태프 배열 파싱해서 staffdto에 데이터 저장하고 list에 dto 담기 */
-        parser = new JSONParser();
+        /* parser = new JSONParser();
         JSONObject staffs = (JSONObject) parser.parse(movieApiDto.getStaffs());
         JSONArray staffArray = (JSONArray) staffs.get("staff");
         if(staffArray!=null && staffArray.size()>0) {
@@ -140,7 +142,7 @@ public class MovieParsingScheduler {
                         .build();
                 staffList.add(staffDto);
             }
-        }
+        }*/
 
         /* 포스터 파싱해서 posterdto에 데이터 저장하고 list에 dto 담기 */
         String posters = movieApiDto.getPosterUrl();
@@ -183,5 +185,13 @@ public class MovieParsingScheduler {
 
         /* list에 dto 담기 */
         movieList.add(movieDto);
+
+        /* 파싱한 데이터 저장하기 */
+        actorRepository.saveAll(actorMapper.toEntity((actorList)));
+        directorRepository.saveAll(directorMapper.toEntity(directorList));
+        movieRepository.saveAll(movieMapper.toEntity(movieList));
+        posterRepository.saveAll(posterMapper.toEntity(posterList));
+        staffRepository.saveAll(staffMapper.toEntity(staffList));
+        stillRepository.saveAll(stillMapper.toEntity(stillList));
     }
 }

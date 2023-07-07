@@ -8,11 +8,11 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface DirectorMapper {
-    Director toEntity(DirectorDto staffDto);
+    Director toEntity(DirectorDto directorDto);
 
-    DirectorDto toDto(Director staff);
+    DirectorDto toDto(Director director);
 
-    List<Director> toEntity(List<DirectorDto> staffDtoList);
+    List<Director> toEntity(List<DirectorDto> directorDtoList);
 
-    List<DirectorDto> toDto(List<Director> staffList);
+    List<DirectorDto> toDto(List<Director> directorList);
 }

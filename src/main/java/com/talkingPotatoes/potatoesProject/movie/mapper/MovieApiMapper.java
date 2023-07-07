@@ -4,6 +4,7 @@ import com.talkingPotatoes.potatoesProject.movie.dto.MovieApiDto;
 import com.talkingPotatoes.potatoesProject.movie.entity.MovieApi;
 import org.mapstruct.Mapper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
