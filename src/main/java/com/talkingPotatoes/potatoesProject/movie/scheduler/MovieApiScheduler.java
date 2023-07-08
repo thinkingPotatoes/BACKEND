@@ -32,7 +32,7 @@ public class MovieApiScheduler {
     // 데이터 들어오는 개수 확인, 0개 들어오면(마지막일 때) 반복문 탈출
     private int cnt;
 
-    @Scheduled(cron = "0 53 * * * *") // 매주 월요일 새벽 1시(임의) (cron = "0 0 1 ? * MON"), 처음 배치 돌릴 때는 (cron = "0 현재시간에서 1~2분 뒤 * * * *")
+    @Scheduled(cron = "0 0 1 ? * MON") // 매주 월요일 새벽 1시(임의) (cron = "0 0 1 ? * MON"), 처음 배치 돌릴 때는 (cron = "0 현재시간에서 1~2분 뒤 * * * *")
     public void getData() throws Exception{
         /* 실행 시간 재는 코드 */
         StopWatch stopWatch = new StopWatch();
@@ -84,6 +84,7 @@ public class MovieApiScheduler {
         movieApiRepository.saveAll(movieApiMapper.toEntity(movieApiList));
 
         /* 실행 시간 재는 코드 */
+        /* 10만 데이터 기준 5분 미만 소요 */
         stopWatch.stop();
         log.info(stopWatch.prettyPrint());
         log.info("코드 실행 시간 (s): " + stopWatch.getTotalTimeSeconds());
@@ -150,7 +151,7 @@ public class MovieApiScheduler {
                     .keywords(movieObj.get("keywords").toString())
                     .posterUrl(movieObj.get("posters").toString())
                     .stillUrl(movieObj.get("stlls").toString())
-                    //.staffs(movieObj.get("staffs").toString())
+                    .staffs(movieObj.get("staffs").toString())
                     .updatedAt(LocalDate.now())
                     .build();
 

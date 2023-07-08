@@ -29,7 +29,7 @@ public class Movie {
 
     private String prodYear;
 
-    @Column(length = 50000)
+    @Column(columnDefinition = "TEXT")
     private String plot;
 
     private String runtime;
