@@ -30,8 +30,8 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@Transactional
-	public void signUp(UserDto userDto,
-		List<UserGenreDto> userGenreDtoList) {
+	public UserDto signUp(UserDto userDto,
+                          List<UserGenreDto> userGenreDtoList) {
 		User user = userRepository.save(userMapper.toEntity(userDto));
 		log.info(String.valueOf(user.getId()));
 		for (UserGenreDto dto : userGenreDtoList) {
@@ -39,5 +39,7 @@ public class UserServiceImpl implements UserService {
 		}
 
 		userGenreRepository.saveAll(userGenreMapper.toEntity(userGenreDtoList));
-	}
+
+        return userMapper.toDto(user);
+    }
 }
