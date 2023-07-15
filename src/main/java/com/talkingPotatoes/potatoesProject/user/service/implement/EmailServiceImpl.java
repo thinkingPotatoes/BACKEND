@@ -32,6 +32,7 @@ public class EmailServiceImpl implements EmailService {
     @Transactional
     public void sendSignUpMessage(UserDto to) throws Exception {
 
+        log.info("EmailServiceImpl::: sendSignUpMessage start");
         String message = "<div>"
                 + "<h1> 안녕하세요. Filmo 입니다</h1>"
                 + "<br>"
@@ -40,22 +41,29 @@ public class EmailServiceImpl implements EmailService {
                 + "</div>";
 
         emailUtil.createMessage(to.getUserId(), message);
-
+        log.info("EmailServiceImpl::: sendSignUpMessage finish");
     }
 
     @Override
     @Transactional
     public void verify(String token) {
+        log.info("EmailServiceImpl::: verify start");
+
+        log.info("EmailServiceImpl::: verify " + token);
         String id = emailUtil.checkToken(token);
 
         User user = userRepository.findById(UUID.fromString(id)).orElseThrow(() -> new NotFoundException("회원을 찾지 못하였습니다."));
         user.updateEmailChecked(true);
+        log.info("EmailServiceImpl::: verify " + user.getId() + " email checked");
 
         userRepository.save(user);
+        log.info("EmailServiceImpl::: verify finish");
     }
 
     @Override
     public void sendEmail(String userId) throws Exception {
+        log.info("EmailServiceImpl::: sendEmail start");
         sendSignUpMessage(userMapper.toDto(userRepository.findByUserId(userId).orElseThrow(() -> new NotFoundException("회원을 찾지 못하였습니다."))));
+        log.info("EmailServiceImpl::: sendEmail finish");
     }
 }
