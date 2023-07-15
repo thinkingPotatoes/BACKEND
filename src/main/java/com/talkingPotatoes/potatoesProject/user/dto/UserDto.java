@@ -6,6 +6,7 @@ import java.util.UUID;
 import com.talkingPotatoes.potatoesProject.common.dto.BaseDto;
 import com.talkingPotatoes.potatoesProject.user.entity.Platform;
 
+import com.talkingPotatoes.potatoesProject.user.entity.Role;
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
 
@@ -23,6 +24,8 @@ public class UserDto extends BaseDto {
 	private String title;
 
 	private Platform platform;
+
+	private Role role;
 
 	private LocalDateTime deletedAt;
 }

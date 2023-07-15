@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.talkingPotatoes.potatoesProject.common.entity.BaseEntity;
+import io.jsonwebtoken.Claims;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UuidGenerator;
 
@@ -50,6 +51,10 @@ public class User extends BaseEntity {
 	@Column(columnDefinition = "boolean default false")
 	private boolean emailChecked;
 
+	@Column(nullable = false)
+	@Enumerated(EnumType.STRING)
+	private Role role;
+
 	public void updateEmailChecked(boolean checked) {
 		emailChecked = checked;
 	}
@@ -57,5 +62,11 @@ public class User extends BaseEntity {
 	public void continueSignUp(String nickname, String title) {
 		this.nickname = nickname;
 		this.title = title;
+	}
+
+	public User(Claims claims) {
+		this.id = UUID.fromString(claims.get("id").toString());
+		this.userId = claims.get("userId").toString();
+		this.role = Role.valueOf(claims.get("role").toString());
 	}
 }

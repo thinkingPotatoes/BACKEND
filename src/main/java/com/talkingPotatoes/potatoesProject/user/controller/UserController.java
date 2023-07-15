@@ -7,6 +7,7 @@ import com.talkingPotatoes.potatoesProject.user.dto.Auth;
 import com.talkingPotatoes.potatoesProject.user.dto.request.OAuthSignUpRequest;
 import com.talkingPotatoes.potatoesProject.user.dto.request.UserIdRequest;
 import com.talkingPotatoes.potatoesProject.user.dto.response.OAuthSignupResponse;
+import com.talkingPotatoes.potatoesProject.user.entity.Role;
 import com.talkingPotatoes.potatoesProject.user.service.EmailService;
 import com.talkingPotatoes.potatoesProject.user.service.OAuthService;
 import org.springframework.http.HttpStatus;
@@ -43,6 +44,7 @@ public class UserController {
 
         UserDto userDto = userDtoMapper.fromSignUpRequest(signUpRequest);
         userDto.setPlatform(Platform.NONE);
+        userDto.setRole(Role.ACTIVE);
 
         List<UserGenreDto> userGenreDtoList = userGenreDtoMapper.fromSignupRequest(signUpRequest.getGenreList());
 
