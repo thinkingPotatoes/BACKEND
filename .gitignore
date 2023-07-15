@@ -38,3 +38,9 @@ out/
 
 ### 설정파일 ###
 src/main/resources/env.yml
+
+**/mapper/
+gradlew
+gradlew.bat
+README.md
+gradle/wrapper/gradle-wrapper.properties
