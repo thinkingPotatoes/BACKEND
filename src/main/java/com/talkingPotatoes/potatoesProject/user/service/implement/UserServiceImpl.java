@@ -30,14 +30,21 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@Transactional
-	public void signUp(UserDto userDto,
-		List<UserGenreDto> userGenreDtoList) {
+	public UserDto signUp(UserDto userDto,
+                          List<UserGenreDto> userGenreDtoList) {
+		log.info("UserServiceImpl::: signUp start");
+
 		User user = userRepository.save(userMapper.toEntity(userDto));
-		log.info(String.valueOf(user.getId()));
+		log.info("UserServiceImpl::: signUp " + user.getId() + " saved");
+
 		for (UserGenreDto dto : userGenreDtoList) {
 			dto.setUserId(user.getId());
 		}
 
 		userGenreRepository.saveAll(userGenreMapper.toEntity(userGenreDtoList));
-	}
+		log.info("UserServiceImpl::: signUp " + user.getId() + " userGenre saved");
+
+		log.info("UserServiceImpl::: signUp finish");
+        return userMapper.toDto(user);
+    }
 }

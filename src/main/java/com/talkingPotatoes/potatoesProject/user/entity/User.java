@@ -28,7 +28,6 @@ public class User extends BaseEntity {
     @Id
     @GeneratedValue
     @UuidGenerator
-    @JdbcTypeCode(Types.VARCHAR)
     private UUID id;
 
     @Column(unique = true, nullable = false)
@@ -46,8 +45,12 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Platform platform;
 
-    private LocalDateTime deletedAt;
+  	private LocalDateTime deletedAt;
 
-    @Column(columnDefinition = "boolean default false")
-    private boolean emailChecked;
+	  @Column(columnDefinition = "boolean default false")
+	  private boolean emailChecked;
+
+	  public void updateEmailChecked(boolean checked) {
+		  emailChecked = checked;
+	  }
 }
