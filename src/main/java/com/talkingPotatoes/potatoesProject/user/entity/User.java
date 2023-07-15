@@ -28,7 +28,6 @@ public class User extends BaseEntity {
 	@Id
 	@GeneratedValue
 	@UuidGenerator
-	@JdbcTypeCode(Types.VARCHAR)
 	private UUID id;
 
 	@Column(unique = true, nullable = false)
@@ -55,4 +54,8 @@ public class User extends BaseEntity {
 		emailChecked = checked;
 	}
 
+	public void continueSignUp(String nickname, String title) {
+		this.nickname = nickname;
+		this.title = title;
+	}
 }
