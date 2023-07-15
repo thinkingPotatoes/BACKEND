@@ -3,6 +3,7 @@ package com.talkingPotatoes.potatoesProject.movie.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,10 +27,10 @@ public class MovieApi {
 
     private String titleOrg;
 
-    @Column(length = 50000)
+    @Column(columnDefinition = "TEXT")
     private String director;
 
-    @Column(length = 50000)
+    @Column(columnDefinition = "TEXT")
     private String actor;
 
     private String nation;
@@ -38,7 +39,7 @@ public class MovieApi {
 
     private String prodYear;
 
-    @Column(length = 50000)
+    @Column(columnDefinition = "TEXT")
     private String plot;
 
     private String runtime;
@@ -51,13 +52,14 @@ public class MovieApi {
 
     private String keywords;
 
-    @Column(length = 50000)
+    @Column(columnDefinition = "TEXT")
     private String posterUrl;
 
-    @Column(length = 50000)
+    @Column(columnDefinition = "TEXT")
     private String stillUrl;
 
-    @Column(length = 50000)
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
     private String staffs;
 
     private LocalDate updatedAt;

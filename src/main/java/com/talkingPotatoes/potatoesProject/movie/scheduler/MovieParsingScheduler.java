@@ -53,6 +53,7 @@ public class MovieParsingScheduler {
         }
 
         /* 실행 시간 재는 코드 */
+        /* 10만 데이터 기준 10분 정도 소요 */
         stopWatch.stop();
         log.info(stopWatch.prettyPrint());
         log.info("코드 실행 시간 (s): " + stopWatch.getTotalTimeSeconds());
@@ -123,7 +124,7 @@ public class MovieParsingScheduler {
         }
 
         /* 스태프 배열 파싱해서 staffdto에 데이터 저장하고 list에 dto 담기 */
-        /* parser = new JSONParser();
+        parser = new JSONParser();
         JSONObject staffs = (JSONObject) parser.parse(movieApiDto.getStaffs());
         JSONArray staffArray = (JSONArray) staffs.get("staff");
         if(staffArray!=null && staffArray.size()>0) {
@@ -142,7 +143,7 @@ public class MovieParsingScheduler {
                         .build();
                 staffList.add(staffDto);
             }
-        }*/
+        }
 
         /* 포스터 파싱해서 posterdto에 데이터 저장하고 list에 dto 담기 */
         String posters = movieApiDto.getPosterUrl();

@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(indexes = @Index(name = "i_director", columnList = "docId"))
+@Table(indexes = @Index(name = "idx_director", columnList = "docId"))
 public class Director {
 
     @Id

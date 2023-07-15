@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(indexes = @Index(name = "i_still", columnList = "docId"))
+@Table(indexes = @Index(name = "idx_still", columnList = "docId"))
 public class Still {
 
     @Id
