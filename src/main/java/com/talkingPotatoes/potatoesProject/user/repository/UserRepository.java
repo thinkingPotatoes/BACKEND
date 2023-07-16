@@ -11,4 +11,6 @@ import com.talkingPotatoes.potatoesProject.user.entity.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, UUID> {
     Optional<User> findByUserId(String userId);
+
+    Optional<User> findByUserIdAndPassword(String userId, String encode);
 }

@@ -4,14 +4,18 @@ import java.io.IOException;
 import java.util.List;
 
 import com.talkingPotatoes.potatoesProject.user.dto.Auth;
+import com.talkingPotatoes.potatoesProject.user.dto.TokenDto;
+import com.talkingPotatoes.potatoesProject.user.dto.request.LoginRequest;
 import com.talkingPotatoes.potatoesProject.user.dto.request.OAuthSignUpRequest;
 import com.talkingPotatoes.potatoesProject.user.dto.request.UserIdRequest;
 import com.talkingPotatoes.potatoesProject.user.dto.response.OAuthSignupResponse;
+import com.talkingPotatoes.potatoesProject.user.dto.response.TokenResponse;
 import com.talkingPotatoes.potatoesProject.user.entity.Role;
 import com.talkingPotatoes.potatoesProject.user.service.EmailService;
 import com.talkingPotatoes.potatoesProject.user.service.OAuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import com.talkingPotatoes.potatoesProject.user.dto.UserDto;
@@ -78,26 +82,7 @@ public class UserController {
                         .build());
     }
 
-    @GetMapping("/{platform}")
-    public void getGoogleAuthUrl(@PathVariable(name = "platform") String socialLoginPath) throws Exception {
-        Platform platform = Platform.valueOf(socialLoginPath.toUpperCase());
-        oAuthService.request(platform);
-    }
-
-    @GetMapping("/login/oauth2/code/{platform}")
-    public ResponseEntity<OAuthSignupResponse> callback(
-            @PathVariable(name = "platform") String socialLoginPath,
-            @RequestParam(name = "code") String code) throws IOException {
-        Platform platform = Platform.valueOf(socialLoginPath.toUpperCase());
-        Auth auth = oAuthService.oAuthLogin(platform, code);
-
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(OAuthSignupResponse.builder()
-                        .message("회원가입 되었습니다.")
-                        .id(auth.getId())
-                        .build());
-    }
-
+    // sns 로그인 이후
     @PostMapping("/signup/oauth")
     public ResponseEntity<Response> oAuthSignUp(@RequestBody OAuthSignUpRequest oAuthSignUpRequest) {
         UserDto userDto = userDtoMapper.fromOAuthSignUpRequest(oAuthSignUpRequest);
@@ -108,6 +93,18 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(Response.builder()
                         .message("회원이 생성되었습니다.")
+                        .build());
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<TokenResponse> login(@RequestBody LoginRequest loginRequest) {
+        TokenDto tokenDto = userService.login(userDtoMapper.fromLoginRequest(loginRequest));
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(TokenResponse.builder()
+                        .message("로그인 되었습니다.")
+                        .accessToken(tokenDto.getAccessToken())
+                        .refreshToken(tokenDto.getRefreshToken())
                         .build());
     }
 }

@@ -55,6 +55,12 @@ public class User extends BaseEntity {
 	@Enumerated(EnumType.STRING)
 	private Role role;
 
+	public void updatePassword(String password) {
+		if (password != null) {
+			this.password = password;
+		}
+	}
+
 	public void updateEmailChecked(boolean checked) {
 		emailChecked = checked;
 	}

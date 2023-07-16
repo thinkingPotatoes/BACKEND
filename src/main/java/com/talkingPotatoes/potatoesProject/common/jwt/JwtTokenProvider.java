@@ -1,5 +1,7 @@
 package com.talkingPotatoes.potatoesProject.common.jwt;
 
+import com.talkingPotatoes.potatoesProject.common.util.RedisUtil;
+import com.talkingPotatoes.potatoesProject.user.dto.TokenDto;
 import com.talkingPotatoes.potatoesProject.user.entity.Role;
 import com.talkingPotatoes.potatoesProject.user.entity.User;
 import io.jsonwebtoken.Claims;
@@ -30,10 +32,12 @@ public class JwtTokenProvider {
     @Value("${jwt.token.secret}")
     private String secretKey;
     private Key key;
-    @Value("${jwt.refresh-token.expire-length}")
+    @Value("${jwt.token.expire-length.access}")
     private String accessTokenValidMilSecond;
-    @Value("${jwt.refresh-token.expire-length}")
+    @Value("${jwt.token.expire-length.refresh}")
     private String refreshTokenValidMilSecond;
+
+    private final RedisUtil redisUtil;
 
     @PostConstruct
     protected void init() {
@@ -45,7 +49,15 @@ public class JwtTokenProvider {
     }
 
     public String createRefreshToken(String id, String userId, Role role) {
+        redisUtil.setDataExpire(id, userId, Long.parseLong(refreshTokenValidMilSecond));
         return generateToken(id, userId, role, Long.parseLong(refreshTokenValidMilSecond));
+    }
+
+    public TokenDto createToken(String id, String userId, Role role) {
+        return TokenDto.builder()
+                .accessToken(createAccessToken(id, userId, role))
+                .refreshToken(createRefreshToken(id, userId, role))
+                .build();
     }
 
     protected String generateToken(String id, String userId, Role role, long tokenValidMilSecond) {

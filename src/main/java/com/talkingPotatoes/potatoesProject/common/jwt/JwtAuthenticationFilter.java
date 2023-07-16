@@ -29,10 +29,6 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
     /**
      * JWT 토큰 검증
      * 만료된 토큰이 발견되었을 때, 만료된 토큰 응답 발생
-     *
-     * @param request     SubletRequest
-     * @param response    SubletResponse
-     * @param filterChain FilterChain
      */
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
