@@ -24,3 +24,14 @@ spring:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.MariaDBDialect
+  batch:
+    jdbc:
+      initialize-schema: never
+      schema: classpath:/org/springframework/batch/core/schema-mysql.sql
+    job:
+      enabled: true
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
