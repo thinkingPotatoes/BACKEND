@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class Poster {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     private String docId;
