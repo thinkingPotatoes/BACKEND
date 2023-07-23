@@ -1,7 +1,6 @@
 package com.talkingPotatoes.potatoesProject.user.controller;
 
 import java.util.List;
-import java.util.UUID;
 
 import com.talkingPotatoes.potatoesProject.user.dto.request.UserIdRequest;
 import com.talkingPotatoes.potatoesProject.user.service.EmailService;
@@ -12,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import com.talkingPotatoes.potatoesProject.user.dto.UserDto;
 import com.talkingPotatoes.potatoesProject.user.dto.UserGenreDto;
 import com.talkingPotatoes.potatoesProject.user.dto.request.SignUpRequest;
-import com.talkingPotatoes.potatoesProject.user.dto.response.Response;
+import com.talkingPotatoes.potatoesProject.common.dto.response.Response;
 import com.talkingPotatoes.potatoesProject.user.entity.Platform;
 import com.talkingPotatoes.potatoesProject.user.mapper.UserDtoMapper;
 import com.talkingPotatoes.potatoesProject.user.mapper.UserGenreDtoMapper;

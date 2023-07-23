@@ -1,9 +1,7 @@
 package com.talkingPotatoes.potatoesProject.user.dto.response;
 
-import lombok.Getter;
-import lombok.experimental.SuperBuilder;
+import lombok.Data;
 
-@Getter
-@SuperBuilder
-public class UpdateMyPageResponse extends Response {
+@Data
+public class UpdateMyPageResponse {
 }
