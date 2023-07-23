@@ -16,16 +16,11 @@ public class UpdateArticleRequest {
     @NotBlank(message = "해당 글에 대한 정보는 필수 입력사항입니다.")
     private String id;
 
-    @NotBlank(message = "회원정보는 필수 입력사항입니다.")
-    private String userId;
-
     @NotBlank(message = "영화는 필수 입력사항입니다.")
     private String movieId;
 
-    @NotBlank(message = "리뷰 제목은 필수 입력사항입니다.")
     private String subject;
 
-    @NotBlank(message = "리뷰 내용은 필수 입력사항입니다.")
     private String content;
 
     @NotNull(message = "평점은 필수 입력사항입니다.")

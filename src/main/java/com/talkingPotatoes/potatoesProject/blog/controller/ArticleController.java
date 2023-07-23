@@ -29,8 +29,9 @@ public class ArticleController {
 
     /* 블로그 글 등록 */
     @PostMapping("/create")
-    public ResponseEntity<Response> createArticle(@RequestBody @Valid CreateArticleRequest createArticleRequest) {
+    public ResponseEntity<Response> createArticle(@RequestHeader(value = "userId") UUID login_id, @RequestBody @Valid CreateArticleRequest createArticleRequest) {
         ArticleDto articleDto = articleDtoMapper.fromCreateArticleRequest(createArticleRequest);
+        articleDto.setId(login_id);
         articleService.createArticle(articleDto);
 
         return ResponseEntity.status(HttpStatus.OK)
@@ -40,10 +41,11 @@ public class ArticleController {
     }
 
     /* 블로그 글 수정 */
-    @PostMapping("/update")
-    public ResponseEntity<Response> updateArticle(@RequestBody @Valid UpdateArticleRequest updateArticleRequest) {
+    @PutMapping("/update")
+    public ResponseEntity<Response> updateArticle(@RequestHeader(value = "userId") UUID login_id, @RequestBody @Valid UpdateArticleRequest updateArticleRequest) {
         String msg = "";
         ArticleDto articleDto = articleDtoMapper.fromUpdateArticleRequest(updateArticleRequest);
+        articleDto.setId(login_id);
 
         if(articleService.existArticleById(articleDto.getId())){
             /* Update Article */
@@ -62,10 +64,9 @@ public class ArticleController {
     }
 
     /* 블로그 글 삭제 */
-    @PostMapping("/delete")
-    public ResponseEntity<Response> deleteArticle(@RequestBody Map<String, String> idMap){
+    @DeleteMapping("/delete")
+    public ResponseEntity<Response> deleteArticle(@RequestParam UUID id){
         String msg = "";
-        UUID id = UUID.fromString(idMap.get("id"));
 
         if(articleService.existArticleById(id)){
             /* DELETE Article */
@@ -104,8 +105,8 @@ public class ArticleController {
     }
 
     /* 유저 블로그 글 리스트 */
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<ListResponse> getArticleByUserId(@PathVariable UUID userId){
+    @GetMapping("/user")
+    public ResponseEntity<ListResponse> getArticleByUserId(@RequestParam UUID userId){
         List<ArticleDto> articleDtoList = articleService.searchArticleByUserId(userId);
 
         return ResponseEntity.status(HttpStatus.OK)

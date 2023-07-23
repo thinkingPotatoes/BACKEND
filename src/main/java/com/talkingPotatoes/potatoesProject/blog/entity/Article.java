@@ -23,17 +23,14 @@ public class Article extends BaseEntity {
     @Id
     @GeneratedValue
     @UuidGenerator
-    @JdbcTypeCode(Types.VARCHAR)
     private UUID id;
 
     @UuidGenerator
-    @Column(unique = true, nullable = false)
-    @JdbcTypeCode(Types.VARCHAR)
+    @Column(nullable = false)
     private UUID userId;
 
     @UuidGenerator
-    @Column(unique = true, nullable = false)
-    @JdbcTypeCode(Types.VARCHAR)
+    @Column(nullable = false)
     private UUID movieId;
 
     private String subject;

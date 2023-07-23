@@ -24,13 +24,12 @@ public class Comment extends BaseEntity {
     @Id
     @GeneratedValue
     @UuidGenerator
-    @JdbcTypeCode(Types.VARCHAR)
     private UUID id;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private UUID articleId;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private UUID userId;
 
     private String content;

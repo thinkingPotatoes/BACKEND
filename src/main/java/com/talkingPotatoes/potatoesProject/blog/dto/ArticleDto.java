@@ -15,7 +15,7 @@ public class ArticleDto extends BaseDto {
 
     private UUID userId;
 
-    private UUID movieId;
+    private UUID movieId;   // FIX: movieDto
 
     private String subject;
 
