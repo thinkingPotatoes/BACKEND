@@ -3,9 +3,7 @@ package com.talkingPotatoes.potatoesProject.blog.controller;
 import com.talkingPotatoes.potatoesProject.blog.dto.ArticleDto;
 import com.talkingPotatoes.potatoesProject.blog.dto.request.CreateArticleRequest;
 import com.talkingPotatoes.potatoesProject.blog.dto.request.UpdateArticleRequest;
-import com.talkingPotatoes.potatoesProject.blog.dto.response.ListResponse;
 import com.talkingPotatoes.potatoesProject.blog.dto.response.Response;
-import com.talkingPotatoes.potatoesProject.blog.entity.Article;
 import com.talkingPotatoes.potatoesProject.blog.mapper.ArticleDtoMapper;
 import com.talkingPotatoes.potatoesProject.blog.service.ArticleService;
 import jakarta.validation.Valid;
@@ -30,8 +28,7 @@ public class ArticleController {
     /* 블로그 글 등록 */
     @PostMapping("/create")
     public ResponseEntity<Response> createArticle(@RequestHeader(value = "userId") UUID login_id, @RequestBody @Valid CreateArticleRequest createArticleRequest) {
-        ArticleDto articleDto = articleDtoMapper.fromCreateArticleRequest(createArticleRequest);
-        articleDto.setId(login_id);
+        ArticleDto articleDto = articleDtoMapper.fromCreateArticleRequest(login_id, createArticleRequest);
         articleService.createArticle(articleDto);
 
         return ResponseEntity.status(HttpStatus.OK)
@@ -44,7 +41,7 @@ public class ArticleController {
     @PutMapping("/update")
     public ResponseEntity<Response> updateArticle(@RequestHeader(value = "userId") UUID login_id, @RequestBody @Valid UpdateArticleRequest updateArticleRequest) {
         String msg = "";
-        ArticleDto articleDto = articleDtoMapper.fromUpdateArticleRequest(updateArticleRequest);
+        ArticleDto articleDto = articleDtoMapper.fromUpdateArticleRequest(login_id, updateArticleRequest);
         articleDto.setId(login_id);
 
         if(articleService.existArticleById(articleDto.getId())){
@@ -65,7 +62,7 @@ public class ArticleController {
 
     /* 블로그 글 삭제 */
     @DeleteMapping("/delete")
-    public ResponseEntity<Response> deleteArticle(@RequestParam UUID id){
+    public ResponseEntity<Response> deleteArticle(@RequestHeader(value = "userId") UUID id){
         String msg = "";
 
         if(articleService.existArticleById(id)){
@@ -74,7 +71,7 @@ public class ArticleController {
             msg = "글이 정상 삭제되었습니다.";
         }else{
             /* Article Id is NULL */
-            msg = "해당 글은 이 존재하지 않습니다.";
+            msg = "해당 글은 존재하지 않습니다.";
         }
 
         return ResponseEntity.status(HttpStatus.OK)
@@ -94,26 +91,20 @@ public class ArticleController {
 
     /* 영화 블로그 글 리스트 */
     @GetMapping("/movie/{movieId}")
-    public ResponseEntity<ListResponse> getArticleByMovieId(@PathVariable UUID movieId){
+    public ResponseEntity<List<ArticleDto>> getArticleByMovieId(@PathVariable UUID movieId){
         List<ArticleDto> articleDtoList = articleService.searchArticleByMovieId(movieId);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(ListResponse.builder()
-                        .count(articleDtoList.size())
-                        .data(articleDtoList)
-                        .build());
+                .body(articleDtoList);
     }
 
     /* 유저 블로그 글 리스트 */
     @GetMapping("/user")
-    public ResponseEntity<ListResponse> getArticleByUserId(@RequestParam UUID userId){
+    public ResponseEntity<List<ArticleDto>> getArticleByUserId(@RequestHeader(value = "userId") UUID userId){
         List<ArticleDto> articleDtoList = articleService.searchArticleByUserId(userId);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(ListResponse.builder()
-                        .count(articleDtoList.size())
-                        .data(articleDtoList)
-                        .build());
+                .body(articleDtoList);
     }
 
 }
