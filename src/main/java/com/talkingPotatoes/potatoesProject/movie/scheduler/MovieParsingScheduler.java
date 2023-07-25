@@ -156,6 +156,13 @@ public class MovieParsingScheduler {
             posterList.add(posterDto);
         }
 
+        /* posterUrl 중에 첫번째 url만 가져오기 */
+        String firstPoster = "";
+        st = new StringTokenizer(posters, "|");
+        if(st.hasMoreTokens()) {
+            firstPoster = st.nextToken();
+        }
+
         /* 스틸컷 파싱해서 stilldto에 데이터 저장하고 list에 dto 담기 */
         String stills = movieApiDto.getStillUrl();
         st = new StringTokenizer(stills, "|");
@@ -182,6 +189,7 @@ public class MovieParsingScheduler {
                 .genre(movieApiDto.getGenre())
                 .repRlsDate(movieApiDto.getRepRlsDate())
                 .keywords(movieApiDto.getKeywords())
+                .poster(firstPoster)
                 .build();
 
         /* list에 dto 담기 */

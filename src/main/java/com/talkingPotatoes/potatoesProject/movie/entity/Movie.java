@@ -11,7 +11,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(indexes = @Index(name = "idx_movie", columnList = "docId"))
+@Table(indexes = {@Index(name = "idx_movie", columnList = "docId"),
+        @Index(name = "idx_search_movie", columnList = "docId, title, repRlsDate")})
 public class Movie {
 
     @Id
@@ -41,5 +42,7 @@ public class Movie {
     private String repRlsDate;
 
     private String keywords;
+
+    private String poster;
 
 }

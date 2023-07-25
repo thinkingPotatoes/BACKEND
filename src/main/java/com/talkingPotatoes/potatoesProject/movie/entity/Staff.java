@@ -11,11 +11,12 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(indexes = @Index(name = "idx_staff", columnList = "docId"))
+@Table(indexes = {@Index(name = "idx_staff", columnList = "docId"),
+        @Index(name = "idx_search_staff", columnList = "docId, staffNM")})
 public class Staff {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     private String docId;

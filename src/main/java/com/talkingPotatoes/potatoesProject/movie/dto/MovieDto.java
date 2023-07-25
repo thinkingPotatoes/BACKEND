@@ -33,4 +33,5 @@ public class MovieDto {
 
     private String keywords;
 
+    private String poster;
 }
