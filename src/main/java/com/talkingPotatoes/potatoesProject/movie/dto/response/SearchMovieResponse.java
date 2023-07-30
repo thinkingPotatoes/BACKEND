@@ -8,7 +8,7 @@ import java.util.List;
 
 @Data
 @Builder
-public class MovieSearchResponse {
+public class SearchMovieResponse {
     private List<MovieSearchDto> movieSearchDtoList;
 
     private long totalCnt;

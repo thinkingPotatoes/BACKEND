@@ -29,12 +29,10 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public Page<MovieSearchDto> searchMovies(String keyword, Pageable pageable) {
-        log.info("MovieServiceImpl::: searchMovies start");
-
-        log.info("MovieServiceImpl::: searchMovies search " + keyword);
+        log.info("MovieServiceImpl::: searchMovies keyword: {}", keyword);
         Page<Movie> movies = movieQueryRepository.findByKeyword(keyword, pageable);
 
-        log.info("MovieServiceImpl::: searchMovies finish");
+        log.info("MovieServiceImpl::: searchMovies count: {}", movies.getNumberOfElements());
         return new PageImpl<>(movieMapper.toSearchDto(movies.getContent()), movies.getPageable(), movies.getTotalElements());
     }
 }

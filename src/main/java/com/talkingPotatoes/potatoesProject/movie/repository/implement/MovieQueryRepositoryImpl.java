@@ -2,7 +2,6 @@ package com.talkingPotatoes.potatoesProject.movie.repository.implement;
 
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.talkingPotatoes.potatoesProject.movie.entity.Movie;

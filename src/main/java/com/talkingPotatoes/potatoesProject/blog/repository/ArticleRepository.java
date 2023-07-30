@@ -11,6 +11,6 @@ import java.util.UUID;
 @Repository
 public interface ArticleRepository extends JpaRepository<Article, UUID> {
     boolean existsById(UUID id);
-    List<Article> findAllByMovieId(UUID movieId);
+    List<Article> findAllByMovieId(String movieId);
     List<Article> findAllByUserId(UUID userId);
 }

@@ -8,4 +8,5 @@ import java.util.UUID;
 
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, UUID> {
+    Long countByArticleId(UUID articleId);
 }
