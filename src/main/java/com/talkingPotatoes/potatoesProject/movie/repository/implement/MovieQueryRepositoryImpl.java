@@ -30,9 +30,14 @@ public class MovieQueryRepositoryImpl implements MovieQueryRepository {
     public Page<Movie> findByKeyword(String keyword, Pageable pageable) {
         JPAQuery<Movie> query = queryFactory.selectFrom(movie)
                 .from(movie)
-                .leftJoin(staff)
-                .on(movie.docId.eq(staff.docId))
-                .where(movie.title.contains(keyword).or(staff.staffNm.eq(keyword)))
+                .where(movie.title.contains(keyword).or(
+                        movie.docId.eq(
+                                queryFactory.select(staff.docId)
+                                .from(staff)
+                                .where(staff.docId.eq(movie.docId))
+                                .where(staff.staffNm.eq(keyword))
+                        )
+                ))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .orderBy(movieSort(pageable));
@@ -41,9 +46,14 @@ public class MovieQueryRepositoryImpl implements MovieQueryRepository {
 
         JPAQuery<Long> countQuery = queryFactory.select(movie.count())
                 .from(movie)
-                .leftJoin(staff)
-                .on(movie.docId.eq(staff.docId))
-                .where(movie.title.contains(keyword).or(staff.staffNm.eq(keyword)));
+                .where(movie.title.contains(keyword).or(
+                        movie.docId.eq(
+                                queryFactory.select(staff.docId)
+                                        .from(staff)
+                                        .where(staff.docId.eq(movie.docId))
+                                        .where(staff.staffNm.eq(keyword))
+                        )
+                ));
 
         return PageableExecutionUtils.getPage(movies, pageable, countQuery::fetchOne);
     }

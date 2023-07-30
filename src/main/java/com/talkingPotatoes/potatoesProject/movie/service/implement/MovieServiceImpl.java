@@ -1,7 +1,6 @@
 package com.talkingPotatoes.potatoesProject.movie.service.implement;
 
 import com.talkingPotatoes.potatoesProject.movie.dto.MovieDto;
-import com.talkingPotatoes.potatoesProject.movie.dto.MovieSearchDto;
 import com.talkingPotatoes.potatoesProject.movie.entity.Movie;
 import com.talkingPotatoes.potatoesProject.movie.mapper.MovieMapper;
 import com.talkingPotatoes.potatoesProject.movie.repository.MovieQueryRepository;
@@ -15,8 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -28,11 +25,11 @@ public class MovieServiceImpl implements MovieService {
     private final MovieMapper movieMapper;
 
     @Override
-    public Page<MovieSearchDto> searchMovies(String keyword, Pageable pageable) {
+    public Page<MovieDto> searchMovies(String keyword, Pageable pageable) {
         log.info("MovieServiceImpl::: searchMovies keyword: {}", keyword);
         Page<Movie> movies = movieQueryRepository.findByKeyword(keyword, pageable);
 
         log.info("MovieServiceImpl::: searchMovies count: {}", movies.getNumberOfElements());
-        return new PageImpl<>(movieMapper.toSearchDto(movies.getContent()), movies.getPageable(), movies.getTotalElements());
+        return new PageImpl<>(movieMapper.toDto(movies.getContent()), movies.getPageable(), movies.getTotalElements());
     }
 }

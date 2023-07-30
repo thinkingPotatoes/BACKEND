@@ -1,9 +1,9 @@
 package com.talkingPotatoes.potatoesProject.movie.controller;
 
 import com.talkingPotatoes.potatoesProject.common.dto.response.Response;
-import com.talkingPotatoes.potatoesProject.movie.dto.MovieSearchDto;
+import com.talkingPotatoes.potatoesProject.movie.dto.MovieDto;
 import com.talkingPotatoes.potatoesProject.movie.dto.request.SearchRequest;
-import com.talkingPotatoes.potatoesProject.movie.dto.response.SearchMovieResponse;
+import com.talkingPotatoes.potatoesProject.movie.dto.response.SearchMovieListResponse;
 import com.talkingPotatoes.potatoesProject.movie.mapper.MovieDtoMapper;
 import com.talkingPotatoes.potatoesProject.movie.service.MovieService;
 import lombok.RequiredArgsConstructor;
@@ -32,10 +32,10 @@ public class MovieController {
     @PostMapping("/search")
     public ResponseEntity<Response> search(@RequestBody SearchRequest searchRequest,
                                            @PageableDefault(size = 10, sort = "repRlsDate", direction = Sort.Direction.DESC) Pageable page) {
-        Page<MovieSearchDto> movies = movieService.searchMovies(searchRequest.getKeyword(), page);
+        Page<MovieDto> movies = movieService.searchMovies(searchRequest.getKeyword(), page);
 
-        SearchMovieResponse searchMovieResponse = SearchMovieResponse.builder()
-                .movieSearchDtoList(movies.getContent())
+        SearchMovieListResponse searchMovieListResponse = SearchMovieListResponse.builder()
+                .searchMovieResponseList(movieDtoMapper.toSearchMovieResponse(movies.getContent()))
                 .totalCnt(movies.getTotalElements())
                 .curPage(movies.getPageable().getPageNumber())
                 .build();
@@ -43,7 +43,7 @@ public class MovieController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(Response.builder()
                         .message("영화 검색 완료하였습니다.")
-                        .data(searchMovieResponse)
+                        .data(searchMovieListResponse)
                         .build());
     }
 }
