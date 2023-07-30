@@ -62,6 +62,8 @@ public class ArticleQueryRepositoryImpl implements ArticleQueryRepository {
                 switch (order.getProperty()) {
                     case "createdAt":
                         return new OrderSpecifier(direction, article.createdAt);
+                    case "watchedAt":
+                        return new OrderSpecifier(direction, article.watchedAt);
                 }
             }
         }
