@@ -25,11 +25,9 @@ public class Article extends BaseEntity {
     @UuidGenerator
     private UUID id;
 
-    @UuidGenerator
     @Column(nullable = false)
     private UUID userId;
 
-    @UuidGenerator
     @Column(nullable = false)
     private UUID movieId;
 
