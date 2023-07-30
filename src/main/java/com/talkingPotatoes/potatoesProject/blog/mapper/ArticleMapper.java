@@ -11,5 +11,5 @@ public interface ArticleMapper {
 
     ArticleDto toDto(Article article);
 
-    ArticleSearchDto toDto(Article article, String poster, Long likeCnt, Long commentCnt);
+    ArticleSearchDto toDto(Article article, String poster, Long likesCnt, Long commentCnt);
 }

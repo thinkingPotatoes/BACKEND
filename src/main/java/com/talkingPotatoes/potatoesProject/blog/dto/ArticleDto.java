@@ -15,7 +15,7 @@ public class ArticleDto extends BaseDto {
 
     private UUID userId;
 
-    private String movieId;   // FIX: movieDto
+    private String movieId;
 
     private String subject;
 
@@ -30,8 +30,6 @@ public class ArticleDto extends BaseDto {
     private String seat;
 
     private Boolean spoiler;
-
-    private Long likeCnt;
 
     private LocalDateTime watchedAt;
 }

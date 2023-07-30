@@ -5,6 +5,7 @@ import com.talkingPotatoes.potatoesProject.blog.dto.ArticleSearchDto;
 import com.talkingPotatoes.potatoesProject.blog.dto.request.CreateArticleRequest;
 import com.talkingPotatoes.potatoesProject.blog.dto.request.SearchArticleRequest;
 import com.talkingPotatoes.potatoesProject.blog.dto.request.UpdateArticleRequest;
+import com.talkingPotatoes.potatoesProject.blog.dto.response.SearchArticleResponse;
 import com.talkingPotatoes.potatoesProject.blog.mapper.ArticleDtoMapper;
 import com.talkingPotatoes.potatoesProject.blog.service.ArticleService;
 import com.talkingPotatoes.potatoesProject.common.dto.response.Response;
@@ -127,10 +128,12 @@ public class ArticleController {
                             .build());
         }
 
+        List<SearchArticleResponse> searchArticleResponseList = articleDtoMapper.toSearchMyArticleResponse(articleDto.getContent());
+
         return ResponseEntity.status(HttpStatus.OK)
                 .body(Response.builder()
                         .message("내 블로그 검색 완료하였습니다.")
-                        .data(articleDtoMapper.toSearchMyArticleResponse(articleDto.getContent(), articleDto.getTotalElements(), pageable.getPageNumber()))
+                        .data(articleDtoMapper.toSearchMyArticleResponse(searchArticleResponseList, articleDto.getTotalElements(), pageable.getPageNumber()))
                         .build());
     }
 }

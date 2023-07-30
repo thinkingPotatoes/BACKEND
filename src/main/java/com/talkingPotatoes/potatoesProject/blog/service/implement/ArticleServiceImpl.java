@@ -7,6 +7,7 @@ import com.talkingPotatoes.potatoesProject.blog.mapper.ArticleMapper;
 import com.talkingPotatoes.potatoesProject.blog.repository.ArticleQueryRepository;
 import com.talkingPotatoes.potatoesProject.blog.repository.ArticleRepository;
 import com.talkingPotatoes.potatoesProject.blog.repository.CommentRepository;
+import com.talkingPotatoes.potatoesProject.blog.repository.LikesRepository;
 import com.talkingPotatoes.potatoesProject.blog.service.ArticleService;
 import com.talkingPotatoes.potatoesProject.common.exception.NotFoundException;
 import com.talkingPotatoes.potatoesProject.movie.repository.MovieRepository;
@@ -32,6 +33,7 @@ public class ArticleServiceImpl implements ArticleService {
     private final ArticleRepository articleRepository;
     private final ArticleQueryRepository articleQueryRepository;
     private final CommentRepository commentRepository;
+    private final LikesRepository likesRepository;
     private final MovieRepository movieRepository;
 
     private final ArticleMapper articleMapper;
@@ -114,11 +116,10 @@ public class ArticleServiceImpl implements ArticleService {
         List<ArticleSearchDto> articleSearchDtoList = new ArrayList<>();
         for (Article article : articles.getContent()) {
             String poster = movieRepository.findById(article.getMovieId()).orElseThrow(() -> new NotFoundException("영화를 찾을 수 없습니다.")).getPoster();
-            // like 개수
-            Long likeCnt = 1L;
+            Long likesCnt = likesRepository.countByArticleId(article.getId());
             Long commentCnt = commentRepository.countByArticleId(article.getId());
 
-            articleSearchDtoList.add(articleMapper.toDto(article, poster, likeCnt, commentCnt));
+            articleSearchDtoList.add(articleMapper.toDto(article, poster, likesCnt, commentCnt));
         }
 
         log.info("ArticleServiceImpl::: searchArticleByUserIdAndKeyword count: {}", articles.getNumberOfElements());

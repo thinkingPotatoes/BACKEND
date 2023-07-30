@@ -1,5 +1,6 @@
 package com.talkingPotatoes.potatoesProject.blog.dto;
 
+import com.talkingPotatoes.potatoesProject.blog.entity.Scope;
 import lombok.Builder;
 import lombok.Data;
 
@@ -11,17 +12,29 @@ import java.util.UUID;
 public class ArticleSearchDto {
     private UUID id;
 
+    private UUID userId;
+
+    private String movieId;
+
     private String subject;
 
     private String content;
 
-    private String poster;
-
     private Integer grade;
+
+    private Scope scope;
+
+    private String theater;
+
+    private String seat;
+
+    private Boolean spoiler;
 
     private LocalDateTime watchedAt;
 
-    private Long likeCnt;
+    private String poster;
+
+    private Long likesCnt;
 
     private Long commentCnt;
 }
