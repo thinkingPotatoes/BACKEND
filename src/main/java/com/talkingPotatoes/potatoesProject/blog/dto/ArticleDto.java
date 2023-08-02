@@ -15,13 +15,13 @@ public class ArticleDto extends BaseDto {
 
     private UUID userId;
 
-    private UUID movieId;   // FIX: movieDto
+    private String movieId;
 
     private String subject;
 
     private String content;
 
-    private Integer grade;
+    private Float star;
 
     private Scope scope;
 
