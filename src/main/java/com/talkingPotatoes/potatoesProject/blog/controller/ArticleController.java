@@ -73,11 +73,15 @@ public class ArticleController {
 
     /* 블로그 글 단일 조회 */
     @GetMapping("/search/{articleId}")
-    public ResponseEntity<ArticleDto> getArticleById(@PathVariable UUID articleId) {
+    public ResponseEntity<Response> getArticleById(@PathVariable UUID articleId) {
         ArticleDto articleDto = articleService.searchArticleById(articleId);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(articleDto);
+                .body(Response.builder()
+                        .message("글이 정상 조회되었습니다.")
+                        .data(articleDtoMapper.toGetArticleResponse(articleDto))
+                        .build()
+                );
     }
 
     /* 영화 블로그 글 리스트 */
