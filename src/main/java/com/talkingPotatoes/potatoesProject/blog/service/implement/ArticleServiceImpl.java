@@ -85,20 +85,18 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<ArticleDto> searchArticleByMovieId(String movieId) {
+    public Page<ArticleDto> searchArticleByMovieId(String movieId, Pageable pageable) {
         log.info("searchArticleByMovieId ::: id: {}", movieId);
-        List<Article> articleList = articleRepository.findAllByMovieId(movieId);
-        return articleList.stream().map(m -> articleMapper.toDto(m))
-                .collect(Collectors.toList());
+        Page<Article> articles = articleRepository.findAllByMovieId(movieId, pageable);
+        return new PageImpl<>(articleMapper.toDto(articles.getContent()), articles.getPageable(), articles.getTotalElements());
 
     }
 
     @Override
-    public List<ArticleDto> searchArticleByUserId(UUID userId) {
+    public Page<ArticleDto> searchArticleByUserId(UUID userId, Pageable pageable) {
         log.info("searchArticleByUserId ::: id: {}", userId);
-        List<Article> articleList = articleRepository.findAllByUserId(userId);
-        return articleList.stream().map(m -> articleMapper.toDto(m))
-                .collect(Collectors.toList());
+        Page<Article> articles = articleRepository.findAllByUserId(userId, pageable);
+        return new PageImpl<>(articleMapper.toDto(articles.getContent()), articles.getPageable(), articles.getTotalElements());
     }
 
     @Override

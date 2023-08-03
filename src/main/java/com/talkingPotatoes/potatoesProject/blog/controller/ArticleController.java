@@ -5,6 +5,7 @@ import com.talkingPotatoes.potatoesProject.blog.dto.ArticleSearchDto;
 import com.talkingPotatoes.potatoesProject.blog.dto.request.CreateArticleRequest;
 import com.talkingPotatoes.potatoesProject.blog.dto.request.SearchArticleRequest;
 import com.talkingPotatoes.potatoesProject.blog.dto.request.UpdateArticleRequest;
+import com.talkingPotatoes.potatoesProject.blog.dto.response.GetArticleResponse;
 import com.talkingPotatoes.potatoesProject.blog.dto.response.SearchArticleResponse;
 import com.talkingPotatoes.potatoesProject.blog.mapper.ArticleDtoMapper;
 import com.talkingPotatoes.potatoesProject.blog.service.ArticleService;
@@ -86,25 +87,39 @@ public class ArticleController {
 
     /* 영화 블로그 글 리스트 */
     @GetMapping("/movie/{movieId}")
-    public ResponseEntity<List<ArticleDto>> getArticleByMovieId(@PathVariable String movieId) {
-        List<ArticleDto> articleDtoList = articleService.searchArticleByMovieId(movieId);
+    public ResponseEntity<Response> getArticleByMovieId(@PathVariable String movieId,
+                                                        @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<ArticleDto> articleDtoList = articleService.searchArticleByMovieId(movieId, pageable);
+
+        List<GetArticleResponse> getArticleResponseList = articleDtoMapper.toGetArticleResponse(articleDtoList.getContent());
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(articleDtoList);
+                .body(Response.builder()
+                        .message("블로그 글 리스트가 정상 조회되었습니다.")
+                        .data(articleDtoMapper.toGetArticleListResponse(getArticleResponseList, articleDtoList.getTotalElements(), pageable.getPageNumber()))
+                        .build()
+                );
     }
 
     /* 유저 블로그 글 리스트 */
     @GetMapping("/user")
-    public ResponseEntity<List<ArticleDto>> getArticleByUserId(@RequestHeader(value = "userId") UUID userId) {
-        List<ArticleDto> articleDtoList = articleService.searchArticleByUserId(userId);
+    public ResponseEntity<Response> getArticleByUserId(@RequestHeader(value = "userId") UUID userId,
+                                                       @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<ArticleDto> articleDtoList = articleService.searchArticleByUserId(userId, pageable);
+
+        List<GetArticleResponse> getArticleResponseList = articleDtoMapper.toGetArticleResponse(articleDtoList.getContent());
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(articleDtoList);
+                .body(Response.builder()
+                        .message("블로그 글 리스트가 정상 조회되었습니다.")
+                        .data(articleDtoMapper.toGetArticleListResponse(getArticleResponseList, articleDtoList.getTotalElements(), pageable.getPageNumber()))
+                        .build()
+                );
     }
 
     /* 내 블로그 검색 */
     @PostMapping("/search/my-article")
-    public ResponseEntity<Response> getMyArticleByUserIdAndKeyword(@RequestHeader(value = "user-id") UUID userId,
+    public ResponseEntity<Response> getMyArticleByUserIdAndKeyword(@RequestHeader(value = "userId") UUID userId,
                                                                    @RequestBody @Valid SearchArticleRequest searchArticleRequest,
                                                                    @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<ArticleSearchDto> articleDto = articleService.searchArticleByUserIdAndKeyword(userId, searchArticleRequest.getKeyword(), pageable);

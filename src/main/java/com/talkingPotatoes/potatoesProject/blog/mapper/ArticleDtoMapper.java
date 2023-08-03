@@ -4,10 +4,12 @@ import com.talkingPotatoes.potatoesProject.blog.dto.ArticleDto;
 import com.talkingPotatoes.potatoesProject.blog.dto.request.CreateArticleRequest;
 import com.talkingPotatoes.potatoesProject.blog.dto.request.UpdateArticleRequest;
 import com.talkingPotatoes.potatoesProject.blog.dto.ArticleSearchDto;
+import com.talkingPotatoes.potatoesProject.blog.dto.response.GetArticleListResponse;
 import com.talkingPotatoes.potatoesProject.blog.dto.response.GetArticleResponse;
 import com.talkingPotatoes.potatoesProject.blog.dto.response.SearchArticleListResponse;
 import com.talkingPotatoes.potatoesProject.blog.dto.response.SearchArticleResponse;
 import org.mapstruct.Mapper;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.UUID;
@@ -25,4 +27,8 @@ public interface ArticleDtoMapper {
     SearchArticleListResponse toSearchMyArticleResponse(List<SearchArticleResponse> searchArticleResponseList, long totalCnt, int curPage);
 
     GetArticleResponse toGetArticleResponse(ArticleDto articleDto);
+
+    List<GetArticleResponse> toGetArticleResponse(List<ArticleDto> articleDtoList);
+
+    GetArticleListResponse toGetArticleListResponse(List<GetArticleResponse> getArticleResponseList, long totalCnt, int curPage);
 }
