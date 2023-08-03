@@ -39,15 +39,6 @@ public class ArticleServiceImpl implements ArticleService {
     private final ArticleMapper articleMapper;
 
     @Override
-    public boolean existArticleById(UUID id) {
-        if (articleRepository.existsById(id)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    @Override
     @Transactional
     public void createArticle(ArticleDto articleDto) {
         log.info("ArticleServiceImpl::: createArticle start");
@@ -61,8 +52,9 @@ public class ArticleServiceImpl implements ArticleService {
         log.info("ArticleServiceImpl::: updateArticle start");
 
         /* 리뷰 상태 정상 조회 */
-        if (!articleRepository.existsById(articleDto.getId())) {
+        if (!articleRepository.existsByUserIdAndId(articleDto.getUserId(), articleDto.getId())) {
             log.info("ArticleServiceImpl::: updateArticle Blog is NULL");
+            throw new NotFoundException("글이 존재하지 않습니다.");
         } else {
             Article article = articleRepository.save(articleMapper.toEntity(articleDto));
             log.info("ArticleServiceImpl::: finish ", String.valueOf(article.getId()));
@@ -72,11 +64,12 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     @Transactional
-    public void deleteArticle(UUID id) {
+    public void deleteArticle(UUID userId, UUID id) {
         log.info("ArticleServiceImpl::: deleteArticle start ID: ");
 
-        if (!articleRepository.existsById(id)) {
+        if (!articleRepository.existsByUserIdAndId(userId, id)) {
             log.info("ArticleServiceImpl::: deleteArticle Blog is NULL");
+            throw new NotFoundException("글이 존재하지 않습니다.");
         } else {
             Article article = articleRepository.getReferenceById(id);
             articleRepository.delete(article);

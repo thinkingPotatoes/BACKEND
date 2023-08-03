@@ -48,42 +48,26 @@ public class ArticleController {
     @PutMapping("/update")
     public ResponseEntity<Response> updateArticle(@RequestHeader(value = "userId") UUID login_id,
                                                   @RequestBody @Valid UpdateArticleRequest updateArticleRequest) {
-        String msg = "";
         ArticleDto articleDto = articleDtoMapper.fromUpdateArticleRequest(login_id, updateArticleRequest);
-        articleDto.setId(login_id);
+        articleDto.setUserId(login_id);
 
-        if (articleService.existArticleById(articleDto.getId())) {
-            /* Update Article */
-            articleService.updateArticle(articleDto);
-            msg = "글이 정상 업데이트되었습니다.";
-        } else {
-            /* Article Id is null */
-            msg = "해당 글은 존재하지 않습니다..";
-        }
+        articleService.updateArticle(articleDto);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(Response.builder()
-                        .message(msg)
+                        .message("글이 정상 업데이트되었습니다.")
                         .build());
     }
 
     /* 블로그 글 삭제 */
-    @DeleteMapping("/delete")
-    public ResponseEntity<Response> deleteArticle(@RequestHeader(value = "userId") UUID id) {
-        String msg = "";
-
-        if (articleService.existArticleById(id)) {
-            /* DELETE Article */
-            articleService.deleteArticle(id);
-            msg = "글이 정상 삭제되었습니다.";
-        } else {
-            /* Article Id is NULL */
-            msg = "해당 글은 존재하지 않습니다.";
-        }
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Response> deleteArticle(@RequestHeader(value = "userId") UUID login_id,
+                                                  @PathVariable("id") UUID id) {
+        articleService.deleteArticle(login_id, id);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(Response.builder()
-                        .message(msg)
+                        .message("글이 정상 삭제되었습니다.")
                         .build());
     }
 

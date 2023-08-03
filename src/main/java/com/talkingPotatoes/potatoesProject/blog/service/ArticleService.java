@@ -10,10 +10,9 @@ import java.util.List;
 import java.util.UUID;
 
 public interface ArticleService {
-    boolean existArticleById(UUID id);
     void createArticle(ArticleDto articleDto);
     void updateArticle(ArticleDto articleDto);
-    void deleteArticle(UUID id);
+    void deleteArticle(UUID userId, UUID id);
     ArticleDto searchArticleById(UUID id);
     List<ArticleDto> searchArticleByMovieId(String movieId);
     List<ArticleDto> searchArticleByUserId(UUID userId);
