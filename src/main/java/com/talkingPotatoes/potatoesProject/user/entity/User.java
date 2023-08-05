@@ -26,53 +26,53 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User extends BaseEntity {
-	@Id
-	@GeneratedValue
-	@UuidGenerator
-	private UUID id;
+    @Id
+    @GeneratedValue
+    @UuidGenerator
+    private UUID id;
+  
+    @Column(unique = true, nullable = false)
+    private String userId;
 
-	@Column(unique = true, nullable = false)
-	private String userId;
+    private String password;
 
-	private String password;
+    @Column(unique = true, nullable = false)
+    private String nickname;
 
-	@Column(unique = true, nullable = false)
-	private String nickname;
+    @Column(nullable = false)
+    private String title;
 
-	@Column(nullable = false)
-	private String title;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Platform platform;
 
-	@Column(nullable = false)
-	@Enumerated(EnumType.STRING)
-	private Platform platform;
+  	private LocalDateTime deletedAt;
 
-	private LocalDateTime deletedAt;
+    @Column(columnDefinition = "boolean default false")
+    private boolean emailChecked;
 
-	@Column(columnDefinition = "boolean default false")
-	private boolean emailChecked;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
-	@Column(nullable = false)
-	@Enumerated(EnumType.STRING)
-	private Role role;
+    public void updatePassword(String password) {
+	   	if (password != null) {
+			  this.password = password;
+		  }
+	  }
 
-	public void updatePassword(String password) {
-		if (password != null) {
-			this.password = password;
-		}
-	}
+    public void updateEmailChecked(boolean checked) {
+	    emailChecked = checked;
+    }
 
-	public void updateEmailChecked(boolean checked) {
-		emailChecked = checked;
-	}
+    public void continueSignUp(String nickname, String title) {
+		  this.nickname = nickname;
+		  this.title = title;
+    }
 
-	public void continueSignUp(String nickname, String title) {
-		this.nickname = nickname;
-		this.title = title;
-	}
-
-	public User(Claims claims) {
-		this.id = UUID.fromString(claims.get("id").toString());
-		this.userId = claims.get("userId").toString();
-		this.role = Role.valueOf(claims.get("role").toString());
-	}
+    public User(Claims claims) {
+		  this.id = UUID.fromString(claims.get("id").toString());
+		  this.userId = claims.get("userId").toString();
+		  this.role = Role.valueOf(claims.get("role").toString());
+    }
 }

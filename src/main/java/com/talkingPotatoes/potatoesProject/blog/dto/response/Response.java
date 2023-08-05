@@ -1,4 +1,4 @@
-package com.talkingPotatoes.potatoesProject.user.dto.response;
+package com.talkingPotatoes.potatoesProject.blog.dto.response;
 
 import lombok.Data;
 import lombok.experimental.SuperBuilder;

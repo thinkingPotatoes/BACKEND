@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import com.talkingPotatoes.potatoesProject.user.dto.UserDto;
 import com.talkingPotatoes.potatoesProject.user.dto.UserGenreDto;
 import com.talkingPotatoes.potatoesProject.user.dto.request.SignUpRequest;
-import com.talkingPotatoes.potatoesProject.user.dto.response.Response;
+import com.talkingPotatoes.potatoesProject.common.dto.response.Response;
 import com.talkingPotatoes.potatoesProject.user.entity.Platform;
 import com.talkingPotatoes.potatoesProject.user.mapper.UserDtoMapper;
 import com.talkingPotatoes.potatoesProject.user.mapper.UserGenreDtoMapper;
