@@ -3,9 +3,9 @@ package com.talkingPotatoes.potatoesProject.blog.controller;
 import com.talkingPotatoes.potatoesProject.blog.dto.ArticleDto;
 import com.talkingPotatoes.potatoesProject.blog.dto.request.CreateArticleRequest;
 import com.talkingPotatoes.potatoesProject.blog.dto.request.UpdateArticleRequest;
-import com.talkingPotatoes.potatoesProject.blog.dto.response.Response;
 import com.talkingPotatoes.potatoesProject.blog.mapper.ArticleDtoMapper;
 import com.talkingPotatoes.potatoesProject.blog.service.ArticleService;
+import com.talkingPotatoes.potatoesProject.common.dto.response.Response;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 @RestController
