@@ -37,7 +37,7 @@ public class Article extends BaseEntity {
     private String content;
 
     @ColumnDefault("0")
-    private Integer grade;
+    private Float star;
 
     @Enumerated(EnumType.STRING)
     @ColumnDefault("'PUBLIC'")

@@ -8,10 +8,14 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Repository
 public interface PosterRepository extends JpaRepository<Poster, Long> {
     @Transactional
     @Modifying
     @Query(value = "delete from poster where doc_id = :id", nativeQuery = true)
     void deleteByDocIdInQuery(@Param("id") String docId);
+
+    List<Poster> findByDocId(String docId);
 }

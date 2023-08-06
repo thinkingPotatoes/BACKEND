@@ -21,7 +21,7 @@ public class ArticleDto extends BaseDto {
 
     private String content;
 
-    private Integer grade;
+    private Float star;
 
     private Scope scope;
 
