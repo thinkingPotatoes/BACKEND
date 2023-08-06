@@ -41,19 +41,14 @@ public class User extends BaseEntity {
 
   	private LocalDateTime deletedAt;
 
-<<<<<<< HEAD
+
 	@Column(columnDefinition = "boolean default false")
 	private boolean emailChecked;
-=======
-    @Column(columnDefinition = "boolean default false")
-    private boolean emailChecked;
->>>>>>> origin/f/login
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
 
-<<<<<<< HEAD
 	public void updatePassword(String password) {
 		if (password != null) {
 			this.password = password;
@@ -74,26 +69,4 @@ public class User extends BaseEntity {
 		this.userId = claims.get("userId").toString();
 		this.role = Role.valueOf(claims.get("role").toString());
 	}
-=======
-    public void updatePassword(String password) {
-	   	if (password != null) {
-			  this.password = password;
-		  }
-	  }
-
-    public void updateEmailChecked(boolean checked) {
-	    emailChecked = checked;
-    }
-
-    public void continueSignUp(String nickname, String title) {
-		  this.nickname = nickname;
-		  this.title = title;
-    }
-
-    public User(Claims claims) {
-		  this.id = UUID.fromString(claims.get("id").toString());
-		  this.userId = claims.get("userId").toString();
-		  this.role = Role.valueOf(claims.get("role").toString());
-    }
->>>>>>> origin/f/login
 }
