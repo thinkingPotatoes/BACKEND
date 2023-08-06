@@ -21,8 +21,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/movies")
 @RequiredArgsConstructor
@@ -38,17 +36,18 @@ public class MovieController {
     @PostMapping("/search")
     public ResponseEntity<Response> search(@RequestBody SearchRequest searchRequest,
                                            @PageableDefault(size = 10, sort = "repRlsDate", direction = Sort.Direction.DESC) Pageable page) {
-        Page<MovieSearchDto> movies = movieService.searchMovies(searchRequest.getKeyword(), page);
+        Page<MovieDto> movies = movieService.searchMovies(searchRequest.getKeyword(), page);
 
-        MovieSearchResponse movieSearchResponse = MovieSearchResponse.builder()
-                .movieSearchDtoList(movies.getContent())
+        SearchMovieListResponse searchMovieListResponse = SearchMovieListResponse.builder()
+                .searchMovieResponseList(movieDtoMapper.toSearchMovieResponse(movies.getContent()))
                 .totalCnt(movies.getTotalElements())
                 .curPage(movies.getPageable().getPageNumber())
                 .build();
+
         return ResponseEntity.status(HttpStatus.OK)
                 .body(Response.builder()
                         .message("영화 검색 완료하였습니다.")
-                        .data(movieSearchResponse)
+                        .data(searchMovieListResponse)
                         .build());
     }
 

@@ -1,16 +1,15 @@
 package com.talkingPotatoes.potatoesProject.blog.dto;
 
 import com.talkingPotatoes.potatoesProject.blog.entity.Scope;
-import com.talkingPotatoes.potatoesProject.common.dto.BaseDto;
+import lombok.Builder;
 import lombok.Data;
-import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
-@SuperBuilder
-public class ArticleDto extends BaseDto {
+@Builder
+public class ArticleSearchDto {
     private UUID id;
 
     private UUID userId;
@@ -21,7 +20,7 @@ public class ArticleDto extends BaseDto {
 
     private String content;
 
-    private Float star;
+    private Integer grade;
 
     private Scope scope;
 
@@ -32,4 +31,10 @@ public class ArticleDto extends BaseDto {
     private Boolean spoiler;
 
     private LocalDateTime watchedAt;
+
+    private String poster;
+
+    private Long likesCnt;
+
+    private Long commentCnt;
 }

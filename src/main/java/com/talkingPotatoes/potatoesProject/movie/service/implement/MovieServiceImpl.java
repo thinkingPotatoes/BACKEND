@@ -23,8 +23,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -42,14 +40,12 @@ public class MovieServiceImpl implements MovieService {
     private final PosterMapper posterMapper;
 
     @Override
-    public Page<MovieSearchDto> searchMovies(String keyword, Pageable pageable) {
-        log.info("MovieServiceImpl::: searchMovies start");
-
-        log.info("MovieServiceImpl::: searchMovies search " + keyword);
+    public Page<MovieDto> searchMovies(String keyword, Pageable pageable) {
+        log.info("MovieServiceImpl::: searchMovies keyword: {}", keyword);
         Page<Movie> movies = movieQueryRepository.findByKeyword(keyword, pageable);
 
-        log.info("MovieServiceImpl::: searchMovies finish");
-        return new PageImpl<>(movieMapper.toSearchDto(movies.getContent()), movies.getPageable(), movies.getTotalElements());
+        log.info("MovieServiceImpl::: searchMovies count: {}", movies.getNumberOfElements());
+        return new PageImpl<>(movieMapper.toDto(movies.getContent()), movies.getPageable(), movies.getTotalElements());
     }
 
     @Override

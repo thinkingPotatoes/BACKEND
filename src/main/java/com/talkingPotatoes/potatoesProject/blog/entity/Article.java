@@ -21,7 +21,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class Article extends BaseEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @UuidGenerator
     private UUID id;
 
@@ -29,7 +29,7 @@ public class Article extends BaseEntity {
     private UUID userId;
 
     @Column(nullable = false)
-    private UUID movieId;
+    private String movieId;
 
     private String subject;
 

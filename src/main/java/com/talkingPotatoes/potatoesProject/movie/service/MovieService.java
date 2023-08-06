@@ -1,5 +1,6 @@
 package com.talkingPotatoes.potatoesProject.movie.service;
 
+import com.talkingPotatoes.potatoesProject.movie.dto.MovieDto;
 import com.talkingPotatoes.potatoesProject.movie.dto.MovieInfoDto;
 import com.talkingPotatoes.potatoesProject.movie.dto.MovieSearchDto;
 import org.springframework.data.domain.Page;
@@ -8,7 +9,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface MovieService {
+
+    Page<MovieDto> searchMovies(String keyword, Pageable pageable);
+
     Page<MovieSearchDto> searchMovies(String keyword, Pageable pageable);
 
     MovieInfoDto selectMovie(String movieId);
+
 }
