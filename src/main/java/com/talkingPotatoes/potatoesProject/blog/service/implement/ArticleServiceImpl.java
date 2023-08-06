@@ -41,23 +41,17 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     @Transactional
     public void createArticle(ArticleDto articleDto) {
-        log.info("ArticleServiceImpl::: createArticle start");
         Article article = articleRepository.save(articleMapper.toEntity(articleDto));
-        log.info("ArticleServiceImpl::: finish ", String.valueOf(article.getId()));
     }
 
     @Override
     @Transactional
     public void updateArticle(ArticleDto articleDto) {
-        log.info("ArticleServiceImpl::: updateArticle start");
-
         /* 리뷰 상태 정상 조회 */
         if (!articleRepository.existsByUserIdAndId(articleDto.getUserId(), articleDto.getId())) {
-            log.info("ArticleServiceImpl::: updateArticle Blog is NULL");
             throw new NotFoundException("글이 존재하지 않습니다.");
         } else {
             Article article = articleRepository.save(articleMapper.toEntity(articleDto));
-            log.info("ArticleServiceImpl::: finish ", String.valueOf(article.getId()));
         }
 
     }
@@ -65,28 +59,22 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     @Transactional
     public void deleteArticle(UUID userId, UUID id) {
-        log.info("ArticleServiceImpl::: deleteArticle start ID: ");
-
         if (!articleRepository.existsByUserIdAndId(userId, id)) {
-            log.info("ArticleServiceImpl::: deleteArticle Blog is NULL");
             throw new NotFoundException("글이 존재하지 않습니다.");
         } else {
             Article article = articleRepository.getReferenceById(id);
             articleRepository.delete(article);
-            log.info("ArticleServiceImpl::: deleteArticle finish ");
         }
     }
 
     @Override
     public ArticleDto searchArticleById(UUID id) {
-        log.info("searchArticleById ::: id: {}", id);
         Article article = articleRepository.getReferenceById(id);
         return articleMapper.toDto(article);
     }
 
     @Override
     public Page<ArticleDto> searchArticleByMovieId(String movieId, Pageable pageable) {
-        log.info("searchArticleByMovieId ::: id: {}", movieId);
         Page<Article> articles = articleRepository.findAllByMovieId(movieId, pageable);
         return new PageImpl<>(articleMapper.toDto(articles.getContent()), articles.getPageable(), articles.getTotalElements());
 
@@ -94,14 +82,12 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public Page<ArticleDto> searchArticleByUserId(UUID userId, Pageable pageable) {
-        log.info("searchArticleByUserId ::: id: {}", userId);
         Page<Article> articles = articleRepository.findAllByUserId(userId, pageable);
         return new PageImpl<>(articleMapper.toDto(articles.getContent()), articles.getPageable(), articles.getTotalElements());
     }
 
     @Override
     public Page<ArticleSearchDto> searchArticleByUserIdAndKeyword(UUID userId, String keyword, Pageable pageable) {
-        log.info("ArticleServiceImpl::: searchArticleByUserIdAndKeyword id: {}, keyword: {}", userId, keyword);
         Page<Article> articles = articleQueryRepository.findByUserIdAndKeyword(userId, keyword, pageable);
 
         List<ArticleSearchDto> articleSearchDtoList = new ArrayList<>();
@@ -113,7 +99,6 @@ public class ArticleServiceImpl implements ArticleService {
             articleSearchDtoList.add(articleMapper.toDto(article, poster, likesCnt, commentCnt));
         }
 
-        log.info("ArticleServiceImpl::: searchArticleByUserIdAndKeyword count: {}", articles.getNumberOfElements());
         return new PageImpl<>(articleSearchDtoList, articles.getPageable(), articles.getTotalElements());
     }
 }

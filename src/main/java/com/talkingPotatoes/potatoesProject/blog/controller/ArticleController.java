@@ -9,6 +9,7 @@ import com.talkingPotatoes.potatoesProject.blog.dto.response.GetArticleResponse;
 import com.talkingPotatoes.potatoesProject.blog.dto.response.SearchArticleResponse;
 import com.talkingPotatoes.potatoesProject.blog.mapper.ArticleDtoMapper;
 import com.talkingPotatoes.potatoesProject.blog.service.ArticleService;
+import com.talkingPotatoes.potatoesProject.common.dto.response.ListResponse;
 import com.talkingPotatoes.potatoesProject.common.dto.response.Response;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -96,7 +97,11 @@ public class ArticleController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(Response.builder()
                         .message("블로그 글 리스트가 정상 조회되었습니다.")
-                        .data(articleDtoMapper.toGetArticleListResponse(getArticleResponseList, articleDtoList.getTotalElements(), pageable.getPageNumber()))
+                        .data(ListResponse.builder()
+                                .list(getArticleResponseList)
+                                .totalCnt(articleDtoList.getTotalElements())
+                                .curPage(pageable.getPageNumber())
+                                .build())
                         .build()
                 );
     }
@@ -112,7 +117,11 @@ public class ArticleController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(Response.builder()
                         .message("블로그 글 리스트가 정상 조회되었습니다.")
-                        .data(articleDtoMapper.toGetArticleListResponse(getArticleResponseList, articleDtoList.getTotalElements(), pageable.getPageNumber()))
+                        .data(ListResponse.builder()
+                                .list(getArticleResponseList)
+                                .totalCnt(articleDtoList.getTotalElements())
+                                .curPage(pageable.getPageNumber())
+                                .build())
                         .build()
                 );
     }
@@ -136,7 +145,11 @@ public class ArticleController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(Response.builder()
                         .message("내 블로그 검색 완료하였습니다.")
-                        .data(articleDtoMapper.toSearchMyArticleResponse(searchArticleResponseList, articleDto.getTotalElements(), pageable.getPageNumber()))
+                        .data(ListResponse.builder()
+                                .list(searchArticleResponseList)
+                                .totalCnt(articleDto.getTotalElements())
+                                .curPage(pageable.getPageNumber())
+                                .build())
                         .build());
     }
 }
