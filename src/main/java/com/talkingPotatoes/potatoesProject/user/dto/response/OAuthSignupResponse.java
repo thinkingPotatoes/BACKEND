@@ -7,6 +7,6 @@ import java.util.UUID;
 
 @Data
 @SuperBuilder
-public class OAuthSignupResponse extends Response {
+public class OAuthSignupResponse {
     private UUID id;
 }

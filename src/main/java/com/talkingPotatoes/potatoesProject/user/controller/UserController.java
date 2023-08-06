@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import com.talkingPotatoes.potatoesProject.user.dto.UserDto;
 import com.talkingPotatoes.potatoesProject.user.dto.UserGenreDto;
 import com.talkingPotatoes.potatoesProject.user.dto.request.SignUpRequest;
-import com.talkingPotatoes.potatoesProject.user.dto.response.Response;
+import com.talkingPotatoes.potatoesProject.common.dto.response.Response;
 import com.talkingPotatoes.potatoesProject.user.entity.Platform;
 import com.talkingPotatoes.potatoesProject.user.mapper.UserDtoMapper;
 import com.talkingPotatoes.potatoesProject.user.mapper.UserGenreDtoMapper;
@@ -97,14 +97,13 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<TokenResponse> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<Response> login(@RequestBody LoginRequest loginRequest) {
         TokenDto tokenDto = userService.login(userDtoMapper.fromLoginRequest(loginRequest));
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(TokenResponse.builder()
+                .body(Response.builder()
                         .message("로그인 되었습니다.")
-                        .accessToken(tokenDto.getAccessToken())
-                        .refreshToken(tokenDto.getRefreshToken())
+                        .data(userDtoMapper.toTokenResponse(tokenDto))
                         .build());
     }
 }

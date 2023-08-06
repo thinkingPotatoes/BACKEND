@@ -1,10 +1,11 @@
-package com.talkingPotatoes.potatoesProject.user.dto.response;
+package com.talkingPotatoes.potatoesProject.common.dto.response;
 
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
 
 @Data
 @SuperBuilder
-public class Response {
+public class Response<D> {
 	private String message;
+	private D data;
 }

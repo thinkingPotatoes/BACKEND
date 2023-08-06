@@ -1,0 +1,68 @@
+package com.talkingPotatoes.potatoesProject.movie.service.implement;
+
+import com.talkingPotatoes.potatoesProject.common.exception.NotFoundException;
+import com.talkingPotatoes.potatoesProject.movie.dto.MovieDto;
+import com.talkingPotatoes.potatoesProject.movie.dto.MovieInfoDto;
+import com.talkingPotatoes.potatoesProject.movie.entity.Movie;
+import com.talkingPotatoes.potatoesProject.movie.entity.Poster;
+import com.talkingPotatoes.potatoesProject.movie.entity.Staff;
+import com.talkingPotatoes.potatoesProject.movie.mapper.MovieMapper;
+import com.talkingPotatoes.potatoesProject.movie.mapper.PosterMapper;
+import com.talkingPotatoes.potatoesProject.movie.mapper.StaffMapper;
+import com.talkingPotatoes.potatoesProject.movie.repository.MovieQueryRepository;
+import com.talkingPotatoes.potatoesProject.movie.repository.MovieRepository;
+import com.talkingPotatoes.potatoesProject.movie.repository.PosterRepository;
+import com.talkingPotatoes.potatoesProject.movie.repository.StaffRepository;
+import com.talkingPotatoes.potatoesProject.movie.service.MovieService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
+@Slf4j
+public class MovieServiceImpl implements MovieService {
+
+    private final MovieRepository movieRepository;
+    private final StaffRepository staffRepository;
+    private final PosterRepository posterRepository;
+
+    private final MovieQueryRepository movieQueryRepository;
+
+    private final MovieMapper movieMapper;
+    private final StaffMapper staffMapper;
+    private final PosterMapper posterMapper;
+
+    @Override
+    public Page<MovieDto> searchMovies(String keyword, Pageable pageable) {
+        log.info("MovieServiceImpl::: searchMovies keyword: {}", keyword);
+        Page<Movie> movies = movieQueryRepository.findByKeyword(keyword, pageable);
+
+        log.info("MovieServiceImpl::: searchMovies count: {}", movies.getNumberOfElements());
+        return new PageImpl<>(movieMapper.toDto(movies.getContent()), movies.getPageable(), movies.getTotalElements());
+    }
+
+    @Override
+    public MovieInfoDto selectMovie(String movieId) {
+        log.info("MovieServiceImpl::: selectMovie start");
+
+        log.info("MovieServiceImpl::: selectMovie " + movieId);
+        Movie movie = movieRepository.findById(movieId).orElseThrow(() -> new NotFoundException("영화 정보가 없습니다."));
+        List<Staff> staffList = staffRepository.findByDocId(movie.getDocId());
+        List<Poster> posterList = posterRepository.findByDocId(movie.getDocId());
+
+        log.info("MovieServiceImpl::: selectMovie finish");
+        return MovieInfoDto.builder()
+                .movieDto(movieMapper.toDto(movie))
+                .staffDtoList(staffMapper.toDto(staffList))
+                .posterDtoList(posterMapper.toDto(posterList))
+                .build();
+    }
+}
