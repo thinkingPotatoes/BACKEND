@@ -3,7 +3,6 @@ package com.talkingPotatoes.potatoesProject.movie.service.implement;
 import com.talkingPotatoes.potatoesProject.common.exception.NotFoundException;
 import com.talkingPotatoes.potatoesProject.movie.dto.MovieDto;
 import com.talkingPotatoes.potatoesProject.movie.dto.MovieInfoDto;
-import com.talkingPotatoes.potatoesProject.movie.dto.MovieSearchDto;
 import com.talkingPotatoes.potatoesProject.movie.entity.Movie;
 import com.talkingPotatoes.potatoesProject.movie.entity.Poster;
 import com.talkingPotatoes.potatoesProject.movie.entity.Staff;
@@ -22,6 +21,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
