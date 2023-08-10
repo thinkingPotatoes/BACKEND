@@ -45,12 +45,33 @@ public class User extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Platform platform;
 
-  	private LocalDateTime deletedAt;
+    private LocalDateTime deletedAt;
 
-	  @Column(columnDefinition = "boolean default false")
-	  private boolean emailChecked;
+    @Column(columnDefinition = "boolean default false")
+    private boolean emailChecked;
 
-	  public void updateEmailChecked(boolean checked) {
-		  emailChecked = checked;
-	  }
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    public void updateEmailChecked(boolean checked) {
+        emailChecked = checked;
+    }
+
+    public void updatePassword(String password) {
+        if (password != null) {
+            this.password = password;
+        }
+    }
+
+    public void continueSignUp(String nickname, String title) {
+        this.nickname = nickname;
+        this.title = title;
+    }
+
+//    public User(Claims claims) {
+//        this.id = UUID.fromString(claims.get("id").toString());
+//        this.userId = claims.get("userId").toString();
+//        this.role = Role.valueOf(claims.get("role").toString());
+//    }
 }
