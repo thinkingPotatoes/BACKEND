@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.talkingPotatoes.potatoesProject.common.entity.BaseEntity;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UuidGenerator;
 
@@ -38,7 +39,6 @@ public class User extends BaseEntity {
     @Column(unique = true, nullable = false)
     private String nickname;
 
-    @Column(nullable = false)
     private String title;
 
     @Column(nullable = false)

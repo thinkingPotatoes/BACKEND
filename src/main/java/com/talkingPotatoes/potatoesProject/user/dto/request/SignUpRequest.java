@@ -26,9 +26,4 @@ public class SignUpRequest {
 	@Pattern(regexp = "[ㄱ-ㅎ가-힣a-zA-Z0-9]{2,9}",
 		message = "닉네임은 한글, 영문, 숫자만 가능하며 2 ~ 10자리까지 가능합니다.")
 	private String nickname;
-
-	@NotBlank(message = "블로그명은 필수 입력사항입니다.")
-	private String title;
-
-	private List<UUID> genreList;
 }

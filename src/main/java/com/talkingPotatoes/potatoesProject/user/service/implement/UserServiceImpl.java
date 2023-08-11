@@ -2,6 +2,7 @@ package com.talkingPotatoes.potatoesProject.user.service.implement;
 
 import java.util.List;
 
+import com.talkingPotatoes.potatoesProject.user.entity.Role;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,21 +31,10 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@Transactional
-	public UserDto signUp(UserDto userDto,
-                          List<UserGenreDto> userGenreDtoList) {
-		log.info("UserServiceImpl::: signUp start");
-
+	public UserDto signUp(UserDto userDto) {
+		if (userDto.getRole() == null) userDto.setRole(Role.ACTIVE);
 		User user = userRepository.save(userMapper.toEntity(userDto));
-		log.info("UserServiceImpl::: signUp " + user.getId() + " saved");
 
-		for (UserGenreDto dto : userGenreDtoList) {
-			dto.setUserId(user.getId());
-		}
-
-		userGenreRepository.saveAll(userGenreMapper.toEntity(userGenreDtoList));
-		log.info("UserServiceImpl::: signUp " + user.getId() + " userGenre saved");
-
-		log.info("UserServiceImpl::: signUp finish");
         return userMapper.toDto(user);
     }
 }
