@@ -59,9 +59,11 @@ public class User extends BaseEntity {
     }
 
     public void updatePassword(String password) {
-        if (password != null) {
-            this.password = password;
-        }
+        this.password = password;
+    }
+
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public void continueSignUp(String nickname, String title) {

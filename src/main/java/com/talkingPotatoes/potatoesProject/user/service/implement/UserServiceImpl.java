@@ -1,17 +1,14 @@
 package com.talkingPotatoes.potatoesProject.user.service.implement;
 
-import java.util.List;
-
 import com.talkingPotatoes.potatoesProject.user.entity.Role;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.talkingPotatoes.potatoesProject.user.dto.UserDto;
-import com.talkingPotatoes.potatoesProject.user.dto.UserGenreDto;
 import com.talkingPotatoes.potatoesProject.user.entity.User;
-import com.talkingPotatoes.potatoesProject.user.mapper.UserGenreMapper;
+import com.talkingPotatoes.potatoesProject.blog.mapper.UserGenreMapper;
 import com.talkingPotatoes.potatoesProject.user.mapper.UserMapper;
-import com.talkingPotatoes.potatoesProject.user.repository.UserGenreRepository;
+import com.talkingPotatoes.potatoesProject.blog.repository.UserGenreRepository;
 import com.talkingPotatoes.potatoesProject.user.repository.UserRepository;
 import com.talkingPotatoes.potatoesProject.user.service.UserService;
 
