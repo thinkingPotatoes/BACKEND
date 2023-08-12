@@ -19,4 +19,6 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 //    void deleteByEmailCheckedIsFalseAndUpdatedAtIsGreaterThan(LocalDateTime dateTime);
   
     Optional<User> findByUserId(String userId);
+
+    Boolean existsByUserId(String userId);
 }
