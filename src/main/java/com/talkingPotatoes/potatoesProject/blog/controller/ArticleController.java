@@ -5,7 +5,6 @@ import com.talkingPotatoes.potatoesProject.blog.dto.ArticleSearchDto;
 import com.talkingPotatoes.potatoesProject.blog.dto.request.CreateArticleRequest;
 import com.talkingPotatoes.potatoesProject.blog.dto.request.SearchArticleRequest;
 import com.talkingPotatoes.potatoesProject.blog.dto.request.UpdateArticleRequest;
-import com.talkingPotatoes.potatoesProject.blog.dto.response.SearchArticleResponse;
 import com.talkingPotatoes.potatoesProject.blog.mapper.ArticleDtoMapper;
 import com.talkingPotatoes.potatoesProject.blog.service.ArticleService;
 import com.talkingPotatoes.potatoesProject.common.dto.response.Response;
