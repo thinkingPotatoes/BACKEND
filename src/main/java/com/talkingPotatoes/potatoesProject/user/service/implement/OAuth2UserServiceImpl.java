@@ -3,6 +3,7 @@ package com.talkingPotatoes.potatoesProject.user.service.implement;
 import com.talkingPotatoes.potatoesProject.user.dto.OAuth2Attributes;
 import com.talkingPotatoes.potatoesProject.user.dto.UserDto;
 import com.talkingPotatoes.potatoesProject.user.entity.Platform;
+import com.talkingPotatoes.potatoesProject.user.entity.Role;
 import com.talkingPotatoes.potatoesProject.user.entity.User;
 import com.talkingPotatoes.potatoesProject.user.mapper.UserMapper;
 import com.talkingPotatoes.potatoesProject.user.repository.UserRepository;
@@ -27,8 +28,6 @@ public class OAuth2UserServiceImpl implements OAuth2UserService<OAuth2UserReques
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        System.out.println("service.start");
-
         OAuth2UserService<OAuth2UserRequest, OAuth2User> delegate = new DefaultOAuth2UserService();
         OAuth2User oAuth2User = delegate.loadUser(userRequest);
 
@@ -40,7 +39,7 @@ public class OAuth2UserServiceImpl implements OAuth2UserService<OAuth2UserReques
         UserDto userDto = UserDto.builder()
                 .userId(attributes.getId())
                 .platform(Platform.valueOf(registrationId.toUpperCase()))
-                //.role(Role.ACTIVE)
+                .role(Role.ACTIVE)
                 .build();
 
         User user = save(userDto);
