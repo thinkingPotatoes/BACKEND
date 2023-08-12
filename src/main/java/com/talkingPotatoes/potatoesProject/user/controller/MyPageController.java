@@ -42,7 +42,7 @@ public class MyPageController {
     /* 닉네임 수정 */
     @PatchMapping("/nickname")
     public ResponseEntity<Response> updateNickname(@RequestHeader(value = "userId") UUID loginId,
-                                                   @Valid NicknameRequest nicknameRequest) {
+                                                   @RequestBody @Valid  NicknameRequest nicknameRequest) {
         UserDto userDto = myPageService.updateNickname(loginId, nicknameRequest.getNickname());
 
         return ResponseEntity.status(HttpStatus.OK)

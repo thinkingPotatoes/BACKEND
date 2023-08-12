@@ -36,7 +36,7 @@ public class User extends BaseEntity {
 
     private String password;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true)
     private String nickname;
 
     private String title;

@@ -28,6 +28,7 @@ public class MyPageServiceImpl implements MyPageService {
     }
 
     @Override
+    @Transactional
     public UserDto updateNickname(UUID loginId, String nickname) {
         User user = userRepository.findById(loginId).orElseThrow(() -> new NotFoundException("회원 정보를 찾을 수 없습니다."));
         user.updateNickname(nickname);
