@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.talkingPotatoes.potatoesProject.blog.entity.QArticle.article;
+import static com.talkingPotatoes.potatoesProject.movie.entity.QMovie.movie;
 
 @Repository
 @RequiredArgsConstructor
@@ -29,7 +30,9 @@ public class ArticleQueryRepositoryImpl implements ArticleQueryRepository {
         JPAQuery<Article> query = queryFactory.selectFrom(article)
                 .from(article)
                 .where(article.userId.eq(userId))
-                .where(article.subject.contains(keyword).or(article.content.contains(keyword)))
+                .where(article.subject.contains(keyword)
+                        .or(article.content.contains(keyword))
+                        .or(article.movieId.eq(queryFactory.select(movie.docId).from(movie).where(movie.title.contains(keyword)))))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .orderBy(articleSort(pageable));
@@ -39,7 +42,9 @@ public class ArticleQueryRepositoryImpl implements ArticleQueryRepository {
         JPAQuery<Long> countQuery = queryFactory.select(article.count())
                 .from(article)
                 .where(article.userId.eq(userId))
-                .where(article.subject.contains(keyword));
+                .where(article.subject.contains(keyword)
+                        .or(article.content.contains(keyword))
+                        .or(article.movieId.eq(queryFactory.select(movie.docId).from(movie).where(movie.title.contains(keyword)))));
 
         return PageableExecutionUtils.getPage(articles, pageable, countQuery::fetchOne);
     }
