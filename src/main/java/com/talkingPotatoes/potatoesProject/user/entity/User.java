@@ -58,6 +58,14 @@ public class User extends BaseEntity {
         this.nickname = nickname;
     }
 
+    public void updateTitle(String title) {
+        if (title.isBlank()) {
+            this.title = this.nickname + "'s Filog";
+        } else {
+            this.title = title;
+        }
+    }
+
     public void continueSignUp(String nickname, String title) {
         this.nickname = nickname;
         this.title = title;

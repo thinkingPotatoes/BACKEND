@@ -31,7 +31,6 @@ public class UserController {
 	public ResponseEntity<Response> signUp(@RequestBody @Valid SignUpRequest signUpRequest) throws Exception {
 
 		UserDto userDto = userDtoMapper.fromSignUpRequest(signUpRequest);
-		userDto.setPlatform(Platform.NONE);
 
 		UserDto resultDto = userService.signUp(userDto);
 

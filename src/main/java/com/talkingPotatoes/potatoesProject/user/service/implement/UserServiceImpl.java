@@ -1,5 +1,6 @@
 package com.talkingPotatoes.potatoesProject.user.service.implement;
 
+import com.talkingPotatoes.potatoesProject.user.entity.Platform;
 import com.talkingPotatoes.potatoesProject.user.entity.Role;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +30,9 @@ public class UserServiceImpl implements UserService {
 	@Override
 	@Transactional
 	public UserDto signUp(UserDto userDto) {
+		userDto.setPlatform(Platform.NONE);
+		userDto.setTitle(userDto.getNickname() + "'s filog");
+
 		if (userDto.getRole() == null) userDto.setRole(Role.ACTIVE);
 		User user = userRepository.save(userMapper.toEntity(userDto));
 
