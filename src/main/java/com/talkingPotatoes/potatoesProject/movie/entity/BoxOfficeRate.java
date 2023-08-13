@@ -27,6 +27,8 @@ public class BoxOfficeRate extends BaseEntity{
 
     private String movieNm;
 
+    private String targetDt;
+
     private Integer rate;
 
     private String posterUrl;

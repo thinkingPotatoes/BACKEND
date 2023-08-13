@@ -12,6 +12,8 @@ public class BoxOfficeRateDto {
 
     private String movieNm;
 
+    private String targetDt;
+
     private Integer rate;
 
     private String posterUrl;

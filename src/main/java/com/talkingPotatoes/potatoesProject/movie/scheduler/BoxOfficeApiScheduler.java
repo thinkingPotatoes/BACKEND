@@ -30,7 +30,7 @@ public class BoxOfficeApiScheduler {
 
     private List<BoxOfficeRateDto> boxOfficeRateList;
 
-    @Scheduled(cron = "0 0 3 * * ?") // (cron = "0 0 3 ? * *")
+    @Scheduled(cron = "0 56 * * * ?") // (cron = "0 0 3 ? * *")
     public void getData() throws Exception{
         /* 실행 시간 재는 코드 */
         StopWatch stopWatch = new StopWatch();
@@ -71,7 +71,8 @@ public class BoxOfficeApiScheduler {
         rd.close();
         conn.disconnect();
 
-        parse(sb.toString());
+        String targetDt = simpleDateFormat.format(date.getTime()).toString();
+        parse(sb.toString(), targetDt);
 
         boxOfficeRateRepository.saveAll(boxOfficeRateMapper.toEntity(boxOfficeRateList));
 
@@ -80,13 +81,12 @@ public class BoxOfficeApiScheduler {
         log.info("코드 실행 시간 (s): " + stopWatch.getTotalTimeSeconds());
     }
 
-    public void parse(String body) throws Exception {
+    public void parse(String body, String targetDt) throws Exception {
         StringTokenizer st = null;
 
         /* Result Array 파싱 */
         JSONParser parser = new JSONParser();
         JSONObject object = (JSONObject) parser.parse(body);
-        log.info(object.toJSONString());
         JSONObject data = (JSONObject) object.get("boxOfficeResult");
         JSONArray result = (JSONArray) data.get("dailyBoxOfficeList");
 
@@ -100,8 +100,9 @@ public class BoxOfficeApiScheduler {
             BoxOfficeRateDto boxOfficeRateDto = BoxOfficeRateDto.builder()
                     .rate(Integer.parseInt(boxOfficeObj.get("rank").toString()))
                     .movieId(movieData.get(1))
-                    .posterUrl(movieData.get(0))
                     .movieNm(boxOfficeObj.get("movieNm").toString())
+                    .targetDt(targetDt)
+                    .posterUrl(movieData.get(0))
                     .audiAcc(boxOfficeObj.get("audiAcc").toString())
                     .build();
 
@@ -121,7 +122,6 @@ public class BoxOfficeApiScheduler {
        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
        conn.setRequestMethod("GET");
        conn.setRequestProperty("Content-type", "application/json");
-       log.info(urlBuilder.toString());
 
        BufferedReader rd;
        if (conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
@@ -139,7 +139,6 @@ public class BoxOfficeApiScheduler {
 
        /* 영화정보 담겨있는 Result Array 파싱 */
        JSONParser parser = new JSONParser();
-       log.info(sb.toString());
        JSONObject object = (JSONObject) parser.parse(sb.toString());
        JSONArray data = (JSONArray) object.get("Data");
        JSONObject dataObj = (JSONObject) data.get(0);
