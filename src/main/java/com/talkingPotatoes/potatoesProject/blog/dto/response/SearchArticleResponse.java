@@ -13,6 +13,8 @@ public class SearchArticleResponse {
 
     private String subject;
 
+    private String movieId;
+
     private String content;
 
     private String poster;

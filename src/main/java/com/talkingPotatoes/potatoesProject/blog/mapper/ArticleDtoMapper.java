@@ -4,7 +4,7 @@ import com.talkingPotatoes.potatoesProject.blog.dto.ArticleDto;
 import com.talkingPotatoes.potatoesProject.blog.dto.request.CreateArticleRequest;
 import com.talkingPotatoes.potatoesProject.blog.dto.request.UpdateArticleRequest;
 import com.talkingPotatoes.potatoesProject.blog.dto.ArticleSearchDto;
-import com.talkingPotatoes.potatoesProject.blog.dto.response.SearchArticleListResponse;
+import com.talkingPotatoes.potatoesProject.blog.dto.response.GetArticleResponse;
 import com.talkingPotatoes.potatoesProject.blog.dto.response.SearchArticleResponse;
 import org.mapstruct.Mapper;
 
@@ -21,5 +21,7 @@ public interface ArticleDtoMapper {
 
     List<SearchArticleResponse> toSearchMyArticleResponse(List<ArticleSearchDto> articleSearchDto);
 
-    SearchArticleListResponse toSearchMyArticleResponse(List<SearchArticleResponse> searchArticleResponseList, long totalCnt, int curPage);
+    GetArticleResponse toGetArticleResponse(ArticleDto articleDto);
+
+    List<GetArticleResponse> toGetArticleResponse(List<ArticleDto> articleDtoList);
 }
