@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.talkingPotatoes.potatoesProject.common.entity.BaseEntity;
+import io.jsonwebtoken.Claims;
 import jakarta.persistence.*;
 import org.hibernate.annotations.UuidGenerator;
 
@@ -70,10 +71,4 @@ public class User extends BaseEntity {
         this.nickname = nickname;
         this.title = title;
     }
-
-//    public User(Claims claims) {
-//        this.id = UUID.fromString(claims.get("id").toString());
-//        this.userId = claims.get("userId").toString();
-//        this.role = Role.valueOf(claims.get("role").toString());
-//    }
 }

@@ -7,10 +7,13 @@ import com.talkingPotatoes.potatoesProject.blog.dto.request.UpdateUserGenreReque
 import com.talkingPotatoes.potatoesProject.blog.mapper.BlogDtoMapper;
 import com.talkingPotatoes.potatoesProject.blog.service.BlogService;
 import com.talkingPotatoes.potatoesProject.common.dto.response.Response;
+import com.talkingPotatoes.potatoesProject.user.dto.Auth;
+import com.talkingPotatoes.potatoesProject.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -25,8 +28,8 @@ public class BlogController {
 
     /* 블로그 조회 */
     @GetMapping
-    public ResponseEntity<Response> getBlog(@RequestHeader(value = "userId") UUID loginId) {
-        BlogDto blogDto = blogService.get(loginId);
+    public ResponseEntity<Response> getBlog(@AuthenticationPrincipal Auth auth) {
+        BlogDto blogDto = blogService.get(auth.getId());
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(Response.builder()

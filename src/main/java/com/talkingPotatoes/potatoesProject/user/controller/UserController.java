@@ -1,7 +1,13 @@
 package com.talkingPotatoes.potatoesProject.user.controller;
 
+
+import com.talkingPotatoes.potatoesProject.user.dto.TokenDto;
+import com.talkingPotatoes.potatoesProject.user.dto.request.LoginRequest;
+import com.talkingPotatoes.potatoesProject.user.dto.request.OAuthSignUpRequest;
 import com.talkingPotatoes.potatoesProject.user.dto.request.UserIdRequest;
+import com.talkingPotatoes.potatoesProject.user.entity.Role;
 import com.talkingPotatoes.potatoesProject.user.service.EmailService;
+import com.talkingPotatoes.potatoesProject.user.service.OAuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,42 +29,66 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class UserController {
 
-	private final UserService userService;
-	private final EmailService emailService;
-	private final UserDtoMapper userDtoMapper;
+    private final UserService userService;
+    private final EmailService emailService;
+    private final OAuthService oAuthService;
+    private final UserDtoMapper userDtoMapper;
 
-	@PostMapping("/signup")
-	public ResponseEntity<Response> signUp(@RequestBody @Valid SignUpRequest signUpRequest) throws Exception {
+    @PostMapping("/signup")
+    public ResponseEntity<Response> signUp(@RequestBody @Valid SignUpRequest signUpRequest) throws Exception {
+        UserDto userDto = userDtoMapper.fromSignUpRequest(signUpRequest);
 
-		UserDto userDto = userDtoMapper.fromSignUpRequest(signUpRequest);
+        UserDto resultDto = userService.signUp(userDto);
 
-		UserDto resultDto = userService.signUp(userDto);
+        emailService.sendSignUpMessage(resultDto);
 
-		emailService.sendSignUpMessage(resultDto);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(Response.builder()
+                        .message("회원이 생성되었습니다.")
+                        .build());
+    }
 
-		return ResponseEntity.status(HttpStatus.OK)
-			.body(Response.builder()
-				.message("회원이 생성되었습니다.")
-				.build());
-	}
+    @PostMapping("/email-send")
+    public ResponseEntity<Response> emailSend(@RequestBody UserIdRequest userIdRequest) throws Exception {
+        emailService.sendEmail(userIdRequest.getUserId());
 
-	@PostMapping("/email-send")
-	public ResponseEntity<Response> emailSend(@RequestBody UserIdRequest userIdRequest) throws Exception {
-		emailService.sendEmail(userIdRequest.getUserId());
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(Response.builder()
+                        .message("이메일이 전송되었습니다.")
+                        .build());
+    }
 
-		return ResponseEntity.status(HttpStatus.OK)
-				.body(Response.builder()
-						.message("이메일이 전송되었습니다.")
-						.build());
-	}
+    @GetMapping("/email-verify")
+    public ResponseEntity<Response> emailVerify(@RequestParam("token") String token) {
+        emailService.verify(token);
 
-	@GetMapping("/email-verify")
-	public ResponseEntity<Response> emailVerify(@RequestParam("token") String token) {
-		emailService.verify(token);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(Response.builder()
+                        .message("이메일 인증이 완료되었습니다.")
+                        .build());
+    }
 
-		return ResponseEntity.status(HttpStatus.OK)
-				.body(Response.builder()
-						.message("이메일 인증이 완료되었습니다.")
-						.build());
-	}
+    /* sns 로그인 이후 */
+    @PostMapping("/signup/oauth")
+    // accessToken으로 user 값을 가져와야할지, userId를 requestBody에 넣어서 와야할지에 대한 고민
+    public ResponseEntity<Response> oAuthSignUp(@RequestBody OAuthSignUpRequest oAuthSignUpRequest) {
+        UserDto userDto = userDtoMapper.fromOAuthSignUpRequest(oAuthSignUpRequest);
+        oAuthService.oAuthContinueSignUp(userDto);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(Response.builder()
+                        .message("회원이 생성되었습니다.")
+                        .build());
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<Response> login(@RequestBody LoginRequest loginRequest) {
+        TokenDto tokenDto = userService.login(userDtoMapper.fromLoginRequest(loginRequest));
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(Response.builder()
+                        .message("로그인 되었습니다.")
+                        .data(userDtoMapper.toTokenResponse(tokenDto))
+                        .build());
+    }
 }
