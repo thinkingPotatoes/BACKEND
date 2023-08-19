@@ -50,9 +50,7 @@ public class UserController {
         userDto.setPlatform(Platform.NONE);
         userDto.setRole(Role.ACTIVE);
 
-        List<UserGenreDto> userGenreDtoList = userGenreDtoMapper.fromSignupRequest(signUpRequest.getGenreList());
-
-        UserDto resultDto = userService.signUp(userDto, userGenreDtoList);
+        UserDto resultDto = userService.signUp(userDto);
 
         emailService.sendSignUpMessage(resultDto);
 

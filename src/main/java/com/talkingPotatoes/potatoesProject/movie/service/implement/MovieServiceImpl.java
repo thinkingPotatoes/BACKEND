@@ -42,23 +42,17 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public Page<MovieDto> searchMovies(String keyword, Pageable pageable) {
-        log.info("MovieServiceImpl::: searchMovies keyword: {}", keyword);
         Page<Movie> movies = movieQueryRepository.findByKeyword(keyword, pageable);
 
-        log.info("MovieServiceImpl::: searchMovies count: {}", movies.getNumberOfElements());
         return new PageImpl<>(movieMapper.toDto(movies.getContent()), movies.getPageable(), movies.getTotalElements());
     }
 
     @Override
     public MovieInfoDto selectMovie(String movieId) {
-        log.info("MovieServiceImpl::: selectMovie start");
-
-        log.info("MovieServiceImpl::: selectMovie " + movieId);
         Movie movie = movieRepository.findById(movieId).orElseThrow(() -> new NotFoundException("영화 정보가 없습니다."));
         List<Staff> staffList = staffRepository.findByDocId(movie.getDocId());
         List<Poster> posterList = posterRepository.findByDocId(movie.getDocId());
 
-        log.info("MovieServiceImpl::: selectMovie finish");
         return MovieInfoDto.builder()
                 .movieDto(movieMapper.toDto(movie))
                 .staffDtoList(staffMapper.toDto(staffList))

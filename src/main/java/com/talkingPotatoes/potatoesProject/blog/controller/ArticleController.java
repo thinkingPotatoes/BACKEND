@@ -5,9 +5,11 @@ import com.talkingPotatoes.potatoesProject.blog.dto.ArticleSearchDto;
 import com.talkingPotatoes.potatoesProject.blog.dto.request.CreateArticleRequest;
 import com.talkingPotatoes.potatoesProject.blog.dto.request.SearchArticleRequest;
 import com.talkingPotatoes.potatoesProject.blog.dto.request.UpdateArticleRequest;
+import com.talkingPotatoes.potatoesProject.blog.dto.response.GetArticleResponse;
 import com.talkingPotatoes.potatoesProject.blog.dto.response.SearchArticleResponse;
 import com.talkingPotatoes.potatoesProject.blog.mapper.ArticleDtoMapper;
 import com.talkingPotatoes.potatoesProject.blog.service.ArticleService;
+import com.talkingPotatoes.potatoesProject.common.dto.response.ListResponse;
 import com.talkingPotatoes.potatoesProject.common.dto.response.Response;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -48,75 +50,85 @@ public class ArticleController {
     @PutMapping("/update")
     public ResponseEntity<Response> updateArticle(@RequestHeader(value = "userId") UUID login_id,
                                                   @RequestBody @Valid UpdateArticleRequest updateArticleRequest) {
-        String msg = "";
         ArticleDto articleDto = articleDtoMapper.fromUpdateArticleRequest(login_id, updateArticleRequest);
-        articleDto.setId(login_id);
+        articleDto.setUserId(login_id);
 
-        if (articleService.existArticleById(articleDto.getId())) {
-            /* Update Article */
-            articleService.updateArticle(articleDto);
-            msg = "글이 정상 업데이트되었습니다.";
-        } else {
-            /* Article Id is null */
-            msg = "해당 글은 존재하지 않습니다..";
-        }
+        articleService.updateArticle(articleDto);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(Response.builder()
-                        .message(msg)
+                        .message("글이 정상 업데이트되었습니다.")
                         .build());
     }
 
     /* 블로그 글 삭제 */
-    @DeleteMapping("/delete")
-    public ResponseEntity<Response> deleteArticle(@RequestHeader(value = "userId") UUID id) {
-        String msg = "";
-
-        if (articleService.existArticleById(id)) {
-            /* DELETE Article */
-            articleService.deleteArticle(id);
-            msg = "글이 정상 삭제되었습니다.";
-        } else {
-            /* Article Id is NULL */
-            msg = "해당 글은 존재하지 않습니다.";
-        }
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Response> deleteArticle(@RequestHeader(value = "userId") UUID login_id,
+                                                  @PathVariable("id") UUID id) {
+        articleService.deleteArticle(login_id, id);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(Response.builder()
-                        .message(msg)
+                        .message("글이 정상 삭제되었습니다.")
                         .build());
     }
 
     /* 블로그 글 단일 조회 */
     @GetMapping("/search/{articleId}")
-    public ResponseEntity<ArticleDto> getArticleById(@PathVariable UUID articleId) {
+    public ResponseEntity<Response> getArticleById(@PathVariable UUID articleId) {
         ArticleDto articleDto = articleService.searchArticleById(articleId);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(articleDto);
+                .body(Response.builder()
+                        .message("글이 정상 조회되었습니다.")
+                        .data(articleDtoMapper.toGetArticleResponse(articleDto))
+                        .build()
+                );
     }
 
     /* 영화 블로그 글 리스트 */
     @GetMapping("/movie/{movieId}")
-    public ResponseEntity<List<ArticleDto>> getArticleByMovieId(@PathVariable String movieId) {
-        List<ArticleDto> articleDtoList = articleService.searchArticleByMovieId(movieId);
+    public ResponseEntity<Response> getArticleByMovieId(@PathVariable String movieId,
+                                                        @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<ArticleDto> articleDtoList = articleService.searchArticleByMovieId(movieId, pageable);
+
+        List<GetArticleResponse> getArticleResponseList = articleDtoMapper.toGetArticleResponse(articleDtoList.getContent());
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(articleDtoList);
+                .body(Response.builder()
+                        .message("블로그 글 리스트가 정상 조회되었습니다.")
+                        .data(ListResponse.builder()
+                                .list(getArticleResponseList)
+                                .totalCnt(articleDtoList.getTotalElements())
+                                .curPage(pageable.getPageNumber())
+                                .build())
+                        .build()
+                );
     }
 
     /* 유저 블로그 글 리스트 */
     @GetMapping("/user")
-    public ResponseEntity<List<ArticleDto>> getArticleByUserId(@RequestHeader(value = "userId") UUID userId) {
-        List<ArticleDto> articleDtoList = articleService.searchArticleByUserId(userId);
+    public ResponseEntity<Response> getArticleByUserId(@RequestHeader(value = "userId") UUID userId,
+                                                       @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<ArticleDto> articleDtoList = articleService.searchArticleByUserId(userId, pageable);
+
+        List<GetArticleResponse> getArticleResponseList = articleDtoMapper.toGetArticleResponse(articleDtoList.getContent());
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(articleDtoList);
+                .body(Response.builder()
+                        .message("블로그 글 리스트가 정상 조회되었습니다.")
+                        .data(ListResponse.builder()
+                                .list(getArticleResponseList)
+                                .totalCnt(articleDtoList.getTotalElements())
+                                .curPage(pageable.getPageNumber())
+                                .build())
+                        .build()
+                );
     }
 
     /* 내 블로그 검색 */
     @PostMapping("/search/my-article")
-    public ResponseEntity<Response> getMyArticleByUserIdAndKeyword(@RequestHeader(value = "user-id") UUID userId,
+    public ResponseEntity<Response> getMyArticleByUserIdAndKeyword(@RequestHeader(value = "userId") UUID userId,
                                                                    @RequestBody @Valid SearchArticleRequest searchArticleRequest,
                                                                    @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<ArticleSearchDto> articleDto = articleService.searchArticleByUserIdAndKeyword(userId, searchArticleRequest.getKeyword(), pageable);
@@ -133,7 +145,11 @@ public class ArticleController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(Response.builder()
                         .message("내 블로그 검색 완료하였습니다.")
-                        .data(articleDtoMapper.toSearchMyArticleResponse(searchArticleResponseList, articleDto.getTotalElements(), pageable.getPageNumber()))
+                        .data(ListResponse.builder()
+                                .list(searchArticleResponseList)
+                                .totalCnt(articleDto.getTotalElements())
+                                .curPage(pageable.getPageNumber())
+                                .build())
                         .build());
     }
 }

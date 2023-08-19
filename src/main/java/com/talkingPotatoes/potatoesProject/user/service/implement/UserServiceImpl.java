@@ -29,50 +29,31 @@ import lombok.extern.slf4j.Slf4j;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final UserGenreRepository userGenreRepository;
     private final UserMapper userMapper;
-    private final UserGenreMapper userGenreMapper;
 
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder encoder;
 
     @Override
     @Transactional
-    public UserDto signUp(UserDto userDto,
-                          List<UserGenreDto> userGenreDtoList) {
-        log.info("UserServiceImpl::: signUp start");
+    public UserDto signUp(UserDto userDto) {
+        User user = userMapper.toEntity(userDto);
+        user.updatePassword(encoder.encode(userDto.getPassword()));
+		user = userRepository.save(user);
 
-        User request = userMapper.toEntity(userDto);
-        request.updatePassword(encoder.encode(userDto.getPassword()));
-        User user = userRepository.save(request);
-        log.info("UserServiceImpl::: signUp " + user.getId() + " saved");
-
-        for (UserGenreDto dto : userGenreDtoList) {
-            dto.setUserId(user.getId());
-        }
-
-        userGenreRepository.saveAll(userGenreMapper.toEntity(userGenreDtoList));
-        log.info("UserServiceImpl::: signUp " + user.getId() + " userGenre saved");
-
-        log.info("UserServiceImpl::: signUp finish");
         return userMapper.toDto(user);
     }
 
     @Override
     public TokenDto login(UserDto userDto) {
-        log.info("UserServiceImpl::: login start");
-
         User user = userRepository.findByUserId(userDto.getUserId())
                 .orElseThrow(() -> new NotFoundException("사용자를 찾지 못하였습니다."));
 
         if (!encoder.matches(userDto.getPassword(), user.getPassword())) throw new NotFoundException("사용자를 찾지 못하였습니다.");
 
         if (!user.isEmailChecked()) throw new AccessDeniedException("이메일을 확인해주세요");
-
-        log.info("UserServiceImpl::: login " + String.valueOf(user.getId()) + " " + user.getUserId() + " " + user.getRole());
         TokenDto tokenDto = jwtTokenProvider.createToken(String.valueOf(user.getId()), user.getUserId(), user.getRole());
 
-        log.info("UserServiceImpl::: login finish");
         return tokenDto;
     }
 }
