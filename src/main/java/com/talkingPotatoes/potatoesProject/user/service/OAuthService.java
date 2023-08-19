@@ -6,5 +6,5 @@ import com.talkingPotatoes.potatoesProject.user.dto.UserGenreDto;
 import java.util.List;
 
 public interface OAuthService {
-    void oAuthContinueSignUp(UserDto userDto, List<UserGenreDto> userGenreDtoList);
+    void oAuthContinueSignUp(UserDto userDto);
 }

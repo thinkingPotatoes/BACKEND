@@ -1,6 +1,7 @@
 package com.talkingPotatoes.potatoesProject.common.jwt;
 
 import com.talkingPotatoes.potatoesProject.common.util.RedisUtil;
+import com.talkingPotatoes.potatoesProject.user.dto.Auth;
 import com.talkingPotatoes.potatoesProject.user.dto.TokenDto;
 import com.talkingPotatoes.potatoesProject.user.entity.Role;
 import com.talkingPotatoes.potatoesProject.user.entity.User;
@@ -44,27 +45,26 @@ public class JwtTokenProvider {
         this.key = Keys.hmacShaKeyFor(this.secretKey.getBytes());
     }
 
-    public String createAccessToken(String id, String userId, Role role) {
-        return generateToken(id, userId, role, Long.parseLong(accessTokenValidMilSecond));
+    public String createAccessToken(String id, Role role) {
+        return generateToken(id, role, Long.parseLong(accessTokenValidMilSecond));
     }
 
-    public String createRefreshToken(String id, String userId, Role role) {
-        redisUtil.setDataExpire(id, userId, Long.parseLong(refreshTokenValidMilSecond));
-        return generateToken(id, userId, role, Long.parseLong(refreshTokenValidMilSecond));
+    public String createRefreshToken(String id, Role role) {
+        redisUtil.setDataExpire(id, role.name(), Long.parseLong(refreshTokenValidMilSecond));
+        return generateToken(id, role, Long.parseLong(refreshTokenValidMilSecond));
     }
 
-    public TokenDto createToken(String id, String userId, Role role) {
+    public TokenDto createToken(String id, Role role) {
         return TokenDto.builder()
-                .accessToken(createAccessToken(id, userId, role))
-                .refreshToken(createRefreshToken(id, userId, role))
+                .accessToken(createAccessToken(id, role))
+                .refreshToken(createRefreshToken(id, role))
                 .build();
     }
 
-    protected String generateToken(String id, String userId, Role role, long tokenValidMilSecond) {
+    protected String generateToken(String id, Role role, long tokenValidMilSecond) {
         Date now = new Date();
         return Jwts.builder()
                 .claim("id", id)
-                .claim("userId", userId)
                 .claim("role", role)
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + tokenValidMilSecond))
@@ -93,7 +93,7 @@ public class JwtTokenProvider {
     }
 
     public Authentication getAuthentication(Claims claims) {
-        return new UsernamePasswordAuthenticationToken(new User(claims), "", getAuthorities(claims));
+        return new UsernamePasswordAuthenticationToken(new Auth(claims), "", getAuthorities(claims));
     }
 
     public String getUserId(Claims claims) {

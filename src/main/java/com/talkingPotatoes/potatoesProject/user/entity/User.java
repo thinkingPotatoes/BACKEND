@@ -29,10 +29,9 @@ public class User extends BaseEntity {
 
     private String password;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true)
     private String nickname;
 
-    @Column(nullable = false)
     private String title;
 
     @Column(nullable = false)
@@ -53,19 +52,23 @@ public class User extends BaseEntity {
     }
 
     public void updatePassword(String password) {
-        if (password != null) {
-            this.password = password;
+        this.password = password;
+    }
+
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void updateTitle(String title) {
+        if (title.isBlank()) {
+            this.title = this.nickname + "'s Filog";
+        } else {
+            this.title = title;
         }
     }
 
     public void continueSignUp(String nickname, String title) {
         this.nickname = nickname;
         this.title = title;
-    }
-
-    public User(Claims claims) {
-        this.id = UUID.fromString(claims.get("id").toString());
-        this.userId = claims.get("userId").toString();
-        this.role = Role.valueOf(claims.get("role").toString());
     }
 }

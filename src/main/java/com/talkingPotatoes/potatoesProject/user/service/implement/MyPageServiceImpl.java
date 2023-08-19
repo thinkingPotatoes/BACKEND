@@ -2,31 +2,37 @@ package com.talkingPotatoes.potatoesProject.user.service.implement;
 
 import com.talkingPotatoes.potatoesProject.common.exception.NotFoundException;
 import com.talkingPotatoes.potatoesProject.user.dto.UserDto;
-import com.talkingPotatoes.potatoesProject.user.dto.UserGenreDto;
 import com.talkingPotatoes.potatoesProject.user.entity.User;
 import com.talkingPotatoes.potatoesProject.user.mapper.UserMapper;
 import com.talkingPotatoes.potatoesProject.user.repository.UserRepository;
-import com.talkingPotatoes.potatoesProject.user.service.OAuthService;
+import com.talkingPotatoes.potatoesProject.user.service.MyPageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
-@Slf4j
+import java.util.UUID;
+
 @RequiredArgsConstructor
+@Service
 @Transactional(readOnly = true)
-public class OAuthServiceImpl implements OAuthService {
-
+@Slf4j
+public class MyPageServiceImpl implements MyPageService {
     private final UserRepository userRepository;
-
     private final UserMapper userMapper;
 
     @Override
+    public UserDto get(UUID loginId) {
+        User user = userRepository.findById(loginId).orElseThrow(() -> new NotFoundException("회원 정보를 찾을 수 없습니다."));
+        return userMapper.toDto(user);
+    }
+
+    @Override
     @Transactional
-    public void oAuthContinueSignUp(UserDto userDto) {
-        User user = userRepository.findById(userDto.getId()).orElseThrow(() -> new NotFoundException("등록된 회원이 아닙니다."));
-        user.continueSignUp(userDto.getNickname(), userDto.getTitle());
-        userRepository.save(user);
+    public UserDto updateNickname(UUID loginId, String nickname) {
+        User user = userRepository.findById(loginId).orElseThrow(() -> new NotFoundException("회원 정보를 찾을 수 없습니다."));
+        user.updateNickname(nickname);
+        User resultUser = userRepository.save(user);
+        return userMapper.toDto(resultUser);
     }
 }
