@@ -40,9 +40,9 @@ public class BlogController {
 
     /* 블로그 제목 수정 */
     @PatchMapping("/title")
-    public ResponseEntity<Response> updateTitle(@RequestHeader(value = "userId") UUID loginId,
+    public ResponseEntity<Response> updateTitle(@AuthenticationPrincipal Auth auth,
                                                 @RequestBody UpdateBlogTitleRequest updateBlogTitleRequest) {
-        blogService.updateTitle(loginId, updateBlogTitleRequest.getTitle());
+        blogService.updateTitle(auth.getId(), updateBlogTitleRequest.getTitle());
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(Response.builder()
@@ -52,9 +52,9 @@ public class BlogController {
 
     /* 블로그 관심사 수정 */
     @PatchMapping("/genre")
-    public ResponseEntity<Response> updateGenre(@RequestHeader(value = "userId") UUID loginId,
+    public ResponseEntity<Response> updateGenre(@AuthenticationPrincipal Auth auth,
                                                 @RequestBody UpdateUserGenreRequest updateUserGenreRequest) {
-        blogService.updateGenre(loginId, updateUserGenreRequest.getGenreList());
+        blogService.updateGenre(auth.getId(), updateUserGenreRequest.getGenreList());
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(Response.builder()
@@ -65,9 +65,9 @@ public class BlogController {
 
     /* 블로그 정보 수정 */
     @PatchMapping
-    public ResponseEntity<Response> updateBlog(@RequestHeader(value = "userId") UUID loginId,
+    public ResponseEntity<Response> updateBlog(@AuthenticationPrincipal Auth auth,
                                                @RequestBody UpdateBlogRequest updateBlogRequest) {
-        blogService.update(blogDtoMapper.fromBlogRequest(loginId, updateBlogRequest));
+        blogService.update(blogDtoMapper.fromBlogRequest(auth.getId(), updateBlogRequest));
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(Response.builder()

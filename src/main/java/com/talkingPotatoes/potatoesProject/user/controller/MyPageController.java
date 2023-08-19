@@ -1,6 +1,7 @@
 package com.talkingPotatoes.potatoesProject.user.controller;
 
 import com.talkingPotatoes.potatoesProject.common.dto.response.Response;
+import com.talkingPotatoes.potatoesProject.user.dto.Auth;
 import com.talkingPotatoes.potatoesProject.user.dto.UserDto;
 import com.talkingPotatoes.potatoesProject.user.dto.request.NicknameRequest;
 import com.talkingPotatoes.potatoesProject.user.mapper.UserDtoMapper;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -25,9 +27,9 @@ public class MyPageController {
 
     /* 마이페이지 정보 조회 */
     @GetMapping
-    public ResponseEntity<Response> getMyPage(@RequestHeader(value = "userId") UUID loginId) {
+    public ResponseEntity<Response> getMyPage(@AuthenticationPrincipal Auth auth) {
 
-        UserDto userDto = myPageService.get(loginId);
+        UserDto userDto = myPageService.get(auth.getId());
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(Response.builder()
@@ -41,9 +43,9 @@ public class MyPageController {
 
     /* 닉네임 수정 */
     @PatchMapping("/nickname")
-    public ResponseEntity<Response> updateNickname(@RequestHeader(value = "userId") UUID loginId,
+    public ResponseEntity<Response> updateNickname(@AuthenticationPrincipal Auth auth,
                                                    @RequestBody @Valid  NicknameRequest nicknameRequest) {
-        UserDto userDto = myPageService.updateNickname(loginId, nicknameRequest.getNickname());
+        UserDto userDto = myPageService.updateNickname(auth.getId(), nicknameRequest.getNickname());
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(Response.builder()
