@@ -1,4 +1,4 @@
-package com.talkingPotatoes.potatoesProject.user.entity;
+package com.talkingPotatoes.potatoesProject.blog.entity;
 
 import java.sql.Types;
 import java.util.UUID;
@@ -25,7 +25,6 @@ public class Genre {
 	@Id
 	@GeneratedValue
 	@UuidGenerator
-	@JdbcTypeCode(Types.VARCHAR)
 	private UUID id;
 
 	@Column(unique = true, nullable = false)

@@ -1,10 +1,7 @@
-package com.talkingPotatoes.potatoesProject.user.entity;
+package com.talkingPotatoes.potatoesProject.blog.entity;
 
-import java.sql.Types;
 import java.util.UUID;
 
-import com.talkingPotatoes.potatoesProject.common.entity.BaseEntity;
-import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UuidGenerator;
 
 import jakarta.persistence.Column;
@@ -21,19 +18,16 @@ import lombok.experimental.SuperBuilder;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserGenre extends BaseEntity {
+public class UserGenre {
 
 	@Id
 	@GeneratedValue
 	@UuidGenerator
-	@JdbcTypeCode(Types.VARCHAR)
 	private UUID id;
 
 	@Column(nullable = false)
-	@JdbcTypeCode(Types.VARCHAR)
 	private UUID userId;
 
 	@Column(nullable = false)
-	@JdbcTypeCode(Types.VARCHAR)
 	private UUID genreId;
 }
