@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/blog")
+@RequestMapping("/filog")
 @RequiredArgsConstructor
 @Slf4j
 public class ArticleController {

@@ -1,10 +1,10 @@
 package com.talkingPotatoes.potatoesProject.user.entity;
 
-import java.sql.Types;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.talkingPotatoes.potatoesProject.common.entity.BaseEntity;
+import io.jsonwebtoken.Claims;
 import jakarta.persistence.*;
 import org.hibernate.annotations.UuidGenerator;
 
@@ -29,6 +29,7 @@ public class User extends BaseEntity {
 
     private String password;
 
+    @Column(unique = true)
     private String nickname;
 
     private String title;
@@ -51,8 +52,18 @@ public class User extends BaseEntity {
     }
 
     public void updatePassword(String password) {
-        if (password != null) {
-            this.password = password;
+        this.password = password;
+    }
+
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void updateTitle(String title) {
+        if (title.isBlank()) {
+            this.title = this.nickname + "'s Filog";
+        } else {
+            this.title = title;
         }
     }
 
@@ -60,10 +71,4 @@ public class User extends BaseEntity {
         this.nickname = nickname;
         this.title = title;
     }
-
-//    public User(Claims claims) {
-//        this.id = UUID.fromString(claims.get("id").toString());
-//        this.userId = claims.get("userId").toString();
-//        this.role = Role.valueOf(claims.get("role").toString());
-//    }
 }
