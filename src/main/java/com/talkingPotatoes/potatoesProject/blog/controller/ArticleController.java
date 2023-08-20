@@ -48,10 +48,9 @@ public class ArticleController {
 
     /* 블로그 글 수정 */
     @PutMapping("/update")
-    public ResponseEntity<Response> updateArticle(@RequestHeader(value = "userId") UUID login_id,
+    public ResponseEntity<Response> updateArticle(@RequestHeader(value = "userId") UUID loginId,
                                                   @RequestBody @Valid UpdateArticleRequest updateArticleRequest) {
-        ArticleDto articleDto = articleDtoMapper.fromUpdateArticleRequest(login_id, updateArticleRequest);
-        articleDto.setUserId(login_id);
+        ArticleDto articleDto = articleDtoMapper.fromUpdateArticleRequest(loginId, updateArticleRequest);
 
         articleService.updateArticle(articleDto);
 
@@ -63,9 +62,9 @@ public class ArticleController {
 
     /* 블로그 글 삭제 */
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Response> deleteArticle(@RequestHeader(value = "userId") UUID login_id,
+    public ResponseEntity<Response> deleteArticle(@RequestHeader(value = "userId") UUID loginId,
                                                   @PathVariable("id") UUID id) {
-        articleService.deleteArticle(login_id, id);
+        articleService.deleteArticle(loginId, id);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(Response.builder()
@@ -108,9 +107,9 @@ public class ArticleController {
 
     /* 유저 블로그 글 리스트 */
     @GetMapping("/user")
-    public ResponseEntity<Response> getArticleByUserId(@RequestHeader(value = "userId") UUID userId,
+    public ResponseEntity<Response> getArticleByUserId(@RequestHeader(value = "userId") UUID loginId,
                                                        @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<ArticleDto> articleDtoList = articleService.searchArticleByUserId(userId, pageable);
+        Page<ArticleDto> articleDtoList = articleService.searchArticleByUserId(loginId, pageable);
 
         List<GetArticleResponse> getArticleResponseList = articleDtoMapper.toGetArticleResponse(articleDtoList.getContent());
 
@@ -128,10 +127,10 @@ public class ArticleController {
 
     /* 내 블로그 검색 */
     @PostMapping("/search/my-article")
-    public ResponseEntity<Response> getMyArticleByUserIdAndKeyword(@RequestHeader(value = "userId") UUID userId,
+    public ResponseEntity<Response> getMyArticleByUserIdAndKeyword(@RequestHeader(value = "userId") UUID loginId,
                                                                    @RequestBody @Valid SearchArticleRequest searchArticleRequest,
                                                                    @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<ArticleSearchDto> articleDto = articleService.searchArticleByUserIdAndKeyword(userId, searchArticleRequest.getKeyword(), pageable);
+        Page<ArticleSearchDto> articleDto = articleService.searchArticleByUserIdAndKeyword(loginId, searchArticleRequest.getKeyword(), pageable);
 
         if (articleDto.getNumberOfElements() == 0) {
             return ResponseEntity.status(HttpStatus.OK)
