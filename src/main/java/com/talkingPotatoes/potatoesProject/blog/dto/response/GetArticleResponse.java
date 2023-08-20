@@ -30,5 +30,7 @@ public class GetArticleResponse {
 
     private Boolean spoiler;
 
+    private Long likeCnt;
+
     private LocalDateTime watchedAt;
 }
