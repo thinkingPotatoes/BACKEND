@@ -1,30 +1,29 @@
-package com.talkingPotatoes.potatoesProject.blog.entity;
+package com.talkingPotatoes.potatoesProject.user.entity;
 
+import java.sql.Types;
 import java.util.UUID;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UuidGenerator;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
 @Getter
-@SuperBuilder
+@Builder
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserGenre {
+public class Genre {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@UuidGenerator
 	private UUID id;
 
-	@Column(nullable = false)
-	private UUID userId;
-
-	@Column(nullable = false)
-	private UUID genreId;
+	@Column(unique = true, nullable = false)
+	private String genre;
 }

@@ -1,6 +1,6 @@
-package com.talkingPotatoes.potatoesProject.blog.dto.request;
+package com.talkingPotatoes.potatoesProject.user.dto.request;
 
-import com.talkingPotatoes.potatoesProject.blog.entity.Genre;
+import com.talkingPotatoes.potatoesProject.user.entity.Genre;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

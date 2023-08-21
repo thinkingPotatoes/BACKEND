@@ -8,11 +8,7 @@ import java.util.List;
 
 @Data
 @Builder
-public class MyPageResponse {
-    private String userId;
-
-    private String nickname;
-
+public class BlogInfoResponse {
     private String title;
 
     private List<Genre> genreList;

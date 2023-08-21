@@ -1,18 +1,16 @@
-package com.talkingPotatoes.potatoesProject.blog.repository.implement;
+package com.talkingPotatoes.potatoesProject.user.repository.implement;
 
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.talkingPotatoes.potatoesProject.blog.entity.Genre;
-import com.talkingPotatoes.potatoesProject.blog.entity.UserGenre;
-import com.talkingPotatoes.potatoesProject.blog.repository.UserGenreQueryRepository;
+import com.talkingPotatoes.potatoesProject.user.repository.UserGenreQueryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.UUID;
 
-import static com.talkingPotatoes.potatoesProject.blog.entity.QGenre.genre1;
-import static com.talkingPotatoes.potatoesProject.blog.entity.QUserGenre.userGenre;
+import static com.talkingPotatoes.potatoesProject.user.entity.QGenre.genre1;
+import static com.talkingPotatoes.potatoesProject.user.entity.QUserGenre.userGenre;
 
 @Repository
 @RequiredArgsConstructor
