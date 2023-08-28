@@ -59,6 +59,10 @@ public class User extends BaseEntity {
         this.nickname = nickname;
     }
 
+    public void updateWithdraw() {
+        this.deletedAt = LocalDateTime.now();
+    }
+
     public void updateTitle(String title) {
         if (title.isBlank()) {
             this.title = this.nickname + "'s Filog";

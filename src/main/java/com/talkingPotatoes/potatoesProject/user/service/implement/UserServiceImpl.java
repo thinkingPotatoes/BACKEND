@@ -20,6 +20,8 @@ import com.talkingPotatoes.potatoesProject.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.UUID;
+
 @RequiredArgsConstructor
 @Service
 @Transactional(readOnly = true)
@@ -32,16 +34,16 @@ public class UserServiceImpl implements UserService {
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder encoder;
 
-	@Override
-	@Transactional
-	public UserDto signUp(UserDto userDto) {
-		userDto.setPlatform(Platform.NONE);
-		userDto.setTitle(userDto.getNickname() + "'s filog");
+    @Override
+    @Transactional
+    public UserDto signUp(UserDto userDto) {
+        userDto.setPlatform(Platform.NONE);
+        userDto.setTitle(userDto.getNickname() + "'s filog");
 
-		if (userDto.getRole() == null) userDto.setRole(Role.ACTIVE);
-		userDto.setPassword(encoder.encode(userDto.getPassword()));
+        if (userDto.getRole() == null) userDto.setRole(Role.ACTIVE);
+        userDto.setPassword(encoder.encode(userDto.getPassword()));
 
-		User user = userRepository.save(userMapper.toEntity(userDto));
+        User user = userRepository.save(userMapper.toEntity(userDto));
 
         return userMapper.toDto(user);
     }
@@ -57,5 +59,15 @@ public class UserServiceImpl implements UserService {
         TokenDto tokenDto = jwtTokenProvider.createToken(String.valueOf(user.getId()), user.getRole());
 
         return tokenDto;
+    }
+
+    @Override
+    public void withdraw(UUID id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("사용자를 찾지 못하였습니다."));
+
+        user.updateWithdraw();
+        
+        userRepository.save(user);
     }
 }
