@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.talkingPotatoes.potatoesProject.common.entity.BaseEntity;
-import io.jsonwebtoken.Claims;
 import jakarta.persistence.*;
 import org.hibernate.annotations.UuidGenerator;
 
@@ -29,9 +28,10 @@ public class User extends BaseEntity {
 
     private String password;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String nickname;
 
+    @Column(nullable = false)
     private String title;
 
     @Column(nullable = false)
