@@ -17,11 +17,5 @@ public interface MyPageService {
 
     void updatePassword(UUID loginId, String password);
 
-    void updateNickname(UUID loginId, String nickname);
-
-    void updateTitle(UUID loginId, String title);
-
-    void updateGenre(UUID loginId, List<Genre> genreList);
-
     void update(UUID loginId, MyPageDto myPageDto);
 }

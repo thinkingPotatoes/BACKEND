@@ -1,15 +1,12 @@
 package com.talkingPotatoes.potatoesProject.user.controller;
 
-import com.talkingPotatoes.potatoesProject.blog.dto.request.UpdateBlogTitleRequest;
 import com.talkingPotatoes.potatoesProject.user.dto.BlogInfoDto;
 import com.talkingPotatoes.potatoesProject.user.dto.MyPageDto;
 import com.talkingPotatoes.potatoesProject.user.dto.request.MyPageRequest;
 import com.talkingPotatoes.potatoesProject.user.dto.request.PasswordRequest;
-import com.talkingPotatoes.potatoesProject.user.dto.request.UpdateUserGenreRequest;
 import com.talkingPotatoes.potatoesProject.common.dto.response.Response;
 import com.talkingPotatoes.potatoesProject.user.dto.Auth;
 import com.talkingPotatoes.potatoesProject.user.dto.UserDto;
-import com.talkingPotatoes.potatoesProject.user.dto.request.NicknameRequest;
 import com.talkingPotatoes.potatoesProject.user.mapper.UserDtoMapper;
 import com.talkingPotatoes.potatoesProject.user.service.MyPageService;
 import jakarta.validation.Valid;
@@ -88,42 +85,6 @@ public class MyPageController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(Response.builder()
                         .message("비밀번호가 수정되었습니다.")
-                        .build());
-    }
-
-    /* 닉네임 수정 */
-    @PatchMapping("/nickname")
-    public ResponseEntity<Response> updateNickname(@AuthenticationPrincipal Auth auth,
-                                                   @RequestBody @Valid  NicknameRequest nicknameRequest) {
-        myPageService.updateNickname(auth.getId(), nicknameRequest.getNickname());
-
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(Response.builder()
-                        .message("닉네임이 수정되었습니다.")
-                        .build());
-    }
-
-    /* 블로그 제목 수정 */
-    @PatchMapping("/title")
-    public ResponseEntity<Response> updateTitle(@AuthenticationPrincipal Auth auth,
-                                                @RequestBody UpdateBlogTitleRequest updateBlogTitleRequest) {
-        myPageService.updateTitle(auth.getId(), updateBlogTitleRequest.getTitle());
-
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(Response.builder()
-                        .message("제목이 수정되었습니다.")
-                        .build());
-    }
-
-    /* 블로그 관심사 수정 */
-    @PatchMapping("/genre")
-    public ResponseEntity<Response> updateGenre(@AuthenticationPrincipal Auth auth,
-                                                @RequestBody UpdateUserGenreRequest updateUserGenreRequest) {
-        myPageService.updateGenre(auth.getId(), updateUserGenreRequest.getGenreList());
-
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(Response.builder()
-                        .message("관심 장르가 수정되었습니다.")
                         .build());
     }
 }

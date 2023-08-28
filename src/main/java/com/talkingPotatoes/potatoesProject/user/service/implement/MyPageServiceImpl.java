@@ -78,23 +78,28 @@ public class MyPageServiceImpl implements MyPageService {
 
     @Override
     @Transactional
-    public void updateNickname(UUID loginId, String nickname) {
+    public void update(UUID loginId, MyPageDto myPageDto) {
+        updateNickname(loginId, myPageDto.getNickname());
+        updateTitle(loginId, myPageDto.getTitle());
+        updateGenre(loginId, myPageDto.getGenreList());
+    }
+
+    @Transactional
+    void updateNickname(UUID loginId, String nickname) {
         User user = userRepository.findById(loginId).orElseThrow(() -> new NotFoundException("회원 정보를 찾을 수 없습니다."));
         user.updateNickname(nickname);
         userRepository.save(user);
     }
 
-    @Override
     @Transactional
-    public void updateTitle(UUID loginId, String title) {
+    void updateTitle(UUID loginId, String title) {
         User user = userRepository.findById(loginId).orElseThrow(() -> new NotFoundException("회원 정보를 찾을 수 없습니다."));
         user.updateTitle(title);
         userRepository.save(user);
     }
 
-    @Override
     @Transactional
-    public void updateGenre(UUID loginId, List<Genre> genreList) {
+    void updateGenre(UUID loginId, List<Genre> genreList) {
         // 기존 정보 전부 삭제하고 다시 등록
         userGenreRepository.deleteByUserId(loginId);
 
@@ -106,11 +111,4 @@ public class MyPageServiceImpl implements MyPageService {
         }
     }
 
-    @Override
-    public void update(UUID loginId, MyPageDto myPageDto) {
-        updatePassword(loginId, myPageDto.getPassword());
-        updateNickname(loginId, myPageDto.getNickname());
-        updateTitle(loginId, myPageDto.getTitle());
-        updateGenre(loginId, myPageDto.getGenreList());
-    }
 }
