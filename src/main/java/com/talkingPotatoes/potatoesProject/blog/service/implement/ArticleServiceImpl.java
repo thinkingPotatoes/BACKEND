@@ -79,16 +79,21 @@ public class ArticleServiceImpl implements ArticleService {
     public void updateLikes(UUID userId, UUID articleId) {
         Article article = articleRepository.findById(articleId).orElseThrow(() -> new NotFoundException("글을 찾을 수가 없습니다."));
 
-        if (likesRepository.existsByUserIdAndArticleId(userId, articleId)) {
-            likesRepository.deleteByUserIdAndArticleId(userId, articleId);
+        boolean clicked = true;
+
+        if (likesRepository.existsByUserIdAndArticleIdAndClickedIsTrue(userId, articleId)) {
+            clicked = false;
             article.updateLikeCnt(-1);
         } else {
-            likesRepository.save(Likes.builder()
-                    .userId(userId)
-                    .articleId(articleId)
-                    .build());
             article.updateLikeCnt(1);
         }
+
+        System.out.println(clicked);
+        likesRepository.save(Likes.builder()
+                .userId(userId)
+                .articleId(articleId)
+                .clicked(clicked)
+                .build());
 
         articleRepository.save(article);
     }
@@ -112,10 +117,9 @@ public class ArticleServiceImpl implements ArticleService {
         List<ArticleSearchDto> articleSearchDtoList = new ArrayList<>();
         for (Article article : articles.getContent()) {
             String poster = movieRepository.findById(article.getMovieId()).orElseThrow(() -> new NotFoundException("영화를 찾을 수 없습니다.")).getPoster();
-            Long likeCnt = likesRepository.countByArticleId(article.getId());
             Long commentCnt = commentRepository.countByArticleId(article.getId());
 
-            articleSearchDtoList.add(articleMapper.toDto(article, poster, likeCnt, commentCnt));
+            articleSearchDtoList.add(articleMapper.toDto(article, poster, commentCnt));
         }
 
         return new PageImpl<>(articleSearchDtoList, articles.getPageable(), articles.getTotalElements());

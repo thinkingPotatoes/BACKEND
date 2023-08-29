@@ -6,7 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.ColumnDefault;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 @Entity
@@ -14,15 +16,15 @@ import java.util.UUID;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
+@IdClass(LikesId.class)
 public class Likes extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(nullable = false)
     private UUID userId;
 
-    @Column(nullable = false)
+    @Id
     private UUID articleId;
+
+    private boolean clicked;
 }
+
