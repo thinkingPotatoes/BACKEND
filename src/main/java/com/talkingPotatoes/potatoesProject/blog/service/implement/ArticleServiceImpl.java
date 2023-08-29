@@ -88,7 +88,6 @@ public class ArticleServiceImpl implements ArticleService {
             article.updateLikeCnt(1);
         }
 
-        System.out.println(clicked);
         likesRepository.save(Likes.builder()
                 .userId(userId)
                 .articleId(articleId)
