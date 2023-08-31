@@ -3,6 +3,7 @@ package com.talkingPotatoes.potatoesProject.blog.service.implement;
 import com.talkingPotatoes.potatoesProject.blog.dto.ArticleDto;
 import com.talkingPotatoes.potatoesProject.blog.dto.ArticleSearchDto;
 import com.talkingPotatoes.potatoesProject.blog.entity.Article;
+import com.talkingPotatoes.potatoesProject.blog.entity.Likes;
 import com.talkingPotatoes.potatoesProject.blog.mapper.ArticleMapper;
 import com.talkingPotatoes.potatoesProject.blog.repository.ArticleQueryRepository;
 import com.talkingPotatoes.potatoesProject.blog.repository.ArticleRepository;
@@ -74,10 +75,32 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    @Transactional
+    public void updateLikes(UUID userId, UUID articleId) {
+        Article article = articleRepository.findById(articleId).orElseThrow(() -> new NotFoundException("글을 찾을 수가 없습니다."));
+
+        boolean clicked = true;
+
+        if (likesRepository.existsByUserIdAndArticleIdAndClickedIsTrue(userId, articleId)) {
+            clicked = false;
+            article.updateLikeCnt(-1);
+        } else {
+            article.updateLikeCnt(1);
+        }
+
+        likesRepository.save(Likes.builder()
+                .userId(userId)
+                .articleId(articleId)
+                .clicked(clicked)
+                .build());
+
+        articleRepository.save(article);
+    }
+
+    @Override
     public Page<ArticleDto> searchArticleByMovieId(String movieId, Pageable pageable) {
         Page<Article> articles = articleRepository.findAllByMovieId(movieId, pageable);
         return new PageImpl<>(articleMapper.toDto(articles.getContent()), articles.getPageable(), articles.getTotalElements());
-
     }
 
     @Override
@@ -93,10 +116,9 @@ public class ArticleServiceImpl implements ArticleService {
         List<ArticleSearchDto> articleSearchDtoList = new ArrayList<>();
         for (Article article : articles.getContent()) {
             String poster = movieRepository.findById(article.getMovieId()).orElseThrow(() -> new NotFoundException("영화를 찾을 수 없습니다.")).getPoster();
-            Long likesCnt = likesRepository.countByArticleId(article.getId());
             Long commentCnt = commentRepository.countByArticleId(article.getId());
 
-            articleSearchDtoList.add(articleMapper.toDto(article, poster, likesCnt, commentCnt));
+            articleSearchDtoList.add(articleMapper.toDto(article, poster, commentCnt));
         }
 
         return new PageImpl<>(articleSearchDtoList, articles.getPageable(), articles.getTotalElements());
