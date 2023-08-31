@@ -47,7 +47,9 @@ public class UserServiceImpl implements UserService {
             throw new DuplicationException("이메일 중복입니다.");
 
         if (userDto.getRole() == null) userDto.setRole(Role.INACTIVE);
-        userDto.setNickname(userDto.getNickname());
+
+        // 닉네임 랜덤 생성
+
         userDto.setPassword(encoder.encode(userDto.getPassword()));
 
         User user = userRepository.save(userMapper.toEntity(userDto));
@@ -77,9 +79,7 @@ public class UserServiceImpl implements UserService {
         if (!jwtTokenProvider.existsRefreshToken(refreshToken))
             throw new NotFoundException("재로그인이 필요합니다.");
 
-        System.out.println("A");
         String refreshUserId = jwtTokenProvider.getUserId(jwtTokenProvider.getClaimsFromToken(refreshToken));
-        System.out.println("B");
         User user = userRepository.findById(UUID.fromString(refreshUserId))
                 .orElseThrow(() -> new NotFoundException("사용자를 찾지 못하였습니다."));
 
