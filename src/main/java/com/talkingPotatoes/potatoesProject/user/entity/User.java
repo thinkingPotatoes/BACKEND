@@ -40,17 +40,13 @@ public class User extends BaseEntity {
 
     private LocalDateTime deletedAt;
 
-    @Column(columnDefinition = "boolean default false")
-    private boolean emailChecked;
-
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    public void updateEmailChecked(boolean checked) {
-        emailChecked = checked;
+    public void updateRole(Role role) {
+        this.role = role;
     }
-
     public void updatePassword(String password) {
         this.password = password;
     }

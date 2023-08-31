@@ -2,6 +2,8 @@ package com.talkingPotatoes.potatoesProject.user.service.implement;
 
 
 import com.talkingPotatoes.potatoesProject.common.exception.AccessDeniedException;
+import com.talkingPotatoes.potatoesProject.common.exception.DuplicationException;
+import com.talkingPotatoes.potatoesProject.common.exception.InactiveException;
 import com.talkingPotatoes.potatoesProject.common.exception.NotFoundException;
 import com.talkingPotatoes.potatoesProject.common.jwt.JwtTokenProvider;
 import com.talkingPotatoes.potatoesProject.user.dto.TokenDto;
@@ -20,6 +22,8 @@ import com.talkingPotatoes.potatoesProject.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.UUID;
+
 @RequiredArgsConstructor
 @Service
 @Transactional(readOnly = true)
@@ -32,16 +36,21 @@ public class UserServiceImpl implements UserService {
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder encoder;
 
-	@Override
-	@Transactional
-	public UserDto signUp(UserDto userDto) {
-		userDto.setPlatform(Platform.NONE);
-		userDto.setTitle(userDto.getNickname() + "'s filog");
+    @Override
+    @Transactional
+    public UserDto signUp(UserDto userDto) {
+        userDto.setPlatform(Platform.NONE);
 
-		if (userDto.getRole() == null) userDto.setRole(Role.ACTIVE);
-		userDto.setPassword(encoder.encode(userDto.getPassword()));
+        if (userRepository.existsUserByUserIdAndRole(userDto.getUserId(), Role.INACTIVE))
+            throw new InactiveException("이메일 인증이 필요합니다.");
+        if (userRepository.existsUserByUserIdAndRole(userDto.getUserId(), Role.ACTIVE))
+            throw new DuplicationException("이메일 중복입니다.");
 
-		User user = userRepository.save(userMapper.toEntity(userDto));
+        if (userDto.getRole() == null) userDto.setRole(Role.INACTIVE);
+        userDto.setNickname(userDto.getNickname());
+        userDto.setPassword(encoder.encode(userDto.getPassword()));
+
+        User user = userRepository.save(userMapper.toEntity(userDto));
 
         return userMapper.toDto(user);
     }
@@ -51,9 +60,29 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByUserId(userDto.getUserId())
                 .orElseThrow(() -> new NotFoundException("사용자를 찾지 못하였습니다."));
 
-        if (!encoder.matches(userDto.getPassword(), user.getPassword())) throw new NotFoundException("사용자를 찾지 못하였습니다.");
+        if (!encoder.matches(userDto.getPassword(), user.getPassword()))
+            throw new NotFoundException("사용자를 찾지 못하였습니다.");
 
-        if (!user.isEmailChecked()) throw new AccessDeniedException("이메일을 확인해주세요");
+        if (user.getRole() == Role.INACTIVE)
+            throw new AccessDeniedException("이메일을 확인해주세요");
+
+        TokenDto tokenDto = jwtTokenProvider.createToken(String.valueOf(user.getId()), user.getRole());
+
+        return tokenDto;
+    }
+
+    @Override
+    @Transactional
+    public TokenDto refreshToken(String refreshToken) {
+        if (!jwtTokenProvider.existsRefreshToken(refreshToken))
+            throw new NotFoundException("재로그인이 필요합니다.");
+
+        System.out.println("A");
+        String refreshUserId = jwtTokenProvider.getUserId(jwtTokenProvider.getClaimsFromToken(refreshToken));
+        System.out.println("B");
+        User user = userRepository.findById(UUID.fromString(refreshUserId))
+                .orElseThrow(() -> new NotFoundException("사용자를 찾지 못하였습니다."));
+
         TokenDto tokenDto = jwtTokenProvider.createToken(String.valueOf(user.getId()), user.getRole());
 
         return tokenDto;
