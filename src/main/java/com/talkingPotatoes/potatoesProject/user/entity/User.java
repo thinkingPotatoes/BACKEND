@@ -67,8 +67,4 @@ public class User extends BaseEntity {
         }
     }
 
-    public void continueSignUp(String nickname, String title) {
-        this.nickname = nickname;
-        this.title = title;
-    }
 }

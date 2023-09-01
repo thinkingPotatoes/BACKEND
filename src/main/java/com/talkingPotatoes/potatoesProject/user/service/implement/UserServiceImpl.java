@@ -7,6 +7,7 @@ import com.talkingPotatoes.potatoesProject.common.jwt.JwtTokenProvider;
 import com.talkingPotatoes.potatoesProject.user.dto.TokenDto;
 import com.talkingPotatoes.potatoesProject.user.entity.Platform;
 import com.talkingPotatoes.potatoesProject.user.entity.Role;
+import com.talkingPotatoes.potatoesProject.user.service.RandomNickname;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,10 +33,18 @@ public class UserServiceImpl implements UserService {
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder encoder;
 
+    private final RandomNickname randomNickname;
+
 	@Override
 	@Transactional
 	public UserDto signUp(UserDto userDto) {
 		userDto.setPlatform(Platform.NONE);
+
+        String nickname = "Filmo_"+ randomNickname.makeNickname();
+        while(userRepository.existsByNickname(nickname)) {
+            nickname = "Filmo_"+ randomNickname.makeNickname();
+        }
+        userDto.setNickname(nickname);
 		userDto.setTitle(userDto.getNickname() + "'s filog");
 
 		if (userDto.getRole() == null) userDto.setRole(Role.ACTIVE);
