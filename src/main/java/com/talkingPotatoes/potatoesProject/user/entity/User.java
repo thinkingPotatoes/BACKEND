@@ -30,9 +30,10 @@ public class User extends BaseEntity {
 
     private String password;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String nickname;
 
+    @Column(nullable = false)
     private String title;
 
     @Column(nullable = false)
@@ -68,8 +69,4 @@ public class User extends BaseEntity {
         }
     }
 
-    public void continueSignUp(String nickname, String title) {
-        this.nickname = nickname;
-        this.title = title;
-    }
 }

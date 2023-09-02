@@ -5,7 +5,6 @@ import com.talkingPotatoes.potatoesProject.user.dto.MyPageDto;
 import com.talkingPotatoes.potatoesProject.user.dto.TokenDto;
 import com.talkingPotatoes.potatoesProject.user.dto.request.LoginRequest;
 import com.talkingPotatoes.potatoesProject.user.dto.request.MyPageRequest;
-import com.talkingPotatoes.potatoesProject.user.dto.request.OAuthSignUpRequest;
 import com.talkingPotatoes.potatoesProject.user.dto.response.BlogInfoResponse;
 import com.talkingPotatoes.potatoesProject.user.dto.response.MyInfoResponse;
 import com.talkingPotatoes.potatoesProject.user.dto.response.TokenResponse;
@@ -20,8 +19,6 @@ import java.util.UUID;
 @Mapper(componentModel = "spring")
 public interface UserDtoMapper {
 	UserDto fromSignUpRequest(SignUpRequest signUpRequest);
-
-    UserDto fromOAuthSignUpRequest(OAuthSignUpRequest oAuthSignUpRequest);
 
     UserDto fromLoginRequest(LoginRequest loginRequest);
 
