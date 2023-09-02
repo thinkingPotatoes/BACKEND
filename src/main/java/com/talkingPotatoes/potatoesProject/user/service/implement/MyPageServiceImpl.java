@@ -62,6 +62,7 @@ public class MyPageServiceImpl implements MyPageService {
                 .nickname(user.getNickname())
                 .title(user.getTitle())
                 .genreNameList(genreList)
+                .platform(user.getPlatform())
                 .build();
 
         return myPageDto;

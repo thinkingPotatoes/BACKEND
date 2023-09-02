@@ -1,6 +1,7 @@
 package com.talkingPotatoes.potatoesProject.user.dto;
 
 import com.talkingPotatoes.potatoesProject.user.entity.Genre;
+import com.talkingPotatoes.potatoesProject.user.entity.Platform;
 import lombok.Builder;
 import lombok.Data;
 
@@ -16,4 +17,5 @@ public class MyPageDto {
     private String title;
     private List<Genre> genreList;
     private List<String> genreNameList;
+    private Platform platform;
 }
