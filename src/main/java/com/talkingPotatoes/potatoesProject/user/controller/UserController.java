@@ -4,7 +4,6 @@ package com.talkingPotatoes.potatoesProject.user.controller;
 import com.talkingPotatoes.potatoesProject.user.dto.Auth;
 import com.talkingPotatoes.potatoesProject.user.dto.TokenDto;
 import com.talkingPotatoes.potatoesProject.user.dto.request.*;
-import com.talkingPotatoes.potatoesProject.user.entity.Role;
 import com.talkingPotatoes.potatoesProject.user.dto.request.LoginRequest;
 import com.talkingPotatoes.potatoesProject.user.dto.request.UserIdRequest;
 import com.talkingPotatoes.potatoesProject.user.service.EmailService;

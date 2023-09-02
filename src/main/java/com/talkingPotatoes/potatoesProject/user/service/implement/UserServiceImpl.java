@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
             nickname = "Filmo_"+ randomNickname.makeNickname();
         }
         userDto.setNickname(nickname);
-        userDto.setTitle(userDto.getNickname() + "'s filog");
+        userDto.setTitle(userDto.getNickname() + "'s Filog");
 
         userDto.setPassword(encoder.encode(userDto.getPassword()));
 
