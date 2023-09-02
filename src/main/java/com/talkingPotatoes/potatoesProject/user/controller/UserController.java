@@ -92,6 +92,7 @@ public class UserController {
     }
 
     /* 회원탈퇴 */
+    @GetMapping("/withdraw")
     public ResponseEntity<Response> withdraw(@AuthenticationPrincipal Auth auth) {
         userService.withdraw(auth.getId());
 
