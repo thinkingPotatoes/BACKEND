@@ -31,5 +31,7 @@ public class ArticleDto extends BaseDto {
 
     private Boolean spoiler;
 
+    private Long likeCnt;
+
     private LocalDateTime watchedAt;
 }

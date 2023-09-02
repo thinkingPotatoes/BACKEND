@@ -11,6 +11,7 @@ import com.talkingPotatoes.potatoesProject.blog.mapper.ArticleDtoMapper;
 import com.talkingPotatoes.potatoesProject.blog.service.ArticleService;
 import com.talkingPotatoes.potatoesProject.common.dto.response.ListResponse;
 import com.talkingPotatoes.potatoesProject.common.dto.response.Response;
+import com.talkingPotatoes.potatoesProject.user.dto.Auth;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,8 +19,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,9 +38,9 @@ public class ArticleController {
 
     /* 블로그 글 등록 */
     @PostMapping("/create")
-    public ResponseEntity<Response> createArticle(@RequestHeader(value = "userId") UUID login_id,
+    public ResponseEntity<Response> createArticle(@AuthenticationPrincipal Auth auth,
                                                   @RequestBody @Valid CreateArticleRequest createArticleRequest) {
-        ArticleDto articleDto = articleDtoMapper.fromCreateArticleRequest(login_id, createArticleRequest);
+        ArticleDto articleDto = articleDtoMapper.fromCreateArticleRequest(auth.getId(), createArticleRequest);
         articleService.createArticle(articleDto);
 
         return ResponseEntity.status(HttpStatus.OK)
@@ -48,9 +51,9 @@ public class ArticleController {
 
     /* 블로그 글 수정 */
     @PutMapping("/update")
-    public ResponseEntity<Response> updateArticle(@RequestHeader(value = "userId") UUID loginId,
+    public ResponseEntity<Response> updateArticle(@AuthenticationPrincipal Auth auth,
                                                   @RequestBody @Valid UpdateArticleRequest updateArticleRequest) {
-        ArticleDto articleDto = articleDtoMapper.fromUpdateArticleRequest(loginId, updateArticleRequest);
+        ArticleDto articleDto = articleDtoMapper.fromUpdateArticleRequest(auth.getId(), updateArticleRequest);
 
         articleService.updateArticle(articleDto);
 
@@ -62,9 +65,9 @@ public class ArticleController {
 
     /* 블로그 글 삭제 */
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Response> deleteArticle(@RequestHeader(value = "userId") UUID loginId,
+    public ResponseEntity<Response> deleteArticle(@AuthenticationPrincipal Auth auth,
                                                   @PathVariable("id") UUID id) {
-        articleService.deleteArticle(loginId, id);
+        articleService.deleteArticle(auth.getId(), id);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(Response.builder()
@@ -85,10 +88,25 @@ public class ArticleController {
                 );
     }
 
+    /* 좋아요 수정 */
+    @GetMapping("/{articleId}/like")
+    public ResponseEntity<Response> updateLikes(@AuthenticationPrincipal Auth auth, @PathVariable UUID articleId) {
+        articleService.updateLikes(auth.getId(), articleId);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(Response.builder()
+                        .message("좋아요가 수정되었습니다.")
+                        .build());
+    }
+
     /* 영화 블로그 글 리스트 */
     @GetMapping("/movie/{movieId}")
     public ResponseEntity<Response> getArticleByMovieId(@PathVariable String movieId,
-                                                        @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+                                                        @PageableDefault(size = 10)
+                                                        @SortDefault.SortDefaults({
+                                                                @SortDefault(sort = "createdAt", direction = Sort.Direction.DESC),
+                                                                @SortDefault(sort = "likeCnt", direction = Sort.Direction.DESC)
+                                                        }) Pageable pageable) {
         Page<ArticleDto> articleDtoList = articleService.searchArticleByMovieId(movieId, pageable);
 
         List<GetArticleResponse> getArticleResponseList = articleDtoMapper.toGetArticleResponse(articleDtoList.getContent());
@@ -107,9 +125,13 @@ public class ArticleController {
 
     /* 유저 블로그 글 리스트 */
     @GetMapping("/user")
-    public ResponseEntity<Response> getArticleByUserId(@RequestHeader(value = "userId") UUID loginId,
-                                                       @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<ArticleDto> articleDtoList = articleService.searchArticleByUserId(loginId, pageable);
+    public ResponseEntity<Response> getArticleByUserId(@AuthenticationPrincipal Auth auth,
+                                                       @PageableDefault(size = 10)
+                                                       @SortDefault.SortDefaults({
+                                                               @SortDefault(sort = "createdAt", direction = Sort.Direction.DESC),
+                                                               @SortDefault(sort = "likeCnt", direction = Sort.Direction.DESC)
+                                                       }) Pageable pageable) {
+        Page<ArticleDto> articleDtoList = articleService.searchArticleByUserId(auth.getId(), pageable);
 
         List<GetArticleResponse> getArticleResponseList = articleDtoMapper.toGetArticleResponse(articleDtoList.getContent());
 
@@ -127,10 +149,14 @@ public class ArticleController {
 
     /* 내 블로그 검색 */
     @PostMapping("/search/my-article")
-    public ResponseEntity<Response> getMyArticleByUserIdAndKeyword(@RequestHeader(value = "userId") UUID loginId,
+    public ResponseEntity<Response> getMyArticleByUserIdAndKeyword(@AuthenticationPrincipal Auth auth,
                                                                    @RequestBody @Valid SearchArticleRequest searchArticleRequest,
-                                                                   @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<ArticleSearchDto> articleDto = articleService.searchArticleByUserIdAndKeyword(loginId, searchArticleRequest.getKeyword(), pageable);
+                                                                   @PageableDefault(size = 10)
+                                                                   @SortDefault.SortDefaults({
+                                                                           @SortDefault(sort = "createdAt", direction = Sort.Direction.DESC),
+                                                                           @SortDefault(sort = "likeCnt", direction = Sort.Direction.DESC)
+                                                                   }) Pageable pageable) {
+        Page<ArticleSearchDto> articleDto = articleService.searchArticleByUserIdAndKeyword(auth.getId(), searchArticleRequest.getKeyword(), pageable);
 
         if (articleDto.getNumberOfElements() == 0) {
             return ResponseEntity.status(HttpStatus.OK)

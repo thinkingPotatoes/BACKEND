@@ -1,6 +1,6 @@
-package com.talkingPotatoes.potatoesProject.blog.repository;
+package com.talkingPotatoes.potatoesProject.user.repository;
 
-import com.talkingPotatoes.potatoesProject.blog.entity.UserGenre;
+import com.talkingPotatoes.potatoesProject.user.entity.UserGenre;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

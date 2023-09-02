@@ -1,6 +1,5 @@
-package com.talkingPotatoes.potatoesProject.blog.repository;
+package com.talkingPotatoes.potatoesProject.user.repository;
 
-import com.talkingPotatoes.potatoesProject.blog.entity.Genre;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

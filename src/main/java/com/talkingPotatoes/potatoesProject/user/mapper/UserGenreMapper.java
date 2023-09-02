@@ -1,11 +1,11 @@
-package com.talkingPotatoes.potatoesProject.blog.mapper;
+package com.talkingPotatoes.potatoesProject.user.mapper;
 
 import java.util.List;
 
 import com.talkingPotatoes.potatoesProject.user.dto.UserGenreDto;
 import org.mapstruct.Mapper;
 
-import com.talkingPotatoes.potatoesProject.blog.entity.UserGenre;
+import com.talkingPotatoes.potatoesProject.user.entity.UserGenre;
 
 @Mapper(componentModel = "spring")
 public interface UserGenreMapper {
