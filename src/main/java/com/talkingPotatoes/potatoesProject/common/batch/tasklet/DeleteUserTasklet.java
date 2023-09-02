@@ -1,5 +1,6 @@
 package com.talkingPotatoes.potatoesProject.common.batch.tasklet;
 
+import com.talkingPotatoes.potatoesProject.user.entity.Role;
 import com.talkingPotatoes.potatoesProject.user.entity.User;
 import com.talkingPotatoes.potatoesProject.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,8 @@ public class DeleteUserTasklet implements Tasklet {
     @Override
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
         List<User> users = this.userRepository
-                        .findByEmailCheckedIsFalseAndUpdatedAtIsLessThan(
+                        .findByRoleAndUpdatedAtIsLessThan(
+                                Role.INACTIVE,
                                 LocalDateTime.now().minusDays(7));
 
         log.info("삭제 회원은 " + users.size() + " 명 입니다.");

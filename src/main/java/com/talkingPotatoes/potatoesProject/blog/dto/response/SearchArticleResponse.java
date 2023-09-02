@@ -23,7 +23,7 @@ public class SearchArticleResponse {
 
     private LocalDateTime watchedAt;
 
-    private Long likesCnt;
+    private Long likeCnt;
 
     private Long commentCnt;
 }

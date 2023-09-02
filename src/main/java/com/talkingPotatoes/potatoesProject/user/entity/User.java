@@ -4,8 +4,8 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.talkingPotatoes.potatoesProject.common.entity.BaseEntity;
-import io.jsonwebtoken.Claims;
 import jakarta.persistence.*;
+import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.UuidGenerator;
 
 import lombok.AllArgsConstructor;
@@ -18,6 +18,7 @@ import lombok.experimental.SuperBuilder;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@DynamicInsert
 public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,23 +41,23 @@ public class User extends BaseEntity {
 
     private LocalDateTime deletedAt;
 
-    @Column(columnDefinition = "boolean default false")
-    private boolean emailChecked;
-
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    public void updateEmailChecked(boolean checked) {
-        emailChecked = checked;
+    public void updateRole(Role role) {
+        this.role = role;
     }
-
     public void updatePassword(String password) {
         this.password = password;
     }
 
     public void updateNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    public void updateWithdraw() {
+        this.deletedAt = LocalDateTime.now();
     }
 
     public void updateTitle(String title) {

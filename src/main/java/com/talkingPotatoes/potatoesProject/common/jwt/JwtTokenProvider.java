@@ -50,8 +50,9 @@ public class JwtTokenProvider {
     }
 
     public String createRefreshToken(String id, Role role) {
-        redisUtil.setDataExpire(id, role.name(), Long.parseLong(refreshTokenValidMilSecond));
-        return generateToken(id, role, Long.parseLong(refreshTokenValidMilSecond));
+        String refreshToken = generateToken(id, role, Long.parseLong(refreshTokenValidMilSecond));
+        redisUtil.setDataExpire(refreshToken, role.name(), Long.parseLong(refreshTokenValidMilSecond));
+        return refreshToken;
     }
 
     public TokenDto createToken(String id, Role role) {
@@ -98,6 +99,11 @@ public class JwtTokenProvider {
 
     public String getUserId(Claims claims) {
         return (String) claims.get("id");
+    }
+
+    public boolean existsRefreshToken(String refreshToken) {
+        if (redisUtil.getData(refreshToken).isEmpty()) return false;
+        return true;
     }
 
     private Collection<? extends GrantedAuthority> getAuthorities(Claims claims) {

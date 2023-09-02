@@ -1,19 +1,18 @@
 package com.talkingPotatoes.potatoesProject.user.controller;
 
 
+import com.talkingPotatoes.potatoesProject.user.dto.Auth;
 import com.talkingPotatoes.potatoesProject.user.dto.TokenDto;
-import com.talkingPotatoes.potatoesProject.user.dto.request.LoginRequest;
-import com.talkingPotatoes.potatoesProject.user.dto.request.OAuthSignUpRequest;
-import com.talkingPotatoes.potatoesProject.user.dto.request.UserIdRequest;
+import com.talkingPotatoes.potatoesProject.user.dto.request.*;
 import com.talkingPotatoes.potatoesProject.user.entity.Role;
 import com.talkingPotatoes.potatoesProject.user.service.EmailService;
 import com.talkingPotatoes.potatoesProject.user.service.OAuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import com.talkingPotatoes.potatoesProject.user.dto.UserDto;
-import com.talkingPotatoes.potatoesProject.user.dto.request.SignUpRequest;
 import com.talkingPotatoes.potatoesProject.common.dto.response.Response;
 import com.talkingPotatoes.potatoesProject.user.entity.Platform;
 import com.talkingPotatoes.potatoesProject.user.mapper.UserDtoMapper;
@@ -88,6 +87,28 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(Response.builder()
                         .message("로그인 되었습니다.")
+                        .data(userDtoMapper.toTokenResponse(tokenDto))
+                        .build());
+    }
+
+    /* 회원탈퇴 */
+    @GetMapping("/withdraw")
+    public ResponseEntity<Response> withdraw(@AuthenticationPrincipal Auth auth) {
+        userService.withdraw(auth.getId());
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(Response.builder()
+                        .message("회원이 탈퇴되었습니다.")
+                        .build());
+    }
+
+    @PostMapping("/refresh-token")
+    public ResponseEntity<Response> refreshAccessToken(@RequestBody RefreshTokenRequest refreshTokenRequest) {
+        TokenDto tokenDto = userService.refreshToken(refreshTokenRequest.getRefreshToken());
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(Response.builder()
+                        .message("accessToken 재발급이 되었습니다.")
                         .data(userDtoMapper.toTokenResponse(tokenDto))
                         .build());
     }
