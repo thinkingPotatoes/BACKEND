@@ -55,7 +55,7 @@ public class OAuth2UserServiceImpl implements OAuth2UserService<OAuth2UserReques
                 .build();
 
         User user = userRepository.findByUserId(userDto.getUserId())
-                .orElse(userRepository.save(userMapper.toEntity(userDto)));
+                .orElseGet(()->userRepository.save(userMapper.toEntity(userDto)));
 
         return new CustomOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")),
