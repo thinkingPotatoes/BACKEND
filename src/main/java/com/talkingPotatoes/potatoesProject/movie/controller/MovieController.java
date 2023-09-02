@@ -1,11 +1,13 @@
 package com.talkingPotatoes.potatoesProject.movie.controller;
 
 import com.talkingPotatoes.potatoesProject.common.dto.response.Response;
+import com.talkingPotatoes.potatoesProject.movie.dto.BoxOfficeRateDto;
 import com.talkingPotatoes.potatoesProject.movie.dto.MovieDto;
 import com.talkingPotatoes.potatoesProject.movie.dto.MovieInfoDto;
 import com.talkingPotatoes.potatoesProject.movie.dto.request.SearchRequest;
 import com.talkingPotatoes.potatoesProject.movie.dto.response.SearchMovieListResponse;
 import com.talkingPotatoes.potatoesProject.movie.dto.response.SelectMovieResponse;
+import com.talkingPotatoes.potatoesProject.movie.mapper.BoxOfficeRateMapper;
 import com.talkingPotatoes.potatoesProject.movie.mapper.MovieDtoMapper;
 import com.talkingPotatoes.potatoesProject.movie.mapper.PosterDtoMapper;
 import com.talkingPotatoes.potatoesProject.movie.mapper.StaffDtoMapper;
@@ -20,6 +22,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.text.DateFormatter;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+
 @RestController
 @RequestMapping("/movies")
 @RequiredArgsConstructor
@@ -30,6 +38,7 @@ public class MovieController {
     private final MovieDtoMapper movieDtoMapper;
     private final StaffDtoMapper staffDtoMapper;
     private final PosterDtoMapper posterDtoMapper;
+    private final BoxOfficeRateMapper boxOfficeRateMapper;
 
     /* 영화검색 */
     @PostMapping("/search")
@@ -63,6 +72,21 @@ public class MovieController {
                 .body(Response.builder()
                         .message("영화 하나 조회 완료하였습니다.")
                         .data(response)
+                        .build());
+    }
+
+    /* 박스오피스 조회 */
+    @GetMapping("/boxOffice/{cur-date}")
+    public ResponseEntity<Response> getBoxOffice(@PathVariable("cur-date") String curDt) {
+        /* 박스오피스 전일자 조회 */
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        LocalDate prevDt = LocalDate.parse(curDt, formatter).minusDays(1);
+        Page<BoxOfficeRateDto> boxOfficeRateDtoList = movieService.getBoxOfficeRate(prevDt.toString().replaceAll("-",""));
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(Response.builder()
+                        .message("박스오피스 조회를 완료했습니다.")
+                        .data(boxOfficeRateDtoList)
                         .build());
     }
 }
