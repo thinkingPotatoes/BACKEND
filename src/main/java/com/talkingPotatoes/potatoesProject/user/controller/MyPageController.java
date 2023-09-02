@@ -2,12 +2,14 @@ package com.talkingPotatoes.potatoesProject.user.controller;
 
 import com.talkingPotatoes.potatoesProject.user.dto.BlogInfoDto;
 import com.talkingPotatoes.potatoesProject.user.dto.MyPageDto;
+import com.talkingPotatoes.potatoesProject.user.dto.request.EmailRequest;
 import com.talkingPotatoes.potatoesProject.user.dto.request.MyPageRequest;
 import com.talkingPotatoes.potatoesProject.user.dto.request.PasswordRequest;
 import com.talkingPotatoes.potatoesProject.common.dto.response.Response;
 import com.talkingPotatoes.potatoesProject.user.dto.Auth;
 import com.talkingPotatoes.potatoesProject.user.dto.UserDto;
 import com.talkingPotatoes.potatoesProject.user.mapper.UserDtoMapper;
+import com.talkingPotatoes.potatoesProject.user.service.EmailService;
 import com.talkingPotatoes.potatoesProject.user.service.MyPageService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 public class MyPageController {
 
     private final MyPageService myPageService;
+    private final EmailService emailService;
     private final UserDtoMapper userDtoMapper;
 
     /* 마이페이지 정보 조회 */
@@ -81,6 +84,29 @@ public class MyPageController {
     public ResponseEntity<Response> updatePassword(@AuthenticationPrincipal Auth auth,
                                                    @RequestBody @Valid PasswordRequest passwordRequest) {
         myPageService.updatePassword(auth.getId(), passwordRequest.getPassword());
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(Response.builder()
+                        .message("비밀번호가 수정되었습니다.")
+                        .build());
+    }
+
+    /* 비밀번호 재설정을 위한 이메일 전송 */
+    @PostMapping("/reset-password")
+    public ResponseEntity<Response> sendEmailForPassword(@RequestBody EmailRequest emailRequest) throws Exception {
+        emailService.sendEmailForPassword(emailRequest.getEmail());
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(Response.builder()
+                        .message("비밀번호 재설정을 위한 이메일이 전송되었습니다.")
+                        .build());
+    }
+
+    /* 비밀번호 재설정 */
+    @PatchMapping("/reset-password")
+    public ResponseEntity<Response> resetPassword(@RequestParam("token") String token,
+                                                  @RequestBody PasswordRequest passwordRequest) {
+        emailService.verifyForPassword(token, passwordRequest.getPassword());
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(Response.builder()

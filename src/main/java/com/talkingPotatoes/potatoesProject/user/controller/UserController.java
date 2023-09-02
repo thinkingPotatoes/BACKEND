@@ -49,7 +49,7 @@ public class UserController {
 
     @PostMapping("/email-send")
     public ResponseEntity<Response> emailSend(@RequestBody UserIdRequest userIdRequest) throws Exception {
-        emailService.sendEmail(userIdRequest.getUserId());
+        emailService.sendEmailForSignUp(userIdRequest.getUserId());
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(Response.builder()
@@ -59,7 +59,7 @@ public class UserController {
 
     @GetMapping("/email-verify")
     public ResponseEntity<Response> emailVerify(@RequestParam("token") String token) {
-        emailService.verify(token);
+        emailService.verifyForSignUp(token);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(Response.builder()
