@@ -10,10 +10,8 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class MyPageRequest {
-    @NotBlank(message = "닉네임은 필수 입력사항입니다.")
     private String nickname;
 
-    @NotBlank(message = "필로그명은 필수 입력사항입니다.")
     private String title;
 
     private List<Genre> genreList;
