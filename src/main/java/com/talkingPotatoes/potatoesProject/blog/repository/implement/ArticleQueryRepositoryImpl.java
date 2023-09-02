@@ -32,7 +32,7 @@ public class ArticleQueryRepositoryImpl implements ArticleQueryRepository {
                 .where(article.userId.eq(userId))
                 .where(article.subject.contains(keyword)
                         .or(article.content.contains(keyword))
-                        .or(article.movieId.eq(queryFactory.select(movie.docId).from(movie).where(movie.title.contains(keyword)))))
+                        .or(article.movieId.in(queryFactory.select(movie.docId).from(movie).where(movie.title.contains(keyword)))))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .orderBy(articleSort(pageable));
@@ -44,7 +44,7 @@ public class ArticleQueryRepositoryImpl implements ArticleQueryRepository {
                 .where(article.userId.eq(userId))
                 .where(article.subject.contains(keyword)
                         .or(article.content.contains(keyword))
-                        .or(article.movieId.eq(queryFactory.select(movie.docId).from(movie).where(movie.title.contains(keyword)))));
+                        .or(article.movieId.in(queryFactory.select(movie.docId).from(movie).where(movie.title.contains(keyword)))));
 
         return PageableExecutionUtils.getPage(articles, pageable, countQuery::fetchOne);
     }
@@ -69,6 +69,8 @@ public class ArticleQueryRepositoryImpl implements ArticleQueryRepository {
                         return new OrderSpecifier(direction, article.createdAt);
                     case "watchedAt":
                         return new OrderSpecifier(direction, article.watchedAt);
+                    case "likeCnt":
+                        return new OrderSpecifier(direction, article.likeCnt);
                 }
             }
         }

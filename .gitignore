@@ -39,4 +39,5 @@ out/
 ### 설정파일 ###
 src/main/resources/env.yml
 
+### SSL ###
 keystore.jks
