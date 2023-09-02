@@ -89,7 +89,7 @@ public class ArticleController {
     }
 
     /* 좋아요 수정 */
-    @PostMapping("/{articleId}/like")
+    @GetMapping("/{articleId}/like")
     public ResponseEntity<Response> updateLikes(@AuthenticationPrincipal Auth auth, @PathVariable UUID articleId) {
         articleService.updateLikes(auth.getId(), articleId);
 
