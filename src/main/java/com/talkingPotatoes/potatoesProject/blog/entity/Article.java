@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UuidGenerator;
 
@@ -19,6 +20,7 @@ import java.util.UUID;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
+@DynamicInsert
 public class Article extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,7 +51,12 @@ public class Article extends BaseEntity {
 
     private Boolean spoiler;
 
+    @ColumnDefault("0")
     private Long likeCnt;
 
     private LocalDateTime watchedAt;
+
+    public void updateLikeCnt(int likeCnt) {
+        this.likeCnt += likeCnt;
+    }
 }

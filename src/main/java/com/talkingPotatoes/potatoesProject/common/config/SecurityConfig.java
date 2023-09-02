@@ -43,7 +43,8 @@ public class SecurityConfig {
                                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                                 .requestMatchers("/users/signup").permitAll()
                                 .requestMatchers("/users/login").permitAll()
-                                .anyRequest().authenticated()
+                                .requestMatchers("/users/refresh-token").permitAll()
+                                .anyRequest().permitAll()
                 )
                 .logout(logout -> {
                     logout.logoutUrl("/users/logout");

@@ -11,4 +11,7 @@ public interface UserService {
     TokenDto login(UserDto userDto);
 
     void withdraw(UUID id);
+
+    TokenDto refreshToken(String refreshToken);
+
 }
