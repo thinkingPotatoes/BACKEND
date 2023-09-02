@@ -25,6 +25,22 @@ public class GlobalExceptionHandler {
                         .build());
     }
 
+    @ExceptionHandler({InactiveException.class})
+    protected ResponseEntity<Response> handleInactiveException(InactiveException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(Response.builder()
+                        .message(ex.getMessage())
+                        .build());
+    }
+
+    @ExceptionHandler({DuplicationException.class})
+    protected ResponseEntity<Response> handleDuplicationException(DuplicationException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(Response.builder()
+                        .message(ex.getMessage())
+                        .build());
+    }
+
     @ExceptionHandler({Exception.class})
     protected ResponseEntity<Response> handleServerException(Exception ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

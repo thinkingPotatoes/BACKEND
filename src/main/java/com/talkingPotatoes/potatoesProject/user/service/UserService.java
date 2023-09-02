@@ -7,4 +7,6 @@ public interface UserService {
 	UserDto signUp(UserDto memberDto);
 
     TokenDto login(UserDto userDto);
+
+    TokenDto refreshToken(String refreshToken);
 }
