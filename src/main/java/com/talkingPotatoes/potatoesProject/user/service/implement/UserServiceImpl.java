@@ -87,4 +87,14 @@ public class UserServiceImpl implements UserService {
 
         return tokenDto;
     }
+
+    @Override
+    public void withdraw(UUID id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("사용자를 찾지 못하였습니다."));
+
+        user.updateWithdraw();
+        
+        userRepository.save(user);
+    }
 }
