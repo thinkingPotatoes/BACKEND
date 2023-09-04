@@ -1,5 +1,6 @@
 package com.talkingPotatoes.potatoesProject.user.service;
 
+import com.talkingPotatoes.potatoesProject.user.dto.CheckUserDto;
 import com.talkingPotatoes.potatoesProject.user.dto.TokenDto;
 import com.talkingPotatoes.potatoesProject.user.dto.UserDto;
 
@@ -14,4 +15,5 @@ public interface UserService {
 
     TokenDto refreshToken(String refreshToken);
 
+    CheckUserDto checkUserId(String userId);
 }
