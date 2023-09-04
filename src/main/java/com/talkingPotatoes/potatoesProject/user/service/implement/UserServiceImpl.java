@@ -6,6 +6,8 @@ import com.talkingPotatoes.potatoesProject.common.exception.DuplicationException
 import com.talkingPotatoes.potatoesProject.common.exception.InactiveException;
 import com.talkingPotatoes.potatoesProject.common.exception.NotFoundException;
 import com.talkingPotatoes.potatoesProject.common.jwt.JwtTokenProvider;
+import com.talkingPotatoes.potatoesProject.user.dto.CheckUserDto;
+import com.talkingPotatoes.potatoesProject.user.dto.Status;
 import com.talkingPotatoes.potatoesProject.user.dto.TokenDto;
 import com.talkingPotatoes.potatoesProject.user.entity.Platform;
 import com.talkingPotatoes.potatoesProject.user.entity.Role;
@@ -23,6 +25,7 @@ import com.talkingPotatoes.potatoesProject.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -76,6 +79,9 @@ public class UserServiceImpl implements UserService {
         if (user.getRole() == Role.INACTIVE)
             throw new AccessDeniedException("이메일을 확인해주세요");
 
+        if (user.getRole() == Role.WITHDRAWAL)
+            throw new AccessDeniedException("회원이 탈퇴하었습니다.");
+
         TokenDto tokenDto = jwtTokenProvider.createToken(String.valueOf(user.getId()), user.getRole());
 
         return tokenDto;
@@ -94,6 +100,30 @@ public class UserServiceImpl implements UserService {
         TokenDto tokenDto = jwtTokenProvider.createToken(String.valueOf(user.getId()), user.getRole());
 
         return tokenDto;
+    }
+
+    @Override
+    public CheckUserDto checkUserId(String userId) {
+        Optional<User> user = userRepository.findByUserId(userId);
+        if (!user.isPresent()) {
+            return CheckUserDto.builder()
+                    .check(Status.WAITED)
+                    .build();
+        } else {
+            if (user.get().getRole() == Role.INACTIVE) {
+                return CheckUserDto.builder()
+                        .check(Status.INACTIVE)
+                        .build();
+            } else if (user.get().getRole() == Role.WITHDRAWAL) {
+                return CheckUserDto.builder()
+                        .check(Status.WITHDRAWAL)
+                        .build();
+            } else {
+                return CheckUserDto.builder()
+                        .check(Status.ACTIVE)
+                        .build();
+            }
+        }
     }
 
     @Override

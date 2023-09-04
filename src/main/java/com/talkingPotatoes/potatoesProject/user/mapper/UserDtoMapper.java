@@ -1,17 +1,11 @@
 package com.talkingPotatoes.potatoesProject.user.mapper;
 
-import com.talkingPotatoes.potatoesProject.user.dto.BlogInfoDto;
-import com.talkingPotatoes.potatoesProject.user.dto.MyPageDto;
-import com.talkingPotatoes.potatoesProject.user.dto.TokenDto;
+import com.talkingPotatoes.potatoesProject.user.dto.*;
 import com.talkingPotatoes.potatoesProject.user.dto.request.LoginRequest;
 import com.talkingPotatoes.potatoesProject.user.dto.request.MyPageRequest;
-import com.talkingPotatoes.potatoesProject.user.dto.response.BlogInfoResponse;
-import com.talkingPotatoes.potatoesProject.user.dto.response.MyInfoResponse;
-import com.talkingPotatoes.potatoesProject.user.dto.response.TokenResponse;
-import com.talkingPotatoes.potatoesProject.user.dto.response.MyPageResponse;
+import com.talkingPotatoes.potatoesProject.user.dto.response.*;
 import org.mapstruct.Mapper;
 
-import com.talkingPotatoes.potatoesProject.user.dto.UserDto;
 import com.talkingPotatoes.potatoesProject.user.dto.request.SignUpRequest;
 
 import java.util.UUID;
@@ -31,4 +25,6 @@ public interface UserDtoMapper {
     BlogInfoResponse toBlogInfoResponse(BlogInfoDto blogInfoDto);
 
     MyInfoResponse toMyInfoResponse(UserDto userDto);
+
+    CheckUserResponse toCheckUserResponse(CheckUserDto checkUserDto);
 }

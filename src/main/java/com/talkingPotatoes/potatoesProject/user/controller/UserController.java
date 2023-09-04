@@ -2,10 +2,12 @@ package com.talkingPotatoes.potatoesProject.user.controller;
 
 
 import com.talkingPotatoes.potatoesProject.user.dto.Auth;
+import com.talkingPotatoes.potatoesProject.user.dto.CheckUserDto;
 import com.talkingPotatoes.potatoesProject.user.dto.TokenDto;
 import com.talkingPotatoes.potatoesProject.user.dto.request.*;
 import com.talkingPotatoes.potatoesProject.user.dto.request.LoginRequest;
 import com.talkingPotatoes.potatoesProject.user.dto.request.UserIdRequest;
+import com.talkingPotatoes.potatoesProject.user.dto.response.CheckUserResponse;
 import com.talkingPotatoes.potatoesProject.user.service.EmailService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +32,17 @@ public class UserController {
     private final UserService userService;
     private final EmailService emailService;
     private final UserDtoMapper userDtoMapper;
+
+    @PostMapping("/check-user")
+    public ResponseEntity<Response> checkUser(@RequestBody @Valid UserIdRequest userIdRequest) {
+        CheckUserDto checkUserDto = userService.checkUserId(userIdRequest.getUserId());
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(Response.builder()
+                        .message("이메일을 검색했습니다.")
+                        .data(userDtoMapper.toCheckUserResponse(checkUserDto))
+                        .build());
+    }
 
     @PostMapping("/signup")
     public ResponseEntity<Response> signUp(@RequestBody @Valid SignUpRequest signUpRequest) throws Exception {

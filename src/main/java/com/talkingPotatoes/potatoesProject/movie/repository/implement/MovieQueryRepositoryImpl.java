@@ -31,7 +31,7 @@ public class MovieQueryRepositoryImpl implements MovieQueryRepository {
         JPAQuery<Movie> query = queryFactory.selectFrom(movie)
                 .from(movie)
                 .where(movie.title.contains(keyword).or(
-                        movie.docId.eq(
+                        movie.docId.contains(
                                 queryFactory.select(staff.docId)
                                 .from(staff)
                                 .where(staff.docId.eq(movie.docId))
@@ -47,7 +47,7 @@ public class MovieQueryRepositoryImpl implements MovieQueryRepository {
         JPAQuery<Long> countQuery = queryFactory.select(movie.count())
                 .from(movie)
                 .where(movie.title.contains(keyword).or(
-                        movie.docId.eq(
+                        movie.docId.contains(
                                 queryFactory.select(staff.docId)
                                         .from(staff)
                                         .where(staff.docId.eq(movie.docId))

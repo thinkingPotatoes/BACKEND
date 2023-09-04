@@ -2,12 +2,12 @@ package com.talkingPotatoes.potatoesProject.user.controller;
 
 import com.talkingPotatoes.potatoesProject.user.dto.BlogInfoDto;
 import com.talkingPotatoes.potatoesProject.user.dto.MyPageDto;
-import com.talkingPotatoes.potatoesProject.user.dto.request.EmailRequest;
 import com.talkingPotatoes.potatoesProject.user.dto.request.MyPageRequest;
 import com.talkingPotatoes.potatoesProject.user.dto.request.PasswordRequest;
 import com.talkingPotatoes.potatoesProject.common.dto.response.Response;
 import com.talkingPotatoes.potatoesProject.user.dto.Auth;
 import com.talkingPotatoes.potatoesProject.user.dto.UserDto;
+import com.talkingPotatoes.potatoesProject.user.dto.request.UserIdRequest;
 import com.talkingPotatoes.potatoesProject.user.mapper.UserDtoMapper;
 import com.talkingPotatoes.potatoesProject.user.service.EmailService;
 import com.talkingPotatoes.potatoesProject.user.service.MyPageService;
@@ -93,8 +93,8 @@ public class MyPageController {
 
     /* 비밀번호 재설정을 위한 이메일 전송 */
     @PostMapping("/reset-password")
-    public ResponseEntity<Response> sendEmailForPassword(@RequestBody EmailRequest emailRequest) throws Exception {
-        emailService.sendEmailForPassword(emailRequest.getEmail());
+    public ResponseEntity<Response> sendEmailForPassword(@RequestBody UserIdRequest userIdRequest) throws Exception {
+        emailService.sendEmailForPassword(userIdRequest.getUserId());
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(Response.builder()
