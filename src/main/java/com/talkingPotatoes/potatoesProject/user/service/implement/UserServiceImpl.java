@@ -79,6 +79,9 @@ public class UserServiceImpl implements UserService {
         if (user.getRole() == Role.INACTIVE)
             throw new AccessDeniedException("이메일을 확인해주세요");
 
+        if (user.getRole() == Role.WITHDRAWAL)
+            throw new AccessDeniedException("회원이 탈퇴하었습니다.");
+
         TokenDto tokenDto = jwtTokenProvider.createToken(String.valueOf(user.getId()), user.getRole());
 
         return tokenDto;
@@ -110,6 +113,10 @@ public class UserServiceImpl implements UserService {
             if (user.get().getRole() == Role.INACTIVE) {
                 return CheckUserDto.builder()
                         .check(Status.INACTIVE)
+                        .build();
+            } else if (user.get().getRole() == Role.WITHDRAWAL) {
+                return CheckUserDto.builder()
+                        .check(Status.WITHDRAWAL)
                         .build();
             } else {
                 return CheckUserDto.builder()

@@ -58,6 +58,7 @@ public class User extends BaseEntity {
     }
 
     public void updateWithdraw() {
+        this.role = Role.WITHDRAWAL;
         this.deletedAt = LocalDateTime.now();
     }
 
