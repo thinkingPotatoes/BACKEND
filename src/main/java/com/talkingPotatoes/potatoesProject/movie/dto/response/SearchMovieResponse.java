@@ -13,4 +13,8 @@ public class SearchMovieResponse {
     private String poster;
 
     private String prodYear;
+
+    private String genre;
+
+    private String nation;
 }
