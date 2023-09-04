@@ -41,7 +41,7 @@ public class EmailUtil {
     public String createToken(UserDto dto) {
         UUID random = UUID.randomUUID();
 
-        redisUtil.setDataExpire(String.valueOf(random), String.valueOf(dto.getId()), 30);
+        redisUtil.setDataExpire(String.valueOf(random), String.valueOf(dto.getId()), 1800);
 
         return String.valueOf(random);
     }
