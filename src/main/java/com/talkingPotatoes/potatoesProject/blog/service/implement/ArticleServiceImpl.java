@@ -71,7 +71,8 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public ArticleDto searchArticleById(UUID id) {
         Article article = articleRepository.getReferenceById(id);
-        return articleMapper.toDto(article);
+        Long commentCnt = commentRepository.countByArticleId(article.getId());
+        return articleMapper.toDto(article, commentCnt);
     }
 
     @Override

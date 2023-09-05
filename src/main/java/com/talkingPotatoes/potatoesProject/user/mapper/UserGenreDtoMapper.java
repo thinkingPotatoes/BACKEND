@@ -1,4 +1,4 @@
-package com.talkingPotatoes.potatoesProject.blog.mapper;
+package com.talkingPotatoes.potatoesProject.user.mapper;
 
 import org.mapstruct.Mapper;
 

@@ -57,7 +57,7 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public MovieInfoDto selectMovie(String movieId) {
+    public MovieInfoDto selectMovieInfo(String movieId) {
         Movie movie = movieRepository.findById(movieId).orElseThrow(() -> new NotFoundException("영화 정보가 없습니다."));
         List<Staff> staffList = staffRepository.findByDocId(movie.getDocId());
         List<Poster> posterList = posterRepository.findByDocId(movie.getDocId());
@@ -67,6 +67,13 @@ public class MovieServiceImpl implements MovieService {
                 .staffDtoList(staffMapper.toDto(staffList))
                 .posterDtoList(posterMapper.toDto(posterList))
                 .build();
+    }
+
+    @Override
+    public MovieDto selectMovie(String movieId) {
+        Movie movie = movieRepository.findById(movieId).orElseThrow(() -> new NotFoundException("영화 정보가 없습니다."));
+
+        return movieMapper.toDto(movie);
     }
 
     @Override

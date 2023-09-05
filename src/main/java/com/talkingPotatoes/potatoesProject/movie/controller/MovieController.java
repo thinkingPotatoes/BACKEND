@@ -62,7 +62,7 @@ public class MovieController {
     /* 영화조회 */
     @GetMapping("/{movie-id}")
     public ResponseEntity<Response> select(@PathVariable("movie-id") String movieId) {
-        MovieInfoDto movieInfoDto = movieService.selectMovie(movieId);
+        MovieInfoDto movieInfoDto = movieService.selectMovieInfo(movieId);
 
         SelectMovieResponse response = movieDtoMapper.toSelectMovieResponse(movieInfoDto.getMovieDto());
         response.setStaffList(staffDtoMapper.toResponse(movieInfoDto.getStaffDtoList()));
