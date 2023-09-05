@@ -14,7 +14,9 @@ public interface MovieService {
 
     Page<MovieDto> searchMovies(String keyword, Pageable pageable);
 
-    MovieInfoDto selectMovie(String movieId);
+    MovieInfoDto selectMovieInfo(String movieId);
+
+    MovieDto selectMovie(String movieId);
 
     Page<BoxOfficeRateDto> getBoxOfficeRate(String curDt);
 }

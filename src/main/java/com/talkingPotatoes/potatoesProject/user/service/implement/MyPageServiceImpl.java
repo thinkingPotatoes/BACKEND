@@ -2,6 +2,7 @@ package com.talkingPotatoes.potatoesProject.user.service.implement;
 
 import com.talkingPotatoes.potatoesProject.common.exception.NotFoundException;
 import com.talkingPotatoes.potatoesProject.user.dto.BlogInfoDto;
+import com.talkingPotatoes.potatoesProject.user.dto.BlogUserDto;
 import com.talkingPotatoes.potatoesProject.user.dto.MyPageDto;
 import com.talkingPotatoes.potatoesProject.user.dto.UserDto;
 import com.talkingPotatoes.potatoesProject.user.entity.Genre;
@@ -34,15 +35,15 @@ public class MyPageServiceImpl implements MyPageService {
     private final PasswordEncoder encoder;
 
     @Override
-    public UserDto getUserInfo(UUID loginId) {
-        User user = userRepository.findById(loginId).orElseThrow(() -> new NotFoundException("회원 정보를 찾을 수 없습니다."));
+    public UserDto getUserInfo(UUID id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("회원 정보를 찾을 수 없습니다."));
         return userMapper.toDto(user);
     }
 
     @Override
-    public BlogInfoDto getBlogInfo(UUID loginId) {
-        User user = userRepository.findById(loginId).orElseThrow(() -> new NotFoundException("회원 정보를 찾을 수 없습니다."));
-        List<String> genreList = userGenreQueryRepository.findByUserId(loginId);
+    public BlogInfoDto getBlogInfo(UUID id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("회원 정보를 찾을 수 없습니다."));
+        List<String> genreList = userGenreQueryRepository.findByUserId(id);
 
         BlogInfoDto blogInfoDto = BlogInfoDto.builder()
                 .title(user.getTitle())
@@ -53,9 +54,9 @@ public class MyPageServiceImpl implements MyPageService {
     }
 
     @Override
-    public MyPageDto getMyPage(UUID loginId) {
-        User user = userRepository.findById(loginId).orElseThrow(() -> new NotFoundException("회원 정보를 찾을 수 없습니다."));
-        List<String> genreList = userGenreQueryRepository.findByUserId(loginId);
+    public MyPageDto getMyPage(UUID id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("회원 정보를 찾을 수 없습니다."));
+        List<String> genreList = userGenreQueryRepository.findByUserId(id);
 
         MyPageDto myPageDto = MyPageDto.builder()
                 .userId(user.getUserId())
@@ -71,42 +72,48 @@ public class MyPageServiceImpl implements MyPageService {
 
     @Override
     @Transactional
-    public void updatePassword(UUID loginId, String password) {
-        User user = userRepository.findById(loginId).orElseThrow(() -> new NotFoundException("회원 정보를 찾을 수 없습니다."));
+    public void updatePassword(UUID id, String password) {
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("회원 정보를 찾을 수 없습니다."));
         user.updatePassword(encoder.encode(password));
         userRepository.save(user);
     }
 
     @Override
     @Transactional
-    public void update(UUID loginId, MyPageDto myPageDto) {
-        updateNickname(loginId, myPageDto.getNickname());
-        updateTitle(loginId, myPageDto.getTitle());
-        updateGenre(loginId, myPageDto.getGenreList());
+    public void update(UUID id, MyPageDto myPageDto) {
+        updateNickname(id, myPageDto.getNickname());
+        updateTitle(id, myPageDto.getTitle());
+        updateGenre(id, myPageDto.getGenreList());
+    }
+
+    @Override
+    public BlogUserDto getBlogUser(UUID id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("회원 정보를 찾을 수 없습니다."));
+        return userMapper.toBlogUserDto(user);
     }
 
     @Transactional
-    void updateNickname(UUID loginId, String nickname) {
-        User user = userRepository.findById(loginId).orElseThrow(() -> new NotFoundException("회원 정보를 찾을 수 없습니다."));
+    void updateNickname(UUID id, String nickname) {
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("회원 정보를 찾을 수 없습니다."));
         user.updateNickname(nickname);
         userRepository.save(user);
     }
 
     @Transactional
-    void updateTitle(UUID loginId, String title) {
-        User user = userRepository.findById(loginId).orElseThrow(() -> new NotFoundException("회원 정보를 찾을 수 없습니다."));
+    void updateTitle(UUID id, String title) {
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("회원 정보를 찾을 수 없습니다."));
         user.updateTitle(title);
         userRepository.save(user);
     }
 
     @Transactional
-    void updateGenre(UUID loginId, List<Genre> genreList) {
+    void updateGenre(UUID id, List<Genre> genreList) {
         // 기존 정보 전부 삭제하고 다시 등록
-        userGenreRepository.deleteByUserId(loginId);
+        userGenreRepository.deleteByUserId(id);
 
         for (Genre genre : genreList) {
             userGenreRepository.save(UserGenre.builder()
-                    .userId(loginId)
+                    .userId(id)
                     .genreId(genre.getId())
                     .build());
         }

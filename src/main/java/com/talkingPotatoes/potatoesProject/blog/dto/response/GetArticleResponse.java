@@ -1,6 +1,8 @@
 package com.talkingPotatoes.potatoesProject.blog.dto.response;
 
 import com.talkingPotatoes.potatoesProject.blog.entity.Scope;
+import com.talkingPotatoes.potatoesProject.movie.dto.MovieDto;
+import com.talkingPotatoes.potatoesProject.user.dto.BlogUserDto;
 import lombok.Builder;
 import lombok.Data;
 
@@ -14,7 +16,11 @@ public class GetArticleResponse {
 
     private UUID userId;
 
+    private BlogUserDto blogUserDto;
+
     private String movieId;
+
+    private MovieDto movieDto;
 
     private String subject;
 
@@ -32,5 +38,9 @@ public class GetArticleResponse {
 
     private Long likeCnt;
 
+    private Long commentCnt;
+
     private LocalDateTime watchedAt;
+
+    private LocalDateTime createdAt;
 }

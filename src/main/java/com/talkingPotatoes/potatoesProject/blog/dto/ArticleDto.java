@@ -33,5 +33,9 @@ public class ArticleDto extends BaseDto {
 
     private Long likeCnt;
 
+    private Long commentCnt;
+
     private LocalDateTime watchedAt;
+
+    private LocalDateTime createdAt;
 }

@@ -11,7 +11,12 @@ import com.talkingPotatoes.potatoesProject.blog.mapper.ArticleDtoMapper;
 import com.talkingPotatoes.potatoesProject.blog.service.ArticleService;
 import com.talkingPotatoes.potatoesProject.common.dto.response.ListResponse;
 import com.talkingPotatoes.potatoesProject.common.dto.response.Response;
+import com.talkingPotatoes.potatoesProject.movie.dto.MovieDto;
+import com.talkingPotatoes.potatoesProject.movie.service.MovieService;
 import com.talkingPotatoes.potatoesProject.user.dto.Auth;
+import com.talkingPotatoes.potatoesProject.user.dto.BlogInfoDto;
+import com.talkingPotatoes.potatoesProject.user.dto.BlogUserDto;
+import com.talkingPotatoes.potatoesProject.user.service.MyPageService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +39,9 @@ import java.util.UUID;
 @Slf4j
 public class ArticleController {
     private final ArticleService articleService;
+    private final MyPageService myPageService;
+    private final MovieService movieService;
+
     private final ArticleDtoMapper articleDtoMapper;
 
     /* 블로그 글 등록 */
@@ -79,11 +87,13 @@ public class ArticleController {
     @GetMapping("/search/{articleId}")
     public ResponseEntity<Response> getArticleById(@PathVariable UUID articleId) {
         ArticleDto articleDto = articleService.searchArticleById(articleId);
+        BlogUserDto blogUserDto = myPageService.getBlogUser(articleDto.getUserId());
+        MovieDto movieDto = movieService.selectMovie(articleDto.getMovieId());
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(Response.builder()
                         .message("글이 정상 조회되었습니다.")
-                        .data(articleDtoMapper.toGetArticleResponse(articleDto))
+                        .data(articleDtoMapper.toGetArticleResponse(articleDto, blogUserDto, movieDto))
                         .build()
                 );
     }

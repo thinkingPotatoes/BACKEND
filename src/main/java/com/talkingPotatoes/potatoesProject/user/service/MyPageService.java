@@ -1,6 +1,7 @@
 package com.talkingPotatoes.potatoesProject.user.service;
 
 import com.talkingPotatoes.potatoesProject.user.dto.BlogInfoDto;
+import com.talkingPotatoes.potatoesProject.user.dto.BlogUserDto;
 import com.talkingPotatoes.potatoesProject.user.dto.MyPageDto;
 import com.talkingPotatoes.potatoesProject.user.dto.UserDto;
 import com.talkingPotatoes.potatoesProject.user.entity.Genre;
@@ -9,13 +10,15 @@ import java.util.List;
 import java.util.UUID;
 
 public interface MyPageService {
-    UserDto getUserInfo(UUID loginId);
+    UserDto getUserInfo(UUID id);
 
-    BlogInfoDto getBlogInfo(UUID loginId);
+    BlogInfoDto getBlogInfo(UUID id);
 
-    MyPageDto getMyPage(UUID loginId);
+    MyPageDto getMyPage(UUID id);
 
-    void updatePassword(UUID loginId, String password);
+    void updatePassword(UUID id, String password);
 
-    void update(UUID loginId, MyPageDto myPageDto);
+    void update(UUID id, MyPageDto myPageDto);
+
+    BlogUserDto getBlogUser(UUID id);
 }
