@@ -2,8 +2,10 @@ package com.talkingPotatoes.potatoesProject.blog.repository.implement;
 
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.talkingPotatoes.potatoesProject.blog.dto.CalendarDto;
 import com.talkingPotatoes.potatoesProject.blog.entity.Article;
 import com.talkingPotatoes.potatoesProject.blog.repository.ArticleQueryRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +15,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -47,6 +52,40 @@ public class ArticleQueryRepositoryImpl implements ArticleQueryRepository {
                         .or(article.movieId.in(queryFactory.select(movie.docId).from(movie).where(movie.title.contains(keyword)))));
 
         return PageableExecutionUtils.getPage(articles, pageable, countQuery::fetchOne);
+    }
+
+    @Override
+    public List<CalendarDto> findByBetweenDate(UUID userId, LocalDate firstDate, LocalDate lastDate) {
+        List<CalendarDto> dto = queryFactory.select(Projections.bean(CalendarDto.class,
+                article.id, article.subject, article.star,
+                article.watchedAt, article.userId, article.movieId,
+                movie.title, movie.keywords, movie.poster))
+                .from(article)
+                .join(movie)
+                .on(article.movieId.eq(movie.docId))
+                .where(article.userId.eq(userId))
+                .where(article.watchedAt.between(firstDate.atStartOfDay(),
+                        LocalDateTime.of(lastDate, LocalTime.MAX).withNano(0)))
+                .fetch();
+        System.out.println("A");
+        return dto;
+    }
+
+    @Override
+    public List<CalendarDto> findByDate(UUID userId, LocalDate date) {
+        List<CalendarDto> dto = queryFactory.select(Projections.bean(CalendarDto.class,
+                article.id, article.subject, article.star,
+                article.watchedAt, article.userId, article.movieId,
+                movie.title, movie.keywords, movie.poster))
+                .from(article)
+                .join(movie)
+                .on(article.movieId.eq(movie.docId))
+                .where(article.userId.eq(userId))
+                .where(article.watchedAt.between(date.atStartOfDay(),
+                        LocalDateTime.of(date, LocalTime.MAX).withNano(0)))
+                .fetch();
+        System.out.println("A");
+        return dto;
     }
 
     /**
