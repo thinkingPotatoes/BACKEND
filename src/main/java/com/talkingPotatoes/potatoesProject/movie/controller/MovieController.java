@@ -8,7 +8,6 @@ import com.talkingPotatoes.potatoesProject.movie.dto.StarRatingDto;
 import com.talkingPotatoes.potatoesProject.movie.dto.request.SearchRequest;
 import com.talkingPotatoes.potatoesProject.movie.dto.response.SearchMovieListResponse;
 import com.talkingPotatoes.potatoesProject.movie.dto.response.SelectMovieResponse;
-import com.talkingPotatoes.potatoesProject.movie.dto.response.StarRatingListResponse;
 import com.talkingPotatoes.potatoesProject.movie.mapper.BoxOfficeRateMapper;
 import com.talkingPotatoes.potatoesProject.movie.mapper.MovieDtoMapper;
 import com.talkingPotatoes.potatoesProject.movie.mapper.PosterDtoMapper;
