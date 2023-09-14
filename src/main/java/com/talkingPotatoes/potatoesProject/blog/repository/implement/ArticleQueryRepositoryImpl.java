@@ -64,10 +64,9 @@ public class ArticleQueryRepositoryImpl implements ArticleQueryRepository {
                 .join(movie)
                 .on(article.movieId.eq(movie.docId))
                 .where(article.userId.eq(userId))
-                .where(article.watchedAt.between(firstDate.atStartOfDay(),
-                        LocalDateTime.of(lastDate, LocalTime.MAX).withNano(0)))
+                .where(article.watchedAt.between(firstDate, lastDate))
                 .fetch();
-        System.out.println("A");
+
         return dto;
     }
 
@@ -81,10 +80,9 @@ public class ArticleQueryRepositoryImpl implements ArticleQueryRepository {
                 .join(movie)
                 .on(article.movieId.eq(movie.docId))
                 .where(article.userId.eq(userId))
-                .where(article.watchedAt.between(date.atStartOfDay(),
-                        LocalDateTime.of(date, LocalTime.MAX).withNano(0)))
+                .where(article.watchedAt.eq(date))
                 .fetch();
-        System.out.println("A");
+
         return dto;
     }
 

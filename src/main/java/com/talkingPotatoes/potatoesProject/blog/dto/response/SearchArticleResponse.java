@@ -1,9 +1,10 @@
 package com.talkingPotatoes.potatoesProject.blog.dto.response;
 
+import com.talkingPotatoes.potatoesProject.blog.entity.ArticleTime;
 import lombok.Builder;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Data
@@ -21,7 +22,9 @@ public class SearchArticleResponse {
 
     private Integer grade;
 
-    private LocalDateTime watchedAt;
+    private LocalDate watchedAt;
+
+    private ArticleTime watchedTime;
 
     private Long likeCnt;
 

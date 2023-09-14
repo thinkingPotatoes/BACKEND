@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -18,7 +19,7 @@ public class CalendarDto {
 
     private Float star;
 
-    private LocalDateTime watchedAt;
+    private LocalDate watchedAt;
 
     private UUID userId;
 
