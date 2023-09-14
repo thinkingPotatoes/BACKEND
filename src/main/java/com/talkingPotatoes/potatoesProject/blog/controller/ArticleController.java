@@ -2,6 +2,7 @@ package com.talkingPotatoes.potatoesProject.blog.controller;
 
 import com.talkingPotatoes.potatoesProject.blog.dto.ArticleDto;
 import com.talkingPotatoes.potatoesProject.blog.dto.ArticleSearchDto;
+import com.talkingPotatoes.potatoesProject.blog.dto.CalendarDto;
 import com.talkingPotatoes.potatoesProject.blog.dto.request.CreateArticleRequest;
 import com.talkingPotatoes.potatoesProject.blog.dto.request.SearchArticleRequest;
 import com.talkingPotatoes.potatoesProject.blog.dto.request.UpdateArticleRequest;
@@ -14,7 +15,6 @@ import com.talkingPotatoes.potatoesProject.common.dto.response.Response;
 import com.talkingPotatoes.potatoesProject.movie.dto.MovieDto;
 import com.talkingPotatoes.potatoesProject.movie.service.MovieService;
 import com.talkingPotatoes.potatoesProject.user.dto.Auth;
-import com.talkingPotatoes.potatoesProject.user.dto.BlogInfoDto;
 import com.talkingPotatoes.potatoesProject.user.dto.BlogUserDto;
 import com.talkingPotatoes.potatoesProject.user.service.MyPageService;
 import jakarta.validation.Valid;
@@ -186,5 +186,36 @@ public class ArticleController {
                                 .curPage(pageable.getPageNumber())
                                 .build())
                         .build());
+    }
+
+    /* 월별 달력 */
+    @GetMapping("/calendar/{year}/{month}")
+    public ResponseEntity<Response> getCalendar(@AuthenticationPrincipal Auth auth,
+                                                @PathVariable Integer year,
+                                                @PathVariable Integer month) {
+        List<CalendarDto> calendarDtoList = articleService.getCalendarFromMonth(auth.getId(), year, month);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(Response.builder()
+                        .message(month + "월의 데이터를 조회하였습니다")
+                        .data(articleDtoMapper.toGetCalendarResponse(calendarDtoList))
+                        .build()
+                );
+    }
+
+    /* 날짜별 달력 */
+    @GetMapping("/calendar/{year}/{month}/{day}")
+    public ResponseEntity<Response> getCalendar(@AuthenticationPrincipal Auth auth,
+                                                @PathVariable Integer year,
+                                                @PathVariable Integer month,
+                                                @PathVariable Integer day) {
+        List<CalendarDto> calendarDtoList = articleService.getCalendarFromDay(auth.getId(), year, month, day);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(Response.builder()
+                        .message(day + "일자의 데이터를 조회하였습니다")
+                        .data(articleDtoMapper.toGetCalendarDayResponse(calendarDtoList))
+                        .build()
+                );
     }
 }

@@ -9,24 +9,24 @@ import java.util.UUID;
 
 @Data
 @Builder
-public class SearchArticleResponse {
+public class GetCalendarDayResponse {
     private UUID id;
 
     private String subject;
 
-    private String movieId;
-
-    private String content;
-
-    private String poster;
-
-    private Integer grade;
+    private Float star;
 
     private LocalDate watchedAt;
 
     private ArticleTime watchedTime;
 
-    private Long likeCnt;
+    private UUID userId;
 
-    private Long commentCnt;
+    private String movieId;
+
+    private String title;
+
+    private String keywords;
+
+    private String poster;
 }

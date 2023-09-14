@@ -1,9 +1,11 @@
 package com.talkingPotatoes.potatoesProject.blog.dto;
 
+import com.talkingPotatoes.potatoesProject.blog.entity.ArticleTime;
 import com.talkingPotatoes.potatoesProject.blog.entity.Scope;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -30,7 +32,9 @@ public class ArticleSearchDto {
 
     private Boolean spoiler;
 
-    private LocalDateTime watchedAt;
+    private LocalDate watchedAt;
+
+    private ArticleTime watchedTime;
 
     private String poster;
 

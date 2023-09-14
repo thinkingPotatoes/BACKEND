@@ -2,6 +2,7 @@ package com.talkingPotatoes.potatoesProject.blog.service.implement;
 
 import com.talkingPotatoes.potatoesProject.blog.dto.ArticleDto;
 import com.talkingPotatoes.potatoesProject.blog.dto.ArticleSearchDto;
+import com.talkingPotatoes.potatoesProject.blog.dto.CalendarDto;
 import com.talkingPotatoes.potatoesProject.blog.entity.Article;
 import com.talkingPotatoes.potatoesProject.blog.entity.Likes;
 import com.talkingPotatoes.potatoesProject.blog.mapper.ArticleMapper;
@@ -20,6 +21,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -123,5 +126,23 @@ public class ArticleServiceImpl implements ArticleService {
         }
 
         return new PageImpl<>(articleSearchDtoList, articles.getPageable(), articles.getTotalElements());
+    }
+
+    @Override
+    public List<CalendarDto> getCalendarFromMonth(UUID userId, Integer year, Integer month) {
+        LocalDate date = LocalDate.of(year, month, 1);
+        YearMonth yearMonth = YearMonth.from(date);
+        LocalDate firstDate = yearMonth.atDay(1);
+        LocalDate lastDate = yearMonth.atEndOfMonth();
+
+        List<CalendarDto> calendar = articleQueryRepository.findByBetweenDate(userId, firstDate, lastDate);
+        return calendar;
+    }
+
+    @Override
+    public List<CalendarDto> getCalendarFromDay(UUID userId, Integer year, Integer month, Integer day) {
+        LocalDate date = LocalDate.of(year, month, day);
+        List<CalendarDto> calendar = articleQueryRepository.findByDate(userId, date);
+        return calendar;
     }
 }

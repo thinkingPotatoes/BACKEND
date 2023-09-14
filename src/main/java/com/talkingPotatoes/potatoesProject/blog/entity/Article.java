@@ -12,6 +12,7 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.sql.Types;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -54,7 +55,9 @@ public class Article extends BaseEntity {
     @ColumnDefault("0")
     private Long likeCnt;
 
-    private LocalDateTime watchedAt;
+    private LocalDate watchedAt;
+
+    private ArticleTime watchedTime;
 
     public void updateLikeCnt(int likeCnt) {
         this.likeCnt += likeCnt;
