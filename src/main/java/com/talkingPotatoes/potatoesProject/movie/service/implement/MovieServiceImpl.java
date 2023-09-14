@@ -4,20 +4,13 @@ import com.talkingPotatoes.potatoesProject.common.exception.NotFoundException;
 import com.talkingPotatoes.potatoesProject.movie.dto.BoxOfficeRateDto;
 import com.talkingPotatoes.potatoesProject.movie.dto.MovieDto;
 import com.talkingPotatoes.potatoesProject.movie.dto.MovieInfoDto;
-import com.talkingPotatoes.potatoesProject.movie.entity.BoxOfficeRate;
-import com.talkingPotatoes.potatoesProject.movie.entity.Movie;
-import com.talkingPotatoes.potatoesProject.movie.entity.Poster;
-import com.talkingPotatoes.potatoesProject.movie.entity.Staff;
-import com.talkingPotatoes.potatoesProject.movie.mapper.BoxOfficeRateMapper;
-import com.talkingPotatoes.potatoesProject.movie.mapper.MovieMapper;
-import com.talkingPotatoes.potatoesProject.movie.mapper.PosterMapper;
-import com.talkingPotatoes.potatoesProject.movie.mapper.StaffMapper;
+import com.talkingPotatoes.potatoesProject.movie.dto.StarRatingDto;
+import com.talkingPotatoes.potatoesProject.movie.entity.*;
+import com.talkingPotatoes.potatoesProject.movie.mapper.*;
 import com.talkingPotatoes.potatoesProject.movie.repository.*;
 import com.talkingPotatoes.potatoesProject.movie.service.MovieService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.grammars.hql.HqlParser;
-import org.springframework.cglib.core.Local;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -41,6 +34,7 @@ public class MovieServiceImpl implements MovieService {
     private final StaffRepository staffRepository;
     private final PosterRepository posterRepository;
     private final BoxOfficeRateRepository boxOfficeRateRepository;
+    private final StarRatingRepository starRatingRepository;
 
     private final MovieQueryRepository movieQueryRepository;
 
@@ -48,6 +42,7 @@ public class MovieServiceImpl implements MovieService {
     private final StaffMapper staffMapper;
     private final PosterMapper posterMapper;
     private final BoxOfficeRateMapper boxOfficeRateMapper;
+    private final StarRatingMapper starRatingMapper;
 
     @Override
     public Page<MovieDto> searchMovies(String keyword, Pageable pageable) {
@@ -81,5 +76,11 @@ public class MovieServiceImpl implements MovieService {
         List<BoxOfficeRate> boxOfficeRates = boxOfficeRateRepository.findAllByTargetDt(curDt);
 
         return new PageImpl<>(boxOfficeRateMapper.toDto(boxOfficeRates));
+    }
+
+    @Override
+    public List<StarRatingDto> selectStarRating(String userId) {
+        List<StarRating> starRatingList = starRatingRepository.searchStarRatingByUserId(userId);
+        return starRatingMapper.toDto(starRatingList);
     }
 }
