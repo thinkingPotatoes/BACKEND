@@ -1,6 +1,6 @@
 package com.talkingPotatoes.potatoesProject.common.batch.scheduler;
 
-import com.talkingPotatoes.potatoesProject.common.batch.job.DeleteLikesBatch;
+import com.talkingPotatoes.potatoesProject.common.batch.job.DeleteUnusedUserBatch;
 import com.talkingPotatoes.potatoesProject.common.batch.job.DeleteUserBatch;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,16 +18,16 @@ import java.time.LocalDateTime;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class LikesScheduler {
+public class UnusedUserScheduler {
     private final JobLauncher jobLauncher;
-    private final DeleteLikesBatch job;
+    private final DeleteUnusedUserBatch job;
 
     @Scheduled(cron = "0 0 0 * * ?")  // 매일 12시마다
     public void runJob() throws Exception {
 
         try {
             jobLauncher.run(
-                    job.deleteLikesJob(), new JobParametersBuilder().addString("dateTime"
+                    job.deleteUnusedUserJob(), new JobParametersBuilder().addString("dateTime"
                             , LocalDateTime.now().toString()).toJobParameters()
             );
         } catch (JobExecutionAlreadyRunningException | JobInstanceAlreadyCompleteException
