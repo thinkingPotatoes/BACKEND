@@ -92,7 +92,7 @@ public class MovieController {
 
     /* 영화평점 조회 */
     @GetMapping("/starRating/{user-id}")
-    public ResponseEntity<Response> getStarRating(@PathVariable("user-id") String userId) {
+    public ResponseEntity<Response> getStarRating(@PathVariable("user-id") UUID userId) {
         List<StarRatingDto> starRatingDtoList = movieService.selectStarRating(userId);
 
         return ResponseEntity.status(HttpStatus.OK)

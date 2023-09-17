@@ -17,6 +17,8 @@ import com.talkingPotatoes.potatoesProject.user.entity.User;
 public interface UserRepository extends JpaRepository<User, UUID> {
     List<User> findByRoleAndUpdatedAtIsLessThan(Role role, LocalDateTime dateTime);
 
+    List<User> findByDeletedAtIsLessThan(LocalDateTime dateTime);
+
     Optional<User> findByUserId(String userId);
 
     Optional<User> findByUserIdAndPassword(String userId, String encode);

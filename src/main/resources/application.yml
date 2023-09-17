@@ -1,5 +1,5 @@
 server:
-  port: 80
+  port: 443
 
   servlet:
     encoding:
@@ -40,8 +40,8 @@ spring:
         dialect: org.hibernate.dialect.MariaDBDialect
   batch:
     jdbc:
-      initialize-schema: never
-      schema: classpath:/org/springframework/batch/core/schema-mysql.sql
+      initialize-schema: always
+      schema: classpath:/org/springframework/batch/core/schema-mariadb.sql
     job:
       enabled: true
 

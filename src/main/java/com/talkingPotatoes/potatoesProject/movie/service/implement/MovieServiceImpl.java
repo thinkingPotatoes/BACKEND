@@ -80,7 +80,7 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public List<StarRatingDto> selectStarRating(String userId) {
+    public List<StarRatingDto> selectStarRating(UUID userId) {
         List<StarRating> starRatingList = starRatingRepository.searchStarRatingByUserId(userId);
         return starRatingMapper.toDto(starRatingList);
     }

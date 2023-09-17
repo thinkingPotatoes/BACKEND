@@ -57,9 +57,9 @@ public class UserServiceImpl implements UserService {
 
         if (userDto.getRole() == null) userDto.setRole(Role.INACTIVE);
 
-        String nickname = "Filmo_"+ randomNickname.makeNickname();
+        String nickname = "F_"+ randomNickname.makeNickname();
         while(userRepository.existsByNickname(nickname)) {
-            nickname = "Filmo_"+ randomNickname.makeNickname();
+            nickname = "F_"+ randomNickname.makeNickname();
         }
         userDto.setNickname(nickname);
         userDto.setTitle(userDto.getNickname() + "'s Filog");

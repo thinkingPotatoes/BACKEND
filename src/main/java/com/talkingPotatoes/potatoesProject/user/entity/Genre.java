@@ -1,10 +1,8 @@
 package com.talkingPotatoes.potatoesProject.user.entity;
 
-import java.sql.Types;
 import java.util.UUID;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UuidGenerator;
 
 import lombok.AllArgsConstructor;
