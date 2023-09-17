@@ -24,7 +24,7 @@ public class StarRating {
     private String movieId;
 
     @Column(nullable = false)
-    private String userId;
+    private UUID userId;
 
     @ColumnDefault("0")
     private Float star;

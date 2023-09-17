@@ -23,6 +23,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -79,7 +80,7 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public List<StarRatingDto> selectStarRating(String userId) {
+    public List<StarRatingDto> selectStarRating(UUID userId) {
         List<StarRating> starRatingList = starRatingRepository.searchStarRatingByUserId(userId);
         return starRatingMapper.toDto(starRatingList);
     }

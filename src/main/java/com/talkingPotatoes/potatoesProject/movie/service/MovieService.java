@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public interface MovieService {
@@ -21,5 +22,5 @@ public interface MovieService {
 
     Page<BoxOfficeRateDto> getBoxOfficeRate(String curDt);
 
-    List<StarRatingDto> selectStarRating(String userId);
+    List<StarRatingDto> selectStarRating(UUID userId);
 }
