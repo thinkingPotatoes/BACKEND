@@ -80,4 +80,21 @@ public class MovieQueryRepositoryImpl implements MovieQueryRepository {
         }
         return null;
     }
+
+    @Override
+    public Page<Movie> get(Pageable pageable) {
+        JPAQuery<Movie> query = queryFactory.selectFrom(movie)
+                .from(movie)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .orderBy(movieSort(pageable));
+
+        List<Movie> movies = query.fetch();
+
+        JPAQuery<Long> countQuery = queryFactory.select(movie.count())
+                .from(movie);
+
+        return PageableExecutionUtils.getPage(movies, pageable, countQuery::fetchOne);
+    }
+
 }

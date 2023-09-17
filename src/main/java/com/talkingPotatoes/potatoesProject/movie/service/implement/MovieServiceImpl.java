@@ -84,4 +84,22 @@ public class MovieServiceImpl implements MovieService {
         List<StarRating> starRatingList = starRatingRepository.searchStarRatingByUserId(userId);
         return starRatingMapper.toDto(starRatingList);
     }
+
+    @Override
+    public void saveInitMovie(UUID userId, List<String> movieIdList) {
+        for(int i=0; i<movieIdList.size(); i++){
+            starRatingRepository.save(StarRating.builder()
+                            .movieId(movieIdList.get(i))
+                            .userId(userId.toString())
+                            .star(5.0F)
+                            .build());
+        }
+    }
+
+    @Override
+    public Page<MovieDto> getMovies(Pageable pageable) {
+        Page<Movie> movies = movieQueryRepository.get(pageable);
+
+        return new PageImpl<>(movieMapper.toDto(movies.getContent()), movies.getPageable(), movies.getTotalElements());
+    }
 }
