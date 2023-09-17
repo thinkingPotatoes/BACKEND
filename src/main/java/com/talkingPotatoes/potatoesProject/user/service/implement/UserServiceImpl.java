@@ -6,17 +6,17 @@ import com.talkingPotatoes.potatoesProject.common.exception.DuplicationException
 import com.talkingPotatoes.potatoesProject.common.exception.InactiveException;
 import com.talkingPotatoes.potatoesProject.common.exception.NotFoundException;
 import com.talkingPotatoes.potatoesProject.common.jwt.JwtTokenProvider;
-import com.talkingPotatoes.potatoesProject.user.dto.CheckUserDto;
-import com.talkingPotatoes.potatoesProject.user.dto.Status;
-import com.talkingPotatoes.potatoesProject.user.dto.TokenDto;
+import com.talkingPotatoes.potatoesProject.user.dto.*;
 import com.talkingPotatoes.potatoesProject.user.entity.Platform;
 import com.talkingPotatoes.potatoesProject.user.entity.Role;
+import com.talkingPotatoes.potatoesProject.user.entity.SimUser;
+import com.talkingPotatoes.potatoesProject.user.mapper.SimUserMapper;
+import com.talkingPotatoes.potatoesProject.user.repository.SimUserRepository;
 import com.talkingPotatoes.potatoesProject.user.service.RandomNickname;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.talkingPotatoes.potatoesProject.user.dto.UserDto;
 import com.talkingPotatoes.potatoesProject.user.entity.User;
 import com.talkingPotatoes.potatoesProject.user.mapper.UserMapper;
 import com.talkingPotatoes.potatoesProject.user.repository.UserRepository;
@@ -25,6 +25,7 @@ import com.talkingPotatoes.potatoesProject.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -36,6 +37,8 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final SimUserRepository simUserRepository;
+    private final SimUserMapper simUserMapper;
 
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder encoder;
@@ -134,5 +137,12 @@ public class UserServiceImpl implements UserService {
         user.updateWithdraw();
 
         userRepository.save(user);
+    }
+
+    @Override
+    public List<SimUserDto> selectSimUser(String userId) {
+        List<SimUser> simUserList = simUserRepository.getSimUsersByUserId(userId);
+
+        return simUserMapper.toDto(simUserList);
     }
 }
