@@ -39,11 +39,9 @@ public class OAuth2UserServiceImpl implements OAuth2UserService<OAuth2UserReques
 
         OAuth2Attributes attributes = OAuth2Attributes.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
 
-
-
-        String nickname = Platform.valueOf(registrationId.toUpperCase())+"_"+randomNickname.makeNickname();
+        String nickname = String.valueOf(Platform.valueOf(registrationId.toUpperCase())).charAt(0)+"_"+randomNickname.makeNickname();
         while(userRepository.existsByNickname(nickname)) {
-            nickname = Platform.valueOf(registrationId.toUpperCase())+"_"+randomNickname.makeNickname();
+            nickname = String.valueOf(Platform.valueOf(registrationId.toUpperCase())).charAt(0)+"_"+randomNickname.makeNickname();
         }
 
         UserDto userDto = UserDto.builder()
