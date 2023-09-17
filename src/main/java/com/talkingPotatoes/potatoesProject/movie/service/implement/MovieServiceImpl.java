@@ -90,7 +90,7 @@ public class MovieServiceImpl implements MovieService {
         for(int i=0; i<movieIdList.size(); i++){
             starRatingRepository.save(StarRating.builder()
                             .movieId(movieIdList.get(i))
-                            .userId(userId.toString())
+                            .userId(userId)
                             .star(5.0F)
                             .build());
         }
