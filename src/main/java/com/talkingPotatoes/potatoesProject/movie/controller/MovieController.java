@@ -4,6 +4,7 @@ import com.talkingPotatoes.potatoesProject.common.dto.response.Response;
 import com.talkingPotatoes.potatoesProject.movie.dto.BoxOfficeRateDto;
 import com.talkingPotatoes.potatoesProject.movie.dto.MovieDto;
 import com.talkingPotatoes.potatoesProject.movie.dto.MovieInfoDto;
+import com.talkingPotatoes.potatoesProject.movie.dto.StarRatingDto;
 import com.talkingPotatoes.potatoesProject.movie.dto.request.SearchRequest;
 import com.talkingPotatoes.potatoesProject.movie.dto.response.SearchMovieListResponse;
 import com.talkingPotatoes.potatoesProject.movie.dto.response.SelectMovieResponse;
@@ -87,6 +88,18 @@ public class MovieController {
                 .body(Response.builder()
                         .message("박스오피스 조회를 완료했습니다.")
                         .data(boxOfficeRateDtoList)
+                        .build());
+    }
+
+    /* 영화평점 조회 */
+    @GetMapping("/starRating/{user-id}")
+    public ResponseEntity<Response> getStarRating(@PathVariable("user-id") UUID userId) {
+        List<StarRatingDto> starRatingDtoList = movieService.selectStarRating(userId);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(Response.builder()
+                        .message("userId에 따른 영화평점을 조회했습니다.")
+                        .data(starRatingDtoList)
                         .build());
     }
 }

@@ -3,11 +3,13 @@ package com.talkingPotatoes.potatoesProject.movie.service;
 import com.talkingPotatoes.potatoesProject.movie.dto.BoxOfficeRateDto;
 import com.talkingPotatoes.potatoesProject.movie.dto.MovieDto;
 import com.talkingPotatoes.potatoesProject.movie.dto.MovieInfoDto;
+import com.talkingPotatoes.potatoesProject.movie.dto.StarRatingDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public interface MovieService {
@@ -19,4 +21,6 @@ public interface MovieService {
     MovieDto selectMovie(String movieId);
 
     Page<BoxOfficeRateDto> getBoxOfficeRate(String curDt);
+
+    List<StarRatingDto> selectStarRating(UUID userId);
 }
