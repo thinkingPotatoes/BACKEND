@@ -5,14 +5,14 @@ import com.talkingPotatoes.potatoesProject.movie.dto.BoxOfficeRateDto;
 import com.talkingPotatoes.potatoesProject.movie.dto.MovieDto;
 import com.talkingPotatoes.potatoesProject.movie.dto.MovieInfoDto;
 import com.talkingPotatoes.potatoesProject.movie.dto.StarRatingDto;
+import com.talkingPotatoes.potatoesProject.movie.dto.request.SaveInitMovieRequest;
 import com.talkingPotatoes.potatoesProject.movie.dto.request.SearchRequest;
 import com.talkingPotatoes.potatoesProject.movie.dto.response.SearchMovieListResponse;
 import com.talkingPotatoes.potatoesProject.movie.dto.response.SelectMovieResponse;
-import com.talkingPotatoes.potatoesProject.movie.mapper.BoxOfficeRateMapper;
-import com.talkingPotatoes.potatoesProject.movie.mapper.MovieDtoMapper;
-import com.talkingPotatoes.potatoesProject.movie.mapper.PosterDtoMapper;
-import com.talkingPotatoes.potatoesProject.movie.mapper.StaffDtoMapper;
+import com.talkingPotatoes.potatoesProject.movie.mapper.*;
 import com.talkingPotatoes.potatoesProject.movie.service.MovieService;
+import com.talkingPotatoes.potatoesProject.user.dto.Auth;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -21,10 +21,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import javax.swing.text.DateFormatter;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -100,6 +99,38 @@ public class MovieController {
                 .body(Response.builder()
                         .message("userId에 따른 영화평점을 조회했습니다.")
                         .data(starRatingDtoList)
+                        .build());
+    }
+
+    /* 영화 리스트 조회 */
+    @GetMapping("/init-movie/get")
+    public ResponseEntity<Response> getInitMovie(@PageableDefault(size = 10, sort = "repRlsDate", direction = Sort.Direction.DESC) Pageable page){
+        Page<MovieDto> movies = movieService.getMovies(page);
+
+        SearchMovieListResponse getMovieListResponse = SearchMovieListResponse.builder()
+                .searchMovieResponseList(movieDtoMapper.toSearchMovieResponse(movies.getContent()))
+                .totalCnt(movies.getTotalElements())
+                .curPage(movies.getPageable().getPageNumber())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(Response.builder()
+                        .message("정상 조회되었습니다.")
+                        .data(getMovieListResponse)
+                        .build());
+    }
+
+    /* 초기 화면 영화 평점 추가 */
+    @PostMapping("/init-movie/save")
+    public ResponseEntity<Response> saveInitMovie(@AuthenticationPrincipal Auth auth,
+                                                  @RequestBody @Valid SaveInitMovieRequest saveInitMovieRequest){
+        if (!saveInitMovieRequest.getMovieList().isEmpty()){
+            movieService.saveInitMovie(auth.getId(), saveInitMovieRequest.getMovieList());
+        }
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(Response.builder()
+                        .message("정상 추가되었습니다.")
                         .build());
     }
 }

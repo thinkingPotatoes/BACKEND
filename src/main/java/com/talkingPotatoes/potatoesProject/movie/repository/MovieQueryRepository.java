@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MovieQueryRepository {
     Page<Movie> findByKeyword(String keyword, Pageable pageable);
+
+    Page<Movie> get(Pageable pageable);
 }
