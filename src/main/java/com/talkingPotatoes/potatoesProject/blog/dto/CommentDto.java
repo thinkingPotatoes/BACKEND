@@ -4,6 +4,8 @@ import com.talkingPotatoes.potatoesProject.common.dto.BaseDto;
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
@@ -18,4 +20,6 @@ public class CommentDto extends BaseDto {
     private String content;
 
     private String nickName;
+
+    private LocalDateTime updatedAt;
 }

@@ -2,11 +2,8 @@ package com.talkingPotatoes.potatoesProject.blog.repository.implement;
 
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.talkingPotatoes.potatoesProject.blog.dto.CommentDto;
-import com.talkingPotatoes.potatoesProject.blog.dto.response.GetCommentResponse;
 import com.talkingPotatoes.potatoesProject.blog.entity.Comment;
 import com.talkingPotatoes.potatoesProject.blog.repository.CommentQueryRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +17,6 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.talkingPotatoes.potatoesProject.blog.entity.QComment.comment;
-import static com.talkingPotatoes.potatoesProject.user.entity.QUser.user;
 
 @Repository
 @RequiredArgsConstructor
@@ -28,22 +24,17 @@ public class CommentQueryRepositoryImpl implements CommentQueryRepository {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Page<GetCommentResponse> findByArticleId(UUID articleId, Pageable pageable) {
-        JPAQuery<GetCommentResponse> query = queryFactory.select(Projections.bean(GetCommentResponse.class,
-                        comment.id, comment.articleId, comment.updatedAt ,user.nickname, comment.content))
-                .from(comment)
-                .leftJoin(user)
-                .on(user.id.eq(comment.userId))
+    public Page<Comment> findByArticleId(UUID articleId, Pageable pageable) {
+        JPAQuery<Comment> query = queryFactory.selectFrom(comment)
                 .where(comment.articleId.eq(articleId))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .orderBy(commentSort(pageable));
-        List<GetCommentResponse> comments = query.fetch();
+
+        List<Comment> comments = query.fetch();
 
         JPAQuery<Long> countQuery = queryFactory.select(comment.count())
                 .from(comment)
-                .leftJoin(user)
-                .on(user.id.eq(comment.userId))
                 .where(comment.articleId.eq(articleId));
 
         return PageableExecutionUtils.getPage(comments, pageable, countQuery::fetchOne);

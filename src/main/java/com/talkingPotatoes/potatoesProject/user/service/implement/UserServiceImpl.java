@@ -145,9 +145,4 @@ public class UserServiceImpl implements UserService {
 
         return simUserMapper.toDto(simUserList);
     }
-
-    @Override
-    public String getNickNameById(UUID id){
-        return userRepository.getReferenceById(id).getNickname();
-    }
 }

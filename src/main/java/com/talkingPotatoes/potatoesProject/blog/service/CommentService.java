@@ -5,6 +5,7 @@ import com.talkingPotatoes.potatoesProject.blog.dto.response.GetCommentResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface CommentService {
@@ -15,5 +16,5 @@ public interface CommentService {
 
     void deleteComment(UUID userId, UUID id);
 
-    Page<GetCommentResponse> getCommentByArticleId(UUID articleId, Pageable pageable);
+    Page<CommentDto> getCommentByArticleId(UUID articleId, Pageable pageable);
 }

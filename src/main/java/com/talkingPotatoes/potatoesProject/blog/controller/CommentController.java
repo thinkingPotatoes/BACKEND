@@ -24,6 +24,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -81,14 +82,15 @@ public class CommentController {
                                                           @SortDefault.SortDefaults({
                                                                   @SortDefault(sort = "updatedAt", direction = Sort.Direction.DESC)})
                                                           Pageable pageable) {
-        Page<GetCommentResponse> getCommentResponses = commentService.getCommentByArticleId(articleId, pageable);
+        Page<CommentDto> commentDtoList = commentService.getCommentByArticleId(articleId, pageable);
 
+        List<GetCommentResponse> getCommentResponses = commentDtoMapper.toGetCommentResponse(commentDtoList.getContent());
         return ResponseEntity.status(HttpStatus.OK)
                 .body(Response.builder()
                         .message("블로그 글의 댓글이 정상 조회되었습니다.")
                         .data(ListResponse.builder()
-                                .list(getCommentResponses.toList())
-                                .totalCnt(getCommentResponses.getTotalElements())
+                                .list(getCommentResponses)
+                                .totalCnt(getCommentResponses.size())
                                 .curPage(pageable.getPageNumber())
                                 .build())
                         .build()

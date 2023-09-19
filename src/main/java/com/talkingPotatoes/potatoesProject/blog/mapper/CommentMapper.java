@@ -13,4 +13,6 @@ public interface CommentMapper {
     CommentDto toDto(Comment comment);
 
     List<CommentDto> toDto(List<Comment> comments);
+
+    CommentDto toDto(Comment comment, String nickName);
 }
