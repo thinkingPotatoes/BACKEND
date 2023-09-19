@@ -20,4 +20,6 @@ public interface UserService {
     CheckUserDto checkUserId(String userId);
 
     List<SimUserDto> selectSimUser(String userId);
+
+    String getNickNameById(UUID id);
 }

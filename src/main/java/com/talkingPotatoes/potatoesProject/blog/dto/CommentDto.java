@@ -16,4 +16,6 @@ public class CommentDto extends BaseDto {
     private UUID userId;
 
     private String content;
+
+    private String nickName;
 }
