@@ -1,16 +1,13 @@
 package com.talkingPotatoes.potatoesProject.blog.controller;
 
 import com.talkingPotatoes.potatoesProject.blog.dto.CommentDto;
-import com.talkingPotatoes.potatoesProject.blog.dto.request.CreateCommentRequest;
-import com.talkingPotatoes.potatoesProject.blog.dto.request.UpdateCommentRequest;
+import com.talkingPotatoes.potatoesProject.blog.dto.request.CommentRequest;
 import com.talkingPotatoes.potatoesProject.blog.dto.response.GetCommentResponse;
 import com.talkingPotatoes.potatoesProject.blog.mapper.CommentDtoMapper;
 import com.talkingPotatoes.potatoesProject.blog.service.CommentService;
 import com.talkingPotatoes.potatoesProject.common.dto.response.ListResponse;
 import com.talkingPotatoes.potatoesProject.common.dto.response.Response;
 import com.talkingPotatoes.potatoesProject.user.dto.Auth;
-import com.talkingPotatoes.potatoesProject.user.mapper.UserMapper;
-import com.talkingPotatoes.potatoesProject.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,10 +34,11 @@ public class CommentController {
     private final CommentService commentService;
 
     /* 댓글 생성 */
-    @PostMapping("/create")
+    @PostMapping("/{articleId}")
     public ResponseEntity<Response> createComment(@AuthenticationPrincipal Auth auth,
-                                                  @RequestBody @Valid CreateCommentRequest createCommentRequest) {
-        CommentDto commentDto = commentDtoMapper.fromCreateCommentRequest(auth.getId(), createCommentRequest);
+                                                  @PathVariable UUID articleId,
+                                                  @RequestBody @Valid CommentRequest createCommentRequest) {
+        CommentDto commentDto = commentDtoMapper.fromCreateCommentRequest(auth.getId(), articleId, createCommentRequest);
         commentService.createComment(commentDto);
 
         return ResponseEntity.status(HttpStatus.OK)
@@ -50,10 +48,12 @@ public class CommentController {
     }
 
     /* 댓글 수정 */
-    @PutMapping("/update")
+    @PutMapping("/{articleId}/{id}")
     public  ResponseEntity<Response> updateComment(@AuthenticationPrincipal Auth auth,
-                                                   @RequestBody @Valid UpdateCommentRequest updateCommentRequest) {
-        CommentDto commentDto = commentDtoMapper.fromUpdateCommentRequest(auth.getId(), updateCommentRequest);
+                                                   @PathVariable("articleId") UUID articleId,
+                                                   @PathVariable("id") UUID id,
+                                                   @RequestBody @Valid CommentRequest commentRequest) {
+        CommentDto commentDto = commentDtoMapper.fromUpdateCommentRequest(auth.getId(), id, articleId, commentRequest);
 
         commentService.updateComment(commentDto);
 

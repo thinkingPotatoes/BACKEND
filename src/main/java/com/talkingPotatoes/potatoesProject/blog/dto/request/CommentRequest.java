@@ -7,10 +7,7 @@ import java.util.UUID;
 
 @Data
 @NoArgsConstructor
-public class UpdateCommentRequest {
-    private UUID id;
-
-    private UUID articleId;
+public class CommentRequest {
 
     private String content;
 }
