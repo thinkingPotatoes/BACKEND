@@ -64,7 +64,7 @@ public class CommentController {
     }
 
     /* 댓글 삭제 */
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{articleId}/{id}")
     public ResponseEntity<Response> deleteArticle(@AuthenticationPrincipal Auth auth,
                                                   @PathVariable("id") UUID id) {
         commentService.deleteComment(auth.getId(), id);

@@ -72,7 +72,7 @@ public class ArticleController {
     }
 
     /* 블로그 글 삭제 */
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/article/{id}")
     public ResponseEntity<Response> deleteArticle(@AuthenticationPrincipal Auth auth,
                                                   @PathVariable("id") UUID id) {
         articleService.deleteArticle(auth.getId(), id);
