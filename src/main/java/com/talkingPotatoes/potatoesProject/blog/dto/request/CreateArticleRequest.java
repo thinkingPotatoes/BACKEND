@@ -21,7 +21,7 @@ public class CreateArticleRequest {
     private String content;
 
     @NotNull(message = "평점은 필수 입력사항입니다.")
-    private Integer grade;
+    private Float star;
 
     private Scope scope;
 
