@@ -1,12 +1,14 @@
 package com.talkingPotatoes.potatoesProject.blog.entity;
 
 import com.talkingPotatoes.potatoesProject.common.entity.BaseEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.DynamicInsert;
 
 import java.util.UUID;
 
@@ -15,15 +17,14 @@ import java.util.UUID;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@DynamicInsert
-@IdClass(LikesId.class)
-public class Likes extends BaseEntity {
+@IdClass(CommentLikesId.class)
+public class CommentLikes extends BaseEntity {
 
     @Id
     private UUID userId;
 
     @Id
-    private UUID articleId;
+    private UUID commentId;
 
     @Column(columnDefinition = "boolean default true")
     private boolean clicked;
