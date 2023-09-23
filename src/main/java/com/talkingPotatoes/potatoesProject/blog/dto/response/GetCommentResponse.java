@@ -19,5 +19,7 @@ public class GetCommentResponse {
 
     private String content;
 
+    private Long likeCnt;
+
     private LocalDateTime updatedAt;
 }

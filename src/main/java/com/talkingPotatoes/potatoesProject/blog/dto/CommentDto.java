@@ -21,5 +21,7 @@ public class CommentDto extends BaseDto {
 
     private String nickName;
 
+    private Long likeCnt;
+
     private LocalDateTime updatedAt;
 }
