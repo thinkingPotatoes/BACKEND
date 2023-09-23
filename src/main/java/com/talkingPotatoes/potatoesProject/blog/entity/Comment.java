@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UuidGenerator;
 
@@ -30,4 +31,11 @@ public class Comment extends BaseEntity {
     private UUID userId;
 
     private String content;
+
+    @ColumnDefault("0")
+    private Long likeCnt;
+
+    public void updateCommentLikeCnt(int likeCnt) {
+        this.likeCnt += likeCnt;
+    }
 }

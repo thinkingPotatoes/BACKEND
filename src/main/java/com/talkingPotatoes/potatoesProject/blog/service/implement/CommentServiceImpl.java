@@ -2,9 +2,13 @@ package com.talkingPotatoes.potatoesProject.blog.service.implement;
 
 import com.talkingPotatoes.potatoesProject.blog.dto.CommentDto;
 import com.talkingPotatoes.potatoesProject.blog.dto.response.GetCommentResponse;
+import com.talkingPotatoes.potatoesProject.blog.entity.Article;
 import com.talkingPotatoes.potatoesProject.blog.entity.Comment;
+import com.talkingPotatoes.potatoesProject.blog.entity.CommentLikes;
+import com.talkingPotatoes.potatoesProject.blog.entity.Likes;
 import com.talkingPotatoes.potatoesProject.blog.mapper.CommentDtoMapper;
 import com.talkingPotatoes.potatoesProject.blog.mapper.CommentMapper;
+import com.talkingPotatoes.potatoesProject.blog.repository.CommentLikesRepository;
 import com.talkingPotatoes.potatoesProject.blog.repository.CommentQueryRepository;
 import com.talkingPotatoes.potatoesProject.blog.repository.CommentRepository;
 import com.talkingPotatoes.potatoesProject.blog.service.CommentService;
@@ -31,6 +35,7 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final CommentQueryRepository commentQueryRepository;
     private final UserRepository userRepository;
+    private final CommentLikesRepository commentLikesRepository;
 
     private final CommentMapper commentMapper;
     private final CommentDtoMapper commentDtoMapper;
@@ -73,5 +78,28 @@ public class CommentServiceImpl implements CommentService {
             commentDtoList.add(commentMapper.toDto(comment, nickname));
         }
         return new PageImpl<>(commentDtoList, comments.getPageable(), comments.getTotalElements());
+    }
+
+    @Override
+    @Transactional
+    public void updateCommentLikes(UUID userId, UUID commentId) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new NotFoundException("댓글을 찾을 수가 없습니다."));
+
+        boolean clicked = true;
+
+        if (commentLikesRepository.existsByUserIdAndCommentIdAndClickedIsTrue(userId, commentId)) {
+            clicked = false;
+            comment.updateCommentLikeCnt(-1);
+        } else {
+            comment.updateCommentLikeCnt(1);
+        }
+
+        commentLikesRepository.save(CommentLikes.builder()
+                .userId(userId)
+                .commentId(commentId)
+                .clicked(clicked)
+                .build());
+
+        commentRepository.save(comment);
     }
 }

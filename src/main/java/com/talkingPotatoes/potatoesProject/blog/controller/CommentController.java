@@ -48,12 +48,12 @@ public class CommentController {
     }
 
     /* 댓글 수정 */
-    @PutMapping("/{articleId}/{id}")
+    @PutMapping("/{articleId}/{commentId}")
     public  ResponseEntity<Response> updateComment(@AuthenticationPrincipal Auth auth,
                                                    @PathVariable("articleId") UUID articleId,
-                                                   @PathVariable("id") UUID id,
+                                                   @PathVariable("commentId") UUID commentId,
                                                    @RequestBody @Valid CommentRequest commentRequest) {
-        CommentDto commentDto = commentDtoMapper.fromUpdateCommentRequest(auth.getId(), id, articleId, commentRequest);
+        CommentDto commentDto = commentDtoMapper.fromUpdateCommentRequest(auth.getId(), commentId, articleId, commentRequest);
 
         commentService.updateComment(commentDto);
 
@@ -64,10 +64,10 @@ public class CommentController {
     }
 
     /* 댓글 삭제 */
-    @DeleteMapping("/{articleId}/{id}")
+    @DeleteMapping("/{articleId}/{commentId}")
     public ResponseEntity<Response> deleteArticle(@AuthenticationPrincipal Auth auth,
-                                                  @PathVariable("id") UUID id) {
-        commentService.deleteComment(auth.getId(), id);
+                                                  @PathVariable("commentId") UUID commentId) {
+        commentService.deleteComment(auth.getId(), commentId);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(Response.builder()
@@ -95,6 +95,17 @@ public class CommentController {
                                 .build())
                         .build()
                 );
+    }
+
+    /* 좋아요 수정 */
+    @GetMapping("/{commentId}/like")
+    public ResponseEntity<Response> updateCommentLikes(@AuthenticationPrincipal Auth auth, @PathVariable UUID commentId) {
+        commentService.updateCommentLikes(auth.getId(), commentId);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(Response.builder()
+                        .message("댓글 좋아요가 수정되었습니다.")
+                        .build());
     }
 
 }
