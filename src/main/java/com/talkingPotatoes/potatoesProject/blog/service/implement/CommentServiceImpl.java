@@ -44,6 +44,9 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     public void createComment(CommentDto commentDto) {
         Comment comment = commentRepository.save(commentMapper.toEntity(commentDto));
+        if (commentDto.getParentId() != null) {
+            comment.updateParent(commentRepository.findById(commentDto.getParentId()).orElseThrow(() -> new NotFoundException("댓글을 찾을 수 없습니다.")));
+        }
     }
 
     @Override
@@ -64,7 +67,7 @@ public class CommentServiceImpl implements CommentService {
             throw new NotFoundException("댓글이 존재하지 않습니다.");
         } else {
             Comment comment = commentRepository.getReferenceById(id);
-            commentRepository.delete(comment);
+            comment.updateDeletedAt();
         }
     }
 
@@ -73,7 +76,7 @@ public class CommentServiceImpl implements CommentService {
         Page<Comment> comments = commentQueryRepository.findByArticleId(articleId, pageable);
 
         List<CommentDto> commentDtoList = new ArrayList<>();
-        for(Comment comment : comments.getContent()) {
+        for (Comment comment : comments.getContent()) {
             String nickname = userRepository.findById(comment.getUserId()).get().getNickname();
             commentDtoList.add(commentMapper.toDto(comment, nickname));
         }

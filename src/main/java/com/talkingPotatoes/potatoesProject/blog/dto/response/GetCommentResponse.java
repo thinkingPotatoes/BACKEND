@@ -11,6 +11,8 @@ import java.util.UUID;
 public class GetCommentResponse {
     private UUID id;
 
+    private UUID parentId;
+
     private UUID articleId;
 
     private String nickname;
@@ -22,4 +24,6 @@ public class GetCommentResponse {
     private Long likeCnt;
 
     private LocalDateTime updatedAt;
+
+    private LocalDateTime deletedAt;
 }

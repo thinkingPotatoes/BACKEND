@@ -12,6 +12,9 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.sql.Types;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -26,6 +29,13 @@ public class Comment extends BaseEntity {
     @UuidGenerator
     private UUID id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
+    private Comment parent;
+
+    @OneToMany(mappedBy = "parent", orphanRemoval = false)
+    private List<Comment> children = new ArrayList<>();
+
     @Column(nullable = false)
     private UUID articleId;
 
@@ -37,7 +47,17 @@ public class Comment extends BaseEntity {
     @ColumnDefault("0")
     private Long likeCnt;
 
+    private LocalDateTime deletedAt;
+
     public void updateCommentLikeCnt(int likeCnt) {
         this.likeCnt += likeCnt;
+    }
+
+    public void updateParent(Comment comment) {
+        this.parent = comment;
+    }
+
+    public void updateDeletedAt() {
+        this.deletedAt = LocalDateTime.now();
     }
 }

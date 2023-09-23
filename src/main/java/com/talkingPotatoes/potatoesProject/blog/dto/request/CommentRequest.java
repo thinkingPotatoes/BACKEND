@@ -9,5 +9,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class CommentRequest {
 
+    private UUID parentId;
+
     private String content;
 }

@@ -13,6 +13,8 @@ import java.util.UUID;
 public class CommentDto extends BaseDto {
     private UUID id;
 
+    private UUID parentId;
+
     private UUID articleId;
 
     private UUID userId;
@@ -24,4 +26,6 @@ public class CommentDto extends BaseDto {
     private Long likeCnt;
 
     private LocalDateTime updatedAt;
+
+    private LocalDateTime deletedAt;
 }
