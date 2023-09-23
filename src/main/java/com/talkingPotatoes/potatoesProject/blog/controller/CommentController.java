@@ -76,7 +76,7 @@ public class CommentController {
     }
 
     /* 리뷰별 댓글 조회 */
-    @GetMapping("/get/{articleId}")
+    @GetMapping("/{articleId}")
     public ResponseEntity<Response> getCommentByArticleId(@PathVariable UUID articleId,
                                                           @PageableDefault(size = 10)
                                                           @SortDefault.SortDefaults({
