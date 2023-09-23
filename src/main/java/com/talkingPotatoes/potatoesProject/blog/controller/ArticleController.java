@@ -45,7 +45,7 @@ public class ArticleController {
     private final ArticleDtoMapper articleDtoMapper;
 
     /* 블로그 글 등록 */
-    @PostMapping("/create")
+    @PostMapping("/article")
     public ResponseEntity<Response> createArticle(@AuthenticationPrincipal Auth auth,
                                                   @RequestBody @Valid CreateArticleRequest createArticleRequest) {
         ArticleDto articleDto = articleDtoMapper.fromCreateArticleRequest(auth.getId(), createArticleRequest);
@@ -58,7 +58,7 @@ public class ArticleController {
     }
 
     /* 블로그 글 수정 */
-    @PutMapping("/update")
+    @PutMapping("/article/{id}")
     public ResponseEntity<Response> updateArticle(@AuthenticationPrincipal Auth auth,
                                                   @RequestBody @Valid UpdateArticleRequest updateArticleRequest) {
         ArticleDto articleDto = articleDtoMapper.fromUpdateArticleRequest(auth.getId(), updateArticleRequest);
@@ -72,7 +72,7 @@ public class ArticleController {
     }
 
     /* 블로그 글 삭제 */
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/article/{id}")
     public ResponseEntity<Response> deleteArticle(@AuthenticationPrincipal Auth auth,
                                                   @PathVariable("id") UUID id) {
         articleService.deleteArticle(auth.getId(), id);
@@ -100,7 +100,7 @@ public class ArticleController {
 
     /* 좋아요 수정 */
     @GetMapping("/{articleId}/like")
-    public ResponseEntity<Response> updateLikes(@AuthenticationPrincipal Auth auth, @PathVariable UUID articleId) {
+    public ResponseEntity<Response> updateLikes(@AuthenticationPrincipal Auth auth, @PathVariable("articleId") UUID articleId) {
         articleService.updateLikes(auth.getId(), articleId);
 
         return ResponseEntity.status(HttpStatus.OK)

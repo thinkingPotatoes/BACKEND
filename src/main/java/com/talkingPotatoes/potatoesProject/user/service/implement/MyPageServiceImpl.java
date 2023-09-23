@@ -92,22 +92,19 @@ public class MyPageServiceImpl implements MyPageService {
         return userMapper.toBlogUserDto(user);
     }
 
-    @Transactional
-    void updateNickname(UUID id, String nickname) {
+    private void updateNickname(UUID id, String nickname) {
         User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("회원 정보를 찾을 수 없습니다."));
         user.updateNickname(nickname);
         userRepository.save(user);
     }
 
-    @Transactional
-    void updateTitle(UUID id, String title) {
+    private void updateTitle(UUID id, String title) {
         User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("회원 정보를 찾을 수 없습니다."));
         user.updateTitle(title);
         userRepository.save(user);
     }
 
-    @Transactional
-    void updateGenre(UUID id, List<Genre> genreList) {
+    private void updateGenre(UUID id, List<Genre> genreList) {
         // 기존 정보 전부 삭제하고 다시 등록
         userGenreRepository.deleteByUserId(id);
 

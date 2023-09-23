@@ -1,27 +1,25 @@
-package com.talkingPotatoes.potatoesProject.blog.dto;
+package com.talkingPotatoes.potatoesProject.blog.dto.response;
 
-import com.talkingPotatoes.potatoesProject.common.dto.BaseDto;
+import lombok.Builder;
 import lombok.Data;
-import lombok.experimental.SuperBuilder;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
-@SuperBuilder
-public class CommentDto extends BaseDto {
+@Builder
+public class GetCommentResponse {
     private UUID id;
 
     private UUID parentId;
 
     private UUID articleId;
 
+    private String nickname;
+
     private UUID userId;
 
     private String content;
-
-    private String nickName;
 
     private Long likeCnt;
 

@@ -18,5 +18,6 @@ public interface ArticleMapper {
 
     List<ArticleDto> toDto(List<Article> articles);
 
-    ArticleSearchDto toDto(Article article, String poster, Long likesCnt);
+    ArticleSearchDto toDto(Article article, String poster, Long commentCnt);
+
 }
