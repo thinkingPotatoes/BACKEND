@@ -6,9 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 
-import java.io.Serializable;
 import java.util.UUID;
 
 @Entity
@@ -16,6 +15,7 @@ import java.util.UUID;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
+@DynamicInsert
 @IdClass(LikesId.class)
 public class Likes extends BaseEntity {
 
@@ -25,6 +25,7 @@ public class Likes extends BaseEntity {
     @Id
     private UUID articleId;
 
+    @Column(columnDefinition = "boolean default true")
     private boolean clicked;
 }
 

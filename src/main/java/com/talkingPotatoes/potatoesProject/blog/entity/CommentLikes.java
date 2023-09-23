@@ -1,6 +1,7 @@
 package com.talkingPotatoes.potatoesProject.blog.entity;
 
 import com.talkingPotatoes.potatoesProject.common.entity.BaseEntity;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
@@ -25,6 +26,7 @@ public class CommentLikes extends BaseEntity {
     @Id
     private UUID commentId;
 
+    @Column(columnDefinition = "boolean default true")
     private boolean clicked;
 }
 
