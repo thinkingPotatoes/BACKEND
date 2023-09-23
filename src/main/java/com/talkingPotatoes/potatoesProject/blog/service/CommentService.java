@@ -17,4 +17,6 @@ public interface CommentService {
     void deleteComment(UUID userId, UUID id);
 
     Page<CommentDto> getCommentByArticleId(UUID articleId, Pageable pageable);
+
+    void updateCommentLikes(UUID id, UUID commentId);
 }

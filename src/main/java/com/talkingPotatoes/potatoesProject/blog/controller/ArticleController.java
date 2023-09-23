@@ -100,7 +100,7 @@ public class ArticleController {
 
     /* 좋아요 수정 */
     @GetMapping("/{articleId}/like")
-    public ResponseEntity<Response> updateLikes(@AuthenticationPrincipal Auth auth, @PathVariable UUID articleId) {
+    public ResponseEntity<Response> updateLikes(@AuthenticationPrincipal Auth auth, @PathVariable("articleId") UUID articleId) {
         articleService.updateLikes(auth.getId(), articleId);
 
         return ResponseEntity.status(HttpStatus.OK)

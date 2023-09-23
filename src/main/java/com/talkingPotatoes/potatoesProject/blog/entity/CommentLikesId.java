@@ -8,7 +8,7 @@ import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
-public class LikesId implements Serializable {
+public class CommentLikesId implements Serializable {
     private UUID userId;
-    private UUID articleId;
+    private UUID commentId;
 }

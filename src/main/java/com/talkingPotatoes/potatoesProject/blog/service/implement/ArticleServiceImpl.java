@@ -110,7 +110,15 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public Page<ArticleDto> searchArticleByUserId(UUID userId, Pageable pageable) {
         Page<Article> articles = articleRepository.findAllByUserId(userId, pageable);
-        return new PageImpl<>(articleMapper.toDto(articles.getContent()), articles.getPageable(), articles.getTotalElements());
+
+        List<ArticleDto> articleDtos = new ArrayList<>();
+        for (Article article : articles.getContent()) {
+            Long commentCnt = commentRepository.countByArticleId(article.getId());
+
+            articleDtos.add(articleMapper.toDto(article, commentCnt));
+        }
+
+        return new PageImpl<>(articleDtos, articles.getPageable(), articles.getTotalElements());
     }
 
     @Override
