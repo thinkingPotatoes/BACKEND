@@ -1,7 +1,6 @@
 package com.talkingPotatoes.potatoesProject.blog.service.implement;
 
 import com.talkingPotatoes.potatoesProject.blog.dto.ArticleDto;
-import com.talkingPotatoes.potatoesProject.blog.dto.ArticleSearchDto;
 import com.talkingPotatoes.potatoesProject.blog.dto.CalendarDto;
 import com.talkingPotatoes.potatoesProject.blog.entity.Article;
 import com.talkingPotatoes.potatoesProject.blog.entity.Likes;
@@ -26,7 +25,6 @@ import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -67,6 +65,7 @@ public class ArticleServiceImpl implements ArticleService {
             throw new NotFoundException("글이 존재하지 않습니다.");
         } else {
             Article article = articleRepository.getReferenceById(id);
+            commentRepository.deleteAllByArticleId(article.getId());
             articleRepository.delete(article);
         }
     }
@@ -113,19 +112,20 @@ public class ArticleServiceImpl implements ArticleService {
 
         List<ArticleDto> articleDtos = new ArrayList<>();
         for (Article article : articles.getContent()) {
+            String poster = movieRepository.findById(article.getMovieId()).orElseThrow(() -> new NotFoundException("영화를 찾을 수 없습니다.")).getPoster();
             Long commentCnt = commentRepository.countByArticleId(article.getId());
 
-            articleDtos.add(articleMapper.toDto(article, commentCnt));
+            articleDtos.add(articleMapper.toDto(article, poster, commentCnt));
         }
 
         return new PageImpl<>(articleDtos, articles.getPageable(), articles.getTotalElements());
     }
 
     @Override
-    public Page<ArticleSearchDto> searchArticleByUserIdAndKeyword(UUID userId, String keyword, Pageable pageable) {
+    public Page<ArticleDto> searchArticleByUserIdAndKeyword(UUID userId, String keyword, Pageable pageable) {
         Page<Article> articles = articleQueryRepository.findByUserIdAndKeyword(userId, keyword, pageable);
 
-        List<ArticleSearchDto> articleSearchDtoList = new ArrayList<>();
+        List<ArticleDto> articleSearchDtoList = new ArrayList<>();
         for (Article article : articles.getContent()) {
             String poster = movieRepository.findById(article.getMovieId()).orElseThrow(() -> new NotFoundException("영화를 찾을 수 없습니다.")).getPoster();
             Long commentCnt = commentRepository.countByArticleId(article.getId());

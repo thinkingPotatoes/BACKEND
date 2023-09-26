@@ -20,7 +20,7 @@ public class SearchArticleResponse {
 
     private String poster;
 
-    private Integer grade;
+    private Float star;
 
     private LocalDate watchedAt;
 
