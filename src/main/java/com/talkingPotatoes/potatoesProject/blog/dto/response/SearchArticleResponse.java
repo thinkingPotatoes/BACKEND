@@ -29,4 +29,6 @@ public class SearchArticleResponse {
     private Long likeCnt;
 
     private Long commentCnt;
+
+    private LocalDateTime createdAt;
 }
