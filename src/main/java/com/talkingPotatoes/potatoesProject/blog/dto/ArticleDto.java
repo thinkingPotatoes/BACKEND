@@ -33,13 +33,15 @@ public class ArticleDto extends BaseDto {
 
     private Boolean spoiler;
 
-    private Long likeCnt;
-
-    private Long commentCnt;
-
     private LocalDate watchedAt;
 
     private ArticleTime watchedTime;
 
     private LocalDateTime createdAt;
+
+    private String poster;
+
+    private Long likeCnt;
+
+    private Long commentCnt;
 }

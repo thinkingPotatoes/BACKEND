@@ -42,6 +42,8 @@ public class GetArticleResponse {
 
     private Long commentCnt;
 
+    private String poster;
+
     private LocalDate watchedAt;
 
     private ArticleTime watchedTime;

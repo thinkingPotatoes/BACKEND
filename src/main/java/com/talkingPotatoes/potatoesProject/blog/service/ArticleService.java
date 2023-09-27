@@ -1,7 +1,6 @@
 package com.talkingPotatoes.potatoesProject.blog.service;
 
 import com.talkingPotatoes.potatoesProject.blog.dto.ArticleDto;
-import com.talkingPotatoes.potatoesProject.blog.dto.ArticleSearchDto;
 import com.talkingPotatoes.potatoesProject.blog.dto.CalendarDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,7 +23,7 @@ public interface ArticleService {
 
     Page<ArticleDto> searchArticleByUserId(UUID userId, Pageable pageable);
 
-    Page<ArticleSearchDto> searchArticleByUserIdAndKeyword(UUID userId, String keyword, Pageable pageable);
+    Page<ArticleDto> searchArticleByUserIdAndKeyword(UUID userId, String keyword, Pageable pageable);
 
     List<CalendarDto> getCalendarFromMonth(UUID userId, Integer year, Integer month);
 
