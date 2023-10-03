@@ -27,6 +27,7 @@ public interface ArticleDtoMapper {
     List<SearchArticleResponse> toSearchMyArticleResponse(List<ArticleDto> articleSearchDto);
 
     @Mapping(source = "movieDto.poster", target = "poster")
+    @Mapping(source = "movieDto", target = "movieDto")
     GetArticleResponse toGetArticleResponse(ArticleDto articleDto, BlogUserDto blogUserDto, MovieDto movieDto);
 
     List<GetArticleResponse> toGetArticleResponse(List<ArticleDto> articleDtoList);
