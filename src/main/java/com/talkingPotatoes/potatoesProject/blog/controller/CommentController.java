@@ -53,9 +53,10 @@ public class CommentController {
                                                    @PathVariable("articleId") UUID articleId,
                                                    @PathVariable("commentId") UUID commentId,
                                                    @RequestBody @Valid CommentRequest commentRequest) {
-        CommentDto commentDto = commentDtoMapper.fromUpdateCommentRequest(auth.getId(), commentId, articleId, commentRequest);
 
-        commentService.updateComment(commentDto);
+        // CommentDto commentDto = commentDtoMapper.fromUpdateCommentRequest(auth.getId(), commentId, articleId, commentRequest);
+
+        commentService.updateComment(commentRequest, commentId);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(Response.builder()

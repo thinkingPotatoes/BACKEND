@@ -1,6 +1,7 @@
 package com.talkingPotatoes.potatoesProject.blog.service;
 
 import com.talkingPotatoes.potatoesProject.blog.dto.CommentDto;
+import com.talkingPotatoes.potatoesProject.blog.dto.request.CommentRequest;
 import com.talkingPotatoes.potatoesProject.blog.dto.response.GetCommentResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,7 +13,7 @@ public interface CommentService {
 
     void createComment(CommentDto commentDto);
 
-    void updateComment(CommentDto commentDto);
+    void updateComment(CommentRequest commentRequest, UUID id);
 
     void deleteComment(UUID userId, UUID id);
 
