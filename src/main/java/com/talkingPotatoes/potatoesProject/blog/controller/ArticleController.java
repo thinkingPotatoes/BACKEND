@@ -1,7 +1,6 @@
 package com.talkingPotatoes.potatoesProject.blog.controller;
 
 import com.talkingPotatoes.potatoesProject.blog.dto.ArticleDto;
-import com.talkingPotatoes.potatoesProject.blog.dto.ArticleSearchDto;
 import com.talkingPotatoes.potatoesProject.blog.dto.CalendarDto;
 import com.talkingPotatoes.potatoesProject.blog.dto.request.CreateArticleRequest;
 import com.talkingPotatoes.potatoesProject.blog.dto.request.SearchArticleRequest;
@@ -166,7 +165,7 @@ public class ArticleController {
                                                                            @SortDefault(sort = "createdAt", direction = Sort.Direction.DESC),
                                                                            @SortDefault(sort = "likeCnt", direction = Sort.Direction.DESC)
                                                                    }) Pageable pageable) {
-        Page<ArticleSearchDto> articleDto = articleService.searchArticleByUserIdAndKeyword(auth.getId(), searchArticleRequest.getKeyword(), pageable);
+        Page<ArticleDto> articleDto = articleService.searchArticleByUserIdAndKeyword(auth.getId(), searchArticleRequest.getKeyword(), pageable);
 
         if (articleDto.getNumberOfElements() == 0) {
             return ResponseEntity.status(HttpStatus.OK)

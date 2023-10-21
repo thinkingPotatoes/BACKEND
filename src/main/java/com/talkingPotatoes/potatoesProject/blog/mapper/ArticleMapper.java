@@ -1,10 +1,8 @@
 package com.talkingPotatoes.potatoesProject.blog.mapper;
 
 import com.talkingPotatoes.potatoesProject.blog.dto.ArticleDto;
-import com.talkingPotatoes.potatoesProject.blog.dto.ArticleSearchDto;
 import com.talkingPotatoes.potatoesProject.blog.entity.Article;
 import org.mapstruct.Mapper;
-import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -18,6 +16,6 @@ public interface ArticleMapper {
 
     List<ArticleDto> toDto(List<Article> articles);
 
-    ArticleSearchDto toDto(Article article, String poster, Long commentCnt);
+    ArticleDto toDto(Article article, String poster, Long commentCnt);
 
 }

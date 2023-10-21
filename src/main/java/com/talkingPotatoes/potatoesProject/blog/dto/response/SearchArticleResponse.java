@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
@@ -20,7 +21,7 @@ public class SearchArticleResponse {
 
     private String poster;
 
-    private Integer grade;
+    private Float star;
 
     private LocalDate watchedAt;
 
@@ -29,4 +30,6 @@ public class SearchArticleResponse {
     private Long likeCnt;
 
     private Long commentCnt;
+
+    private LocalDateTime createdAt;
 }

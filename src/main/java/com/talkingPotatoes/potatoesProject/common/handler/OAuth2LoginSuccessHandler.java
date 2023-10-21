@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -38,8 +39,16 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         TokenDto tokenDto = jwtTokenProvider.createToken(String.valueOf(user.getId()), user.getRole());
 
         response.setStatus(HttpServletResponse.SC_OK);
-        response.addHeader("Authorization", tokenDto.getAccessToken());
-        response.addHeader("Authorization-refresh", tokenDto.getRefreshToken());
+        response.setHeader("Authorization", tokenDto.getAccessToken());
+
+        ResponseCookie cookie = ResponseCookie.from("refreshToken", tokenDto.getRefreshToken())
+                .maxAge(1209600000)
+                .path("/")
+                .secure(false)
+                .httpOnly(true)
+                .build();
+
+        response.setHeader("Set-Cookie", cookie.toString());
 
     }
 }

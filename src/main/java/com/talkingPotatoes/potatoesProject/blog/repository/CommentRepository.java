@@ -16,5 +16,7 @@ public interface CommentRepository extends JpaRepository<Comment, UUID> {
 
     boolean existsByUserIdAndId(UUID userId, UUID id);
 
-    Page<Comment> findAllByArticleId(UUID articlieId, Pageable pageable);
+    Page<Comment> findAllByArticleId(UUID articleId, Pageable pageable);
+
+    void deleteAllByArticleId(UUID articleId);
 }

@@ -7,7 +7,9 @@ import com.talkingPotatoes.potatoesProject.user.dto.request.LoginRequest;
 import com.talkingPotatoes.potatoesProject.user.dto.request.UserIdRequest;
 import com.talkingPotatoes.potatoesProject.user.dto.response.CheckUserResponse;
 import com.talkingPotatoes.potatoesProject.user.service.EmailService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -79,8 +81,20 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Response> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<Response> login(HttpServletResponse response, @RequestBody LoginRequest loginRequest) {
         TokenDto tokenDto = userService.login(userDtoMapper.fromLoginRequest(loginRequest));
+
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.setHeader("Authorization", tokenDto.getAccessToken());
+
+        ResponseCookie cookie = ResponseCookie.from("refreshToken", tokenDto.getRefreshToken())
+                .maxAge(1209600000)
+                .path("/")
+                .secure(false)
+                .httpOnly(true)
+                .build();
+
+        response.setHeader("Set-Cookie", cookie.toString());
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(Response.builder()
