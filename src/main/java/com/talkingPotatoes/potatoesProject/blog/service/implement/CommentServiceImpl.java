@@ -1,6 +1,7 @@
 package com.talkingPotatoes.potatoesProject.blog.service.implement;
 
 import com.talkingPotatoes.potatoesProject.blog.dto.CommentDto;
+import com.talkingPotatoes.potatoesProject.blog.dto.request.CommentRequest;
 import com.talkingPotatoes.potatoesProject.blog.dto.response.GetCommentResponse;
 import com.talkingPotatoes.potatoesProject.blog.entity.Article;
 import com.talkingPotatoes.potatoesProject.blog.entity.Comment;
@@ -22,6 +23,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -51,12 +53,24 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public void updateComment(CommentDto commentDto) {
+    public void updateComment(CommentRequest commentRequest, UUID id) {
         /* 댓글 정상 조회 */
-        if (!commentRepository.existsById(commentDto.getId())) {
+        if (!commentRepository.existsById(id)) {
             throw new NotFoundException("댓글이 존재하지 않습니다.");
         } else {
-            Comment comment = commentRepository.save(commentMapper.toEntity(commentDto));
+            // Comment comment = commentRepository.save(commentMapper.toEntity(commentDto));
+            Comment comment = commentRepository.getReferenceById(id);
+            Comment updateComment = Comment.builder()
+                    .id(id)
+                    .parent(comment.getParent())
+                    .children(comment.getChildren())
+                    .articleId(comment.getArticleId())
+                    .userId(comment.getUserId())
+                    .content(commentRequest.getContent())
+                    .likeCnt(comment.getLikeCnt())
+                    .updatedAt(LocalDateTime.now())
+                    .build();
+            commentRepository.save(updateComment);
         }
     }
 
