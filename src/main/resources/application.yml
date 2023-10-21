@@ -1,20 +1,10 @@
 server:
-  port: 443
+  port: 80
 
   servlet:
     encoding:
       charset: UTF-8
       force: true
-
-  ssl:
-    enabled: true
-    key-store-type: PKCS12
-    key-store-password: potato
-    key-alias: tomcat
-    key-store: keystore.jks
-
-  http:
-    port: 80
 
 # 만약 스프링 시큐리티를 사용중이라면 아래 설정도 포함
 security:
