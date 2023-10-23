@@ -24,7 +24,7 @@ public interface MovieService {
 
     List<StarRatingDto> selectStarRating(UUID userId);
 
-    void saveInitMovie(UUID userId, List<String> movieList);
+    void saveInitMovie(String userId, List<String> movieList);
 
     Page<MovieDto> getMovies(Pageable pageable);
 }

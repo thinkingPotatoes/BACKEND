@@ -11,8 +11,10 @@ import com.talkingPotatoes.potatoesProject.movie.dto.response.SearchMovieListRes
 import com.talkingPotatoes.potatoesProject.movie.dto.response.SelectMovieResponse;
 import com.talkingPotatoes.potatoesProject.movie.mapper.*;
 import com.talkingPotatoes.potatoesProject.movie.service.MovieService;
-import com.talkingPotatoes.potatoesProject.user.dto.Auth;
-import jakarta.validation.Valid;
+import com.talkingPotatoes.potatoesProject.user.dto.TokenDto;
+import com.talkingPotatoes.potatoesProject.user.mapper.UserDtoMapper;
+import com.talkingPotatoes.potatoesProject.user.service.UserService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -20,8 +22,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -35,10 +37,11 @@ import java.util.*;
 public class MovieController {
 
     private final MovieService movieService;
+    private final UserService userService;
     private final MovieDtoMapper movieDtoMapper;
     private final StaffDtoMapper staffDtoMapper;
     private final PosterDtoMapper posterDtoMapper;
-    private final BoxOfficeRateMapper boxOfficeRateMapper;
+    private final UserDtoMapper userDtoMapper;
 
     /* 영화검색 */
     @PostMapping("/search")
@@ -122,15 +125,35 @@ public class MovieController {
 
     /* 초기 화면 영화 평점 추가 */
     @PostMapping("/init-movie/save")
-    public ResponseEntity<Response> saveInitMovie(@AuthenticationPrincipal Auth auth,
-                                                  @RequestBody @Valid SaveInitMovieRequest saveInitMovieRequest){
+    public ResponseEntity<Response> saveInitMovie(HttpServletResponse response, @RequestBody SaveInitMovieRequest saveInitMovieRequest){
+
+        TokenDto tokenDto = userService.initMovieToken(saveInitMovieRequest.getUserId());
+
         if (!saveInitMovieRequest.getMovieList().isEmpty()){
-            movieService.saveInitMovie(auth.getId(), saveInitMovieRequest.getMovieList());
+            movieService.saveInitMovie(saveInitMovieRequest.getUserId(), saveInitMovieRequest.getMovieList());
+        } else {
+            ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Response.builder()
+                            .message("REQUEST ERROR")
+                            .build());
         }
+
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.setHeader("Authorization", tokenDto.getAccessToken());
+
+        ResponseCookie cookie = ResponseCookie.from("refreshToken", tokenDto.getRefreshToken())
+                .maxAge(1209600000)
+                .path("/")
+                .secure(false)
+                .httpOnly(true)
+                .build();
+
+        response.setHeader("Set-Cookie", cookie.toString());
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(Response.builder()
                         .message("정상 추가되었습니다.")
+                        .data(userDtoMapper.toTokenResponse(tokenDto))
                         .build());
     }
 }
