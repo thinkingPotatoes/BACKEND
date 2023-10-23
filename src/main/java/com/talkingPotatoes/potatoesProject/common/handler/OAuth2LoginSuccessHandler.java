@@ -43,11 +43,10 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         TokenDto tokenDto = jwtTokenProvider.createToken(String.valueOf(user.getId()), user.getRole());
 
         response.setStatus(HttpServletResponse.SC_OK);
-        addCookie(response, "accountId", user.getId().toString(), 1209600000);
-        addCookie(response, "accessToken", tokenDto.getAccessToken(), 1209600000);
         addCookie(response, "refreshToken", tokenDto.getRefreshToken(), 1209600000);
 
-        return UriComponentsBuilder.fromUriString("/login")
+        return UriComponentsBuilder.fromUriString("localhost:5173/login")
+                .queryParam("accessToken", tokenDto.getAccessToken())
                 .build().toUriString();
 
     }
