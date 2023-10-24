@@ -45,7 +45,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         response.setStatus(HttpServletResponse.SC_OK);
         addCookie(response, "refreshToken", tokenDto.getRefreshToken(), 1209600000);
 
-        return UriComponentsBuilder.fromUriString("localhost:5173/login")
+        return UriComponentsBuilder.fromUriString("localhost:5173/login/callback")
                 .queryParam("accessToken", tokenDto.getAccessToken())
                 .build().toUriString();
 
