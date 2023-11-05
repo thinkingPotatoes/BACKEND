@@ -37,7 +37,7 @@ public class MovieParsingScheduler {
     private final StaffMapper staffMapper;
     private final StillMapper stillMapper;
 
-    @Scheduled(cron = "0 5 1 ? * MON")  // API 배치 돌리고 5분 뒤
+    @Scheduled(cron = "0 55 13 ? * MON")  // API 배치 돌리고 5분 뒤
     public void getData() throws Exception{
         /* 실행 시간 재는 코드 */
         StopWatch stopWatch = new StopWatch();
