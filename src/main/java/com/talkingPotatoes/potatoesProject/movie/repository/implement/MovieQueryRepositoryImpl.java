@@ -85,6 +85,7 @@ public class MovieQueryRepositoryImpl implements MovieQueryRepository {
     public Page<Movie> get(Pageable pageable) {
         JPAQuery<Movie> query = queryFactory.selectFrom(movie)
                 .from(movie)
+                .where(movie.poster.isNotEmpty())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .orderBy(movieSort(pageable));

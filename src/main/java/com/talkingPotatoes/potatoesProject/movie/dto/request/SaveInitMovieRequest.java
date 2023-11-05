@@ -8,5 +8,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class SaveInitMovieRequest {
+    private String userId;
+
     private List<String> movieList;
 }

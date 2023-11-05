@@ -9,6 +9,7 @@ import com.talkingPotatoes.potatoesProject.movie.entity.*;
 import com.talkingPotatoes.potatoesProject.movie.mapper.*;
 import com.talkingPotatoes.potatoesProject.movie.repository.*;
 import com.talkingPotatoes.potatoesProject.movie.service.MovieService;
+import com.talkingPotatoes.potatoesProject.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -17,11 +18,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -36,6 +32,7 @@ public class MovieServiceImpl implements MovieService {
     private final PosterRepository posterRepository;
     private final BoxOfficeRateRepository boxOfficeRateRepository;
     private final StarRatingRepository starRatingRepository;
+    private final UserRepository userRepository;
 
     private final MovieQueryRepository movieQueryRepository;
 
@@ -86,11 +83,13 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public void saveInitMovie(UUID userId, List<String> movieIdList) {
+    public void saveInitMovie(String userId, List<String> movieIdList) {
+        UUID loginId = userRepository.findByUserId(userId).orElseThrow().getId();
+
         for(int i=0; i<movieIdList.size(); i++){
             starRatingRepository.save(StarRating.builder()
                             .movieId(movieIdList.get(i))
-                            .userId(userId)
+                            .userId(loginId)
                             .star(5.0F)
                             .build());
         }

@@ -145,4 +145,20 @@ public class UserServiceImpl implements UserService {
 
         return simUserMapper.toDto(simUserList);
     }
+
+    @Override
+    public TokenDto initMovieToken(String userId) {
+        User user = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new NotFoundException("사용자를 찾지 못하였습니다."));
+
+        if (user.getRole() == Role.INACTIVE)
+            throw new AccessDeniedException("이메일을 확인해주세요");
+
+        if (user.getRole() == Role.WITHDRAWAL)
+            throw new AccessDeniedException("회원이 탈퇴하었습니다.");
+
+        TokenDto tokenDto = jwtTokenProvider.createToken(String.valueOf(user.getId()), user.getRole());
+
+        return tokenDto;
+    }
 }
