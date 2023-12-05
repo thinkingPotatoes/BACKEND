@@ -1,11 +1,37 @@
+spring:
+  profiles:
+    group:
+      prod1: profile1,common
+      prod2: profile2,common
+default:
+  string: default property
+---
+spring:
+  config:
+    activate:
+      on-profile: profile1
 server:
-  port: 8080
-
+  port: 8081
   servlet:
     encoding:
       charset: UTF-8
       force: true
-
+security:
+  require-ssl: true
+---
+spring:
+  config:
+    activate:
+      on-profile: profile2
+server:
+  port: 8082
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+security:
+  require-ssl: true
+---
 # 만약 스프링 시큐리티를 사용중이라면 아래 설정도 포함
 security:
   require-ssl: true
@@ -13,6 +39,7 @@ security:
 spring:
   config:
     import: env.yml
+    profiles: common
 
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
