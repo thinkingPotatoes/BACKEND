@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import com.talkingPotatoes.potatoesProject.user.dto.UserDto;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.talkingPotatoes.potatoesProject.common.exception.EmailException;
@@ -21,6 +22,7 @@ public class EmailUtil {
     private final JavaMailSender emailSender;
     private final RedisUtil redisUtil;
 
+    @Async
     public void createMessage(String to, String message) throws Exception {
         try {
             MimeMessage sendMessage = emailSender.createMimeMessage();
