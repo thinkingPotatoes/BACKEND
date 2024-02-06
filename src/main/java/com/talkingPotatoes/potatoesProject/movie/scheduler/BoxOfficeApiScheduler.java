@@ -30,7 +30,7 @@ public class BoxOfficeApiScheduler {
 
     private List<BoxOfficeRateDto> boxOfficeRateList;
 
-    @Scheduled(cron = "0 10 14 ? * *")
+    @Scheduled(cron = "0 10 21 ? * *")
     public void getData() throws Exception{
         /* 실행 시간 재는 코드 */
         StopWatch stopWatch = new StopWatch();
