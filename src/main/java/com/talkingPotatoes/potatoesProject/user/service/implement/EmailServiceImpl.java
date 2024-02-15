@@ -222,7 +222,7 @@ public class EmailServiceImpl implements EmailService {
 //                "                            이메일 주소를 인증합니다\n" +
 //                "                          </div>\n" +
 //                "                        </button>\n" +
-                "<a href='http://localhost:5173/register/success?token=" + emailUtil.createToken(to) + "'>이메일 주소를 인증합니다</a>" +
+                "<a href='http://3.38.67.125:5100/register/success?token=" + emailUtil.createToken(to) + "'>이메일 주소를 인증합니다</a>" +
                 "                      </div>\n" +
                 "                      <div\n" +
                 "                        style=\"\n" +
@@ -257,7 +257,7 @@ public class EmailServiceImpl implements EmailService {
 //                + "<h1> 안녕하세요. Filmo 입니다</h1>"
 //                + "<br>"
 //                + "<p>아래 링크를 클릭하면 이메일 인증이 완료됩니다.<p>"
-//                + "<a href='http://localhost:5173/register/success?token=" + emailUtil.createToken(to) + "'>인증 링크</a>"
+//                + "<a href='http://3.38.67.125:5100/register/success?token=" + emailUtil.createToken(to) + "'>인증 링크</a>"
 //                + "</div>";
 
         emailUtil.createMessage(to.getUserId(), message);
@@ -476,7 +476,7 @@ public class EmailServiceImpl implements EmailService {
 //                "                            비밀번호 재설정하기\n" +
 //                "                          </div>\n" +
 //                "                        </button>\n" +
-                "<a href='localhost:5173/password/reset?token=" + emailUtil.createToken(toDto) + "'>비밀번호 재설정하기</a>" +
+                "<a href='http://3.38.67.125:5100/password/reset?token=" + emailUtil.createToken(toDto) + "'>비밀번호 재설정하기</a>" +
                 "                      </div>\n" +
                 "                      <div\n" +
                 "                        style=\"\n" +
@@ -513,7 +513,7 @@ public class EmailServiceImpl implements EmailService {
 //                + "<h1> 안녕하세요. Filmo 입니다</h1>"
 //                + "<br>"
 //                + "<p>아래 링크를 클릭하면 비밀번호를 재설정할 수 있습니다.<p>"
-//                + "<a href='localhost:5173/password/reset?token=" + emailUtil.createToken(toDto) + "'>인증 링크</a>"
+//                + "<a href='http://3.38.67.125:5100/password/reset?token=" + emailUtil.createToken(toDto) + "'>인증 링크</a>"
 //                + "</div>";
 
         emailUtil.createMessage(toDto.getUserId(), message);
