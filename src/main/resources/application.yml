@@ -11,7 +11,7 @@ spring:
     activate:
       on-profile: profile1
 server:
-  port: 80
+  port: 8081
 
   servlet:
     encoding:
