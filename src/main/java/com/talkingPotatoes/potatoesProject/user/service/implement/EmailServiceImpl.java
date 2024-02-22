@@ -32,6 +32,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     @Transactional
+
     public void sendSignUpMessage(UserDto toDto) throws Exception {
         String message = "<!DOCTYPE html>\n" +
                 "<html lang=\"en\">\n" +
