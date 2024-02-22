@@ -32,7 +32,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     @Transactional
-    public void sendSignUpMessage(UserDto to) throws Exception {
+    public void sendSignUpMessage(UserDto toDto) throws Exception {
         String message = "<!DOCTYPE html>\n" +
                 "<html lang=\"en\">\n" +
                 "  <head>\n" +
@@ -190,39 +190,39 @@ public class EmailServiceImpl implements EmailService {
                 "                          요청해요.<br />아래 버튼을 클릭하여 이메일 주소를\n" +
                 "                          인증해 주시고,<br />Filmo 회원가입을 완료해 주세요!\n" +
                 "                        </div>\n" +
-//                "                        <button\n" +
-//                "                          style=\"\n" +
-//                "                            width: 320px;\n" +
-//                "                            height: 52px;\n" +
-//                "                            padding: 8px;\n" +
-//                "                            background: #9087f4;\n" +
-//                "                            border-radius: 8px;\n" +
-//                "                            display: flex;\n" +
-//                "                            justify-content: center;\n" +
-//                "                            align-items: center;\n" +
-//                "                            gap: 8px;\n" +
-//                "                            border: none;\n" +
-//                "                            box-shadow: none;\n" +
-//                "                            overflow: visible;\n" +
-//                "                            cursor: pointer;\n" +
-//                "                          \"\n" +
-//                "                          onclick=\"handleClickCertificate()\"\n" +
-//                "                        >\n" +
-//                "                          <div\n" +
-//                "                            style=\"\n" +
-//                "                              text-align: center;\n" +
-//                "                              color: white;\n" +
-//                "                              font-size: 16px;\n" +
-//                "                              font-family: Pretendard-Medium;\n" +
-//                "                              font-weight: 500;\n" +
-//                "                              line-height: 20.8px;\n" +
-//                "                              word-wrap: break-word;\n" +
-//                "                            \"\n" +
-//                "                          >\n" +
-//                "                            이메일 주소를 인증합니다\n" +
-//                "                          </div>\n" +
-//                "                        </button>\n" +
-                "<a href='http://3.38.67.125:5100/register/success?token=" + emailUtil.createToken(to) + "'>이메일 주소를 인증합니다</a>" +
+                "                        <a\n" +
+                "                          href='http://3.38.67.125:5100/register/success?token=" + emailUtil.createToken(to) + "'>이메일 주소를 인증합니다</a>" +
+                "                          style=\"\n" +
+                "                            text-decoration: none;\n" +
+                "                            width: 320px;\n" +
+                "                            height: 52px;\n" +
+                "                            padding: 8px;\n" +
+                "                            background: #9087f4;\n" +
+                "                            border-radius: 8px;\n" +
+                "                            display: flex;\n" +
+                "                            justify-content: center;\n" +
+                "                            align-items: center;\n" +
+                "                            gap: 8px;\n" +
+                "                            border: none;\n" +
+                "                            box-shadow: none;\n" +
+                "                            overflow: visible;\n" +
+                "                            cursor: pointer;\n" +
+                "                          \"\n" +
+                "                        >\n" +
+                "                          <div\n" +
+                "                            style=\"\n" +
+                "                              text-align: center;\n" +
+                "                              color: white;\n" +
+                "                              font-size: 16px;\n" +
+                "                              font-family: Pretendard-Medium;\n" +
+                "                              font-weight: 500;\n" +
+                "                              line-height: 20.8px;\n" +
+                "                              word-wrap: break-word;\n" +
+                "                            \"\n" +
+                "                          >\n" +
+                "                            이메일 주소를 인증합니다\n" +
+                "                          </div>\n" +
+                "                        </a>\n" +
                 "                      </div>\n" +
                 "                      <div\n" +
                 "                        style=\"\n" +
@@ -247,20 +247,10 @@ public class EmailServiceImpl implements EmailService {
                 "        </td>\n" +
                 "      </tr>\n" +
                 "    </table>\n" +
-                "\n" +
-                "    <script>\n" +
-                "function handleClickCertificate(){window.open(\"http://www.naver.com\", \"_blank\");}\n" +
-        "    </script>\n" +
                 "  </body>\n" +
                 "</html>";
-//        String message = "<div>"
-//                + "<h1> 안녕하세요. Filmo 입니다</h1>"
-//                + "<br>"
-//                + "<p>아래 링크를 클릭하면 이메일 인증이 완료됩니다.<p>"
-//                + "<a href='http://3.38.67.125:5100/register/success?token=" + emailUtil.createToken(to) + "'>인증 링크</a>"
-//                + "</div>";
 
-        emailUtil.createMessage(to.getUserId(), message);
+        emailUtil.createMessage(toDto.getUserId(), message);
     }
 
     @Override
@@ -444,39 +434,39 @@ public class EmailServiceImpl implements EmailService {
                 "                          비밀번호를<br />\n" +
                 "                          새로 설정해 주세요!\n" +
                 "                        </div>\n" +
-//                "                        <button\n" +
-//                "                          style=\"\n" +
-//                "                            width: 320px;\n" +
-//                "                            height: 52px;\n" +
-//                "                            padding: 8px;\n" +
-//                "                            background: #9087f4;\n" +
-//                "                            border-radius: 8px;\n" +
-//                "                            display: flex;\n" +
-//                "                            justify-content: center;\n" +
-//                "                            align-items: center;\n" +
-//                "                            gap: 8px;\n" +
-//                "                            border: none;\n" +
-//                "                            box-shadow: none;\n" +
-//                "                            overflow: visible;\n" +
-//                "                            cursor: pointer;\n" +
-//                "                          \"\n" +
-//                "                          onclick=\"handleClickCertificate()\"\n" +
-//                "                        >\n" +
-//                "                          <div\n" +
-//                "                            style=\"\n" +
-//                "                              text-align: center;\n" +
-//                "                              color: white;\n" +
-//                "                              font-size: 16px;\n" +
-//                "                              font-family: Pretendard-Medium;\n" +
-//                "                              font-weight: 500;\n" +
-//                "                              line-height: 20.8px;\n" +
-//                "                              word-wrap: break-word;\n" +
-//                "                            \"\n" +
-//                "                          >\n" +
-//                "                            비밀번호 재설정하기\n" +
-//                "                          </div>\n" +
-//                "                        </button>\n" +
-                "<a href='http://3.38.67.125:5100/password/reset?token=" + emailUtil.createToken(toDto) + "'>비밀번호 재설정하기</a>" +
+                "                        <a\n" +
+                "                          href='http://3.38.67.125:5100/password/reset?token=" + emailUtil.createToken(toDto) + "'>비밀번호 재설정하기</a>" +
+                "                          style=\"\n" +
+                "                            text-decoration: none;\n" +
+                "                            width: 320px;\n" +
+                "                            height: 52px;\n" +
+                "                            padding: 8px;\n" +
+                "                            background: #9087f4;\n" +
+                "                            border-radius: 8px;\n" +
+                "                            display: flex;\n" +
+                "                            justify-content: center;\n" +
+                "                            align-items: center;\n" +
+                "                            gap: 8px;\n" +
+                "                            border: none;\n" +
+                "                            box-shadow: none;\n" +
+                "                            overflow: visible;\n" +
+                "                            cursor: pointer;\n" +
+                "                          \"\n" +
+                "                        >\n" +
+                "                          <div\n" +
+                "                            style=\"\n" +
+                "                              text-align: center;\n" +
+                "                              color: white;\n" +
+                "                              font-size: 16px;\n" +
+                "                              font-family: Pretendard-Medium;\n" +
+                "                              font-weight: 500;\n" +
+                "                              line-height: 20.8px;\n" +
+                "                              word-wrap: break-word;\n" +
+                "                            \"\n" +
+                "                          >\n" +
+                "                            비밀번호 재설정하기\n" +
+                "                          </div>\n" +
+                "                        </a>\n" +
                 "                      </div>\n" +
                 "                      <div\n" +
                 "                        style=\"\n" +
@@ -503,18 +493,8 @@ public class EmailServiceImpl implements EmailService {
                 "        </td>\n" +
                 "      </tr>\n" +
                 "    </table>\n" +
-                "\n" +
-                "    <script>\n" +
-                "function handleClickCertificate(){window.open(\"http://www.naver.com\", \"_blank\");}\n" +
-        "    </script>\n" +
                 "  </body>\n" +
                 "</html>";
-//        String message = "<div>"
-//                + "<h1> 안녕하세요. Filmo 입니다</h1>"
-//                + "<br>"
-//                + "<p>아래 링크를 클릭하면 비밀번호를 재설정할 수 있습니다.<p>"
-//                + "<a href='http://3.38.67.125:5100/password/reset?token=" + emailUtil.createToken(toDto) + "'>인증 링크</a>"
-//                + "</div>";
 
         emailUtil.createMessage(toDto.getUserId(), message);
     }
