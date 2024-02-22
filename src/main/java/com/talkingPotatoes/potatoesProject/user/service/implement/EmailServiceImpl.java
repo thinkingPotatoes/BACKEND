@@ -32,7 +32,6 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     @Transactional
-
     public void sendSignUpMessage(UserDto toDto) throws Exception {
         String message = "<!DOCTYPE html>\n" +
                 "<html lang=\"en\">\n" +
@@ -192,7 +191,7 @@ public class EmailServiceImpl implements EmailService {
                 "                          인증해 주시고,<br />Filmo 회원가입을 완료해 주세요!\n" +
                 "                        </div>\n" +
                 "                        <a\n" +
-                "                          href='http://3.38.67.125:5100/register/success?token=" + emailUtil.createToken(to) + "'>이메일 주소를 인증합니다</a>" +
+                "                          href='http://3.38.67.125:5100/register/success?token=" + emailUtil.createToken(toDto) + "'>이메일 주소를 인증합니다</a>" +
                 "                          style=\"\n" +
                 "                            text-decoration: none;\n" +
                 "                            width: 320px;\n" +
