@@ -3,6 +3,7 @@ package com.talkingPotatoes.potatoesProject.user.entity;
 import java.util.UUID;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.UuidGenerator;
 
 import lombok.AllArgsConstructor;
@@ -15,6 +16,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@DynamicInsert
 public class Genre {
 
 	@Id

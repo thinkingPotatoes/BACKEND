@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -21,5 +22,21 @@ public class GenreServiceImpl implements GenreService {
     @Override
     public List<Genre> getGenreList() {
         return genreRepository.findAll();
+    }
+
+    @Override
+    @Transactional
+    public boolean createGenre(String genreNm){
+        if(!genreNm.isEmpty() && !genreRepository.existsByGenre(genreNm)) {
+            genreRepository.save(Genre.builder().genre(genreNm).build());
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    @Transactional
+    public void deleteGenre(UUID genreId){
+        genreRepository.deleteById(genreId);
     }
 }
