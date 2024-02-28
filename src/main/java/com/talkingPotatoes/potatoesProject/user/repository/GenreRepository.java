@@ -8,4 +8,7 @@ import java.util.UUID;
 
 @Repository
 public interface GenreRepository extends JpaRepository<Genre, UUID> {
+    void deleteById(UUID genreId);
+
+    boolean existsByGenre(String genre);
 }
