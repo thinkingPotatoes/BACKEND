@@ -45,7 +45,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         response.setStatus(HttpServletResponse.SC_OK);
         addCookie(response, "refreshToken", tokenDto.getRefreshToken(), 1209600000);
 
-        return UriComponentsBuilder.fromUriString("http://ec2-3-38-67-125.ap-northeast-2.compute.amazonaws.com:5100/login/callback")
+        return UriComponentsBuilder.fromUriString("http://ec2-3-38-67-125.ap-northeast-2.compute.amazonaws.com:5173/login/callback")
                 .queryParam("accessToken", tokenDto.getAccessToken())
                 .build().toUriString();
 
