@@ -191,7 +191,7 @@ public class EmailServiceImpl implements EmailService {
                 "                          인증해 주시고,<br />Filmo 회원가입을 완료해 주세요!\n" +
                 "                        </div>\n" +
                 "                        <a\n" +
-                "                          href='http://ec2-3-38-67-125.ap-northeast-2.compute.amazonaws.com:5100/register/success?token=" + emailUtil.createToken(toDto) + "'" +
+                "                          href='http://3.38.67.125:5100/register/success?token=" + emailUtil.createToken(toDto) + "'" +
                 "                          style=\"\n" +
                 "                            text-decoration: none;\n" +
                 "                            width: 320px;\n" +
@@ -435,7 +435,7 @@ public class EmailServiceImpl implements EmailService {
                 "                          새로 설정해 주세요!\n" +
                 "                        </div>\n" +
                 "                        <a\n" +
-                "                          href='http://ec2-3-38-67-125.ap-northeast-2.compute.amazonaws.com:5100/password/reset?token=" + emailUtil.createToken(toDto) + "'" +
+                "                          href='http://3.38.67.125:5100/password/reset?token=" + emailUtil.createToken(toDto) + "'" +
                 "                          style=\"\n" +
                 "                            text-decoration: none;\n" +
                 "                            width: 320px;\n" +
