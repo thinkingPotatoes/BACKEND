@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
         if (userRepository.existsUserByUserIdAndRole(userDto.getUserId(), Role.ACTIVE))
             throw new DuplicationException("이메일 중복입니다.");
 
-        if (userDto.getRole() == null) userDto.setRole(Role.ACTIVE);
+        if (userDto.getRole() == null) userDto.setRole(Role.INACTIVE);
 
         String nickname = "F_"+ randomNickname.makeNickname();
         while(userRepository.existsByNickname(nickname)) {
