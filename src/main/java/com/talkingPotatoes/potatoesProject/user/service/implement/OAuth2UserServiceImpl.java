@@ -60,7 +60,8 @@ public class OAuth2UserServiceImpl implements OAuth2UserService<OAuth2UserReques
                 attributes.getAttributes(),
                 attributes.getNameAttributeKey(),
                 user.getId(),
-                user.getRole()
+                user.getRole(),
+                user.getUserId()
         );
     }
 }
