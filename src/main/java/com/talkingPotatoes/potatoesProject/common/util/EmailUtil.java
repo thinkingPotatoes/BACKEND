@@ -23,12 +23,12 @@ public class EmailUtil {
     private final RedisUtil redisUtil;
 
     @Async
-    public void createMessage(String to, String message) throws Exception {
+    public void createMessage(String to, String message, String subject) throws Exception {
         try {
             MimeMessage sendMessage = emailSender.createMimeMessage();
 
             sendMessage.addRecipients(Message.RecipientType.TO, to);
-            sendMessage.setSubject("Filmo 회원가입 이메일 인증");
+            sendMessage.setSubject(subject, "utf-8");
 
             sendMessage.setText(message, "utf-8", "html");
             sendMessage.setFrom(new InternetAddress("bitcamp1@naver.com", "Filmo"));
