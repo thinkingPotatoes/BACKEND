@@ -250,7 +250,7 @@ public class EmailServiceImpl implements EmailService {
                 "  </body>\n" +
                 "</html>";
 
-        emailUtil.createMessage(toDto.getUserId(), message);
+        emailUtil.createMessage(toDto.getUserId(), message, "Filmo 회원가입 이메일 인증");
     }
 
     @Override
@@ -496,7 +496,7 @@ public class EmailServiceImpl implements EmailService {
                 "  </body>\n" +
                 "</html>";
 
-        emailUtil.createMessage(toDto.getUserId(), message);
+        emailUtil.createMessage(toDto.getUserId(), message, "Filmo 비밀번호 변경");
     }
 
     @Override
